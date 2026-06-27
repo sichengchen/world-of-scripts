@@ -246,8 +246,7 @@ function Toolbar({
 }) {
   return (
     <header className="relative z-20 grid grid-cols-[auto_minmax(210px,360px)_auto_auto_minmax(240px,1fr)_auto] items-center gap-2.5 border-b bg-background px-3.5 py-2.5 max-[1160px]:grid-cols-[auto_minmax(180px,1fr)_auto_auto_auto] max-[820px]:grid-cols-[1fr_auto_auto] max-[820px]:gap-2 max-[820px]:p-2">
-      <div className="inline-flex min-w-max items-center gap-2 font-semibold text-foreground">
-        <GitBranch aria-hidden="true" />
+      <div className="min-w-max font-semibold text-foreground">
         <span>Alphabet World</span>
       </div>
 
