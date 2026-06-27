@@ -1,5 +1,7 @@
 import { edges, guidedTraces, scripts, scriptTypes } from './scripts'
 
+const letterBasedTypes = ['alphabet', 'abjad', 'abugida', 'featural']
+
 export function validateContent() {
   const ids = new Set<string>()
   const errors: string[] = []
@@ -13,8 +15,8 @@ export function validateContent() {
     if (!script.sampleGlyphs.length) errors.push(`${script.id} is missing sample glyphs`)
     if (!script.sources.length) errors.push(`${script.id} is missing sources`)
     if (!scriptTypes.includes(script.type)) errors.push(`${script.id} has an unknown type`)
-    if (script.type === 'alphabet' && (!script.characterRows || script.characterRows.length < 20)) {
-      errors.push(`${script.id} is an alphabet and must list the full alphabet in characterRows`)
+    if (letterBasedTypes.includes(script.type) && (!script.characterRows || script.characterRows.length < 20)) {
+      errors.push(`${script.id} is letter-based and must list its full core letter inventory in characterRows`)
     }
     for (const visualGlyph of script.visualGlyphs ?? []) {
       if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)

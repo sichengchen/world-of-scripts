@@ -91,6 +91,9 @@ export const scripts: ScriptNode[] = [
     endYear: -1500,
     direction: 'rtl',
     sampleGlyphs: ['𐤀', '𐤁', '𐤌', '𐤍'],
+    characterRows: '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An early consonantal writing system often associated with the emergence of alphabetic writing. Its exact relationship to later Canaanite and Phoenician forms is partly reconstructed and debated.',
     notes: ['Glyphs shown use later Northwest Semitic forms as readable representatives.'],
@@ -110,14 +113,9 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Phoenician'],
     sampleGlyphs: ['𐤀', '𐤁', '𐤂', '𐤃', '𐤄'],
-    characterRows: [
-      { glyph: '𐤀', label: 'aleph', transliteration: 'ʾ' },
-      { glyph: '𐤁', label: 'beth', transliteration: 'b' },
-      { glyph: '𐤂', label: 'gimel', transliteration: 'g' },
-      { glyph: '𐤃', label: 'daleth', transliteration: 'd' },
-      { glyph: '𐤄', label: 'he', transliteration: 'h' },
-      { glyph: '𐤅', label: 'waw', transliteration: 'w' },
-    ],
+    characterRows: '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A compact consonantal script that became one of the most influential ancestors of later Mediterranean and Near Eastern writing systems.',
     sources: [
@@ -263,6 +261,9 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Imperial Aramaic'],
     sampleGlyphs: ['𐡀', '𐡁', '𐡂', '𐡃'],
+    characterRows: '𐡀 𐡁 𐡂 𐡃 𐡄 𐡅 𐡆 𐡇 𐡈 𐡉 𐡊 𐡋 𐡌 𐡍 𐡎 𐡏 𐡐 𐡑 𐡒 𐡓 𐡔 𐡕'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A major administrative and cultural script of the ancient Near East. Several later abjads and abugidas are linked to Aramaic branches.',
     sources: [
@@ -282,14 +283,7 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Hebrew'],
     sampleGlyphs: ['א', 'ב', 'ג', 'ד', 'ה'],
-    characterRows: [
-      { glyph: 'א', label: 'aleph' },
-      { glyph: 'ב', label: 'bet' },
-      { glyph: 'ג', label: 'gimel' },
-      { glyph: 'ד', label: 'dalet' },
-      { glyph: 'ה', label: 'he' },
-      { glyph: 'ו', label: 'vav' },
-    ],
+    characterRows: 'א ב ג ד ה ו ז ח ט י כ ל מ נ ס ע פ צ ק ר ש ת'.split(' ').map((glyph) => ({ glyph })),
     summary:
       'A Northwest Semitic abjad used for Hebrew and Jewish languages. Its square script form is historically connected to Aramaic writing.',
     sources: [
@@ -309,6 +303,9 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Syriac'],
     sampleGlyphs: ['ܐ', 'ܒ', 'ܓ', 'ܕ'],
+    characterRows: 'ܐ ܒ ܓ ܕ ܗ ܘ ܙ ܚ ܛ ܝ ܟ ܠ ܡ ܢ ܣ ܥ ܦ ܨ ܩ ܪ ܫ ܬ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An Aramaic-derived script used for Syriac and several Christian communities of the Near East, with multiple calligraphic styles.',
     sources: [
@@ -327,6 +324,9 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Nabataean'],
     sampleGlyphs: ['𐢀', '𐢁', '𐢂', '𐢃'],
+    characterRows: '𐢀 𐢁 𐢂 𐢃 𐢄 𐢅 𐢆 𐢇 𐢈 𐢉 𐢊 𐢋 𐢌 𐢍 𐢎 𐢏 𐢐 𐢑 𐢒 𐢓 𐢔 𐢕'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An Aramaic-derived script used by the Nabataeans. Its cursive development is closely associated with the emergence of Arabic script.',
     sources: [
@@ -346,14 +346,9 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Arabic'],
     sampleGlyphs: ['ا', 'ب', 'ت', 'ث', 'ج'],
-    characterRows: [
-      { glyph: 'ا', label: 'alif' },
-      { glyph: 'ب', label: 'ba' },
-      { glyph: 'ت', label: 'ta' },
-      { glyph: 'ث', label: 'tha' },
-      { glyph: 'ج', label: 'jim' },
-      { glyph: 'ح', label: 'ha' },
-    ],
+    characterRows: 'ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A cursive abjad used for Arabic and many other languages. It descends from Nabataean forms and spread widely with Islamic literary culture.',
     sources: [
@@ -372,6 +367,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Brahmi'],
     sampleGlyphs: ['𑀅', '𑀓', '𑀢', '𑀫'],
+    characterRows: '𑀅 𑀆 𑀇 𑀈 𑀉 𑀊 𑀋 𑀌 𑀍 𑀎 𑀏 𑀐 𑀑 𑀒 𑀓 𑀔 𑀕 𑀖 𑀗 𑀘 𑀙 𑀚 𑀛 𑀜 𑀝 𑀞 𑀟 𑀠 𑀡 𑀢 𑀣 𑀤 𑀥 𑀦 𑀧 𑀨 𑀩 𑀪 𑀫 𑀬 𑀭 𑀮 𑀯 𑀰 𑀱 𑀲 𑀳'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An ancient South Asian abugida and ancestor of many Indic and Southeast Asian scripts. Its deeper origin is still debated.',
     notes: ['Relationship to Aramaic is often proposed but not treated here as certain descent.'],
@@ -392,14 +390,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Devanagari'],
     sampleGlyphs: ['अ', 'क', 'ग', 'म', 'ह'],
-    characterRows: [
-      { glyph: 'अ', label: 'a' },
-      { glyph: 'आ', label: 'aa' },
-      { glyph: 'क', label: 'ka' },
-      { glyph: 'ग', label: 'ga' },
-      { glyph: 'च', label: 'ca' },
-      { glyph: 'म', label: 'ma' },
-    ],
+    characterRows: 'अ आ इ ई उ ऊ ऋ ॠ ऌ ए ऐ ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A North Indian abugida used for Hindi, Marathi, Nepali, Sanskrit, and other languages. Its visible headline gives words a distinctive horizontal rhythm.',
     sources: [
@@ -419,6 +412,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Bengali'],
     sampleGlyphs: ['অ', 'ক', 'গ', 'ম'],
+    characterRows: 'অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ ম য র ল শ ষ স হ ড় ঢ় য় ৰ ৱ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An eastern Indic script used for Bengali, Assamese, and related languages, descended through Brahmic writing traditions.',
     sources: [
@@ -438,6 +434,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Gujarati'],
     sampleGlyphs: ['અ', 'ક', 'ગ', 'મ'],
+    characterRows: 'અ આ ઇ ઈ ઉ ઊ ઋ એ ઐ ઓ ઔ ક ખ ગ ઘ ઙ ચ છ જ ઝ ઞ ટ ઠ ડ ઢ ણ ત થ દ ધ ન પ ફ બ ભ મ ય ર લ વ શ ષ સ હ ળ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Brahmic abugida used for Gujarati and related languages, visually related to Devanagari but without the continuous headline.',
     sources: [
@@ -457,6 +456,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Gurmukhi'],
     sampleGlyphs: ['ਅ', 'ਕ', 'ਗ', 'ਮ'],
+    characterRows: 'ੳ ਅ ੲ ਸ ਹ ਕ ਖ ਗ ਘ ਙ ਚ ਛ ਜ ਝ ਞ ਟ ਠ ਡ ਢ ਣ ਤ ਥ ਦ ਧ ਨ ਪ ਫ ਬ ਭ ਮ ਯ ਰ ਲ ਵ ੜ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Brahmic script standardized for Punjabi and Sikh scripture, with a compact letter rhythm and vowel signs typical of abugidas.',
     sources: [
@@ -476,6 +478,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Tamil'],
     sampleGlyphs: ['அ', 'க', 'ச', 'ம'],
+    characterRows: 'அ ஆ இ ஈ உ ஊ எ ஏ ஐ ஒ ஓ ஔ ஃ க ங ச ஞ ட ண த ந ப ம ய ர ல வ ழ ள ற ன ஜ ஷ ஸ ஹ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A southern Brahmic script used for Tamil. Its modern form has relatively few base consonant signs compared with many related Indic scripts.',
     sources: [
@@ -495,6 +500,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Kannada'],
     sampleGlyphs: ['ಅ', 'ಕ', 'ಗ', 'ಮ'],
+    characterRows: 'ಅ ಆ ಇ ಈ ಉ ಊ ಋ ೠ ಎ ಏ ಐ ಒ ಓ ಔ ಅಂ ಅಃ ಕ ಖ ಗ ಘ ಙ ಚ ಛ ಜ ಝ ಞ ಟ ಠ ಡ ಢ ಣ ತ ಥ ದ ಧ ನ ಪ ಫ ಬ ಭ ಮ ಯ ರ ಲ ವ ಶ ಷ ಸ ಹ ಳ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A southern Brahmic script used for Kannada and related languages, with rounded forms shaped by manuscript traditions.',
     sources: [
@@ -514,6 +522,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Telugu'],
     sampleGlyphs: ['అ', 'క', 'గ', 'మ'],
+    characterRows: 'అ ఆ ఇ ఈ ఉ ఊ ఋ ౠ ఎ ఏ ఐ ఒ ఓ ఔ అం అః క ఖ గ ఘ ఙ చ ఛ జ ఝ ఞ ట ఠ డ ఢ ణ త థ ద ధ న ప ఫ బ భ మ య ర ల వ శ ష స హ ళ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A southern Brahmic script used for Telugu, notable for rounded letterforms and complex vowel signs.',
     sources: [
@@ -533,6 +544,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Khmer'],
     sampleGlyphs: ['អ', 'ក', 'ខ', 'ម'],
+    characterRows: 'ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ល វ ស ហ ឡ អ ឥ ឦ ឧ ឩ ឪ ឫ ឬ ឭ ឮ ឯ ឰ ឱ ឲ ឳ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Southeast Asian Brahmic abugida used for Khmer. It has a large inventory and historically influenced neighboring scripts.',
     sources: [
@@ -552,14 +566,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Thai'],
     sampleGlyphs: ['ก', 'ข', 'ค', 'ง'],
-    characterRows: [
-      { glyph: 'ก', label: 'ko kai' },
-      { glyph: 'ข', label: 'kho khai' },
-      { glyph: 'ค', label: 'kho khwai' },
-      { glyph: 'ง', label: 'ngo ngu' },
-      { glyph: 'จ', label: 'cho chan' },
-      { glyph: 'ม', label: 'mo ma' },
-    ],
+    characterRows: 'ก ข ฃ ค ฅ ฆ ง จ ฉ ช ซ ฌ ญ ฎ ฏ ฐ ฑ ฒ ณ ด ต ถ ท ธ น บ ป ผ ฝ พ ฟ ภ ม ย ร ฤ ล ฦ ว ศ ษ ส ห ฬ อ ฮ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Brahmic-derived script used for Thai. It combines consonant letters, vowel marks, tone marks, and spacing conventions distinct from Latin writing.',
     sources: [
@@ -579,6 +588,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Tibetan'],
     sampleGlyphs: ['ཀ', 'ཁ', 'ག', 'མ'],
+    characterRows: 'ཀ ཁ ག ང ཅ ཆ ཇ ཉ ཏ ཐ ད ན པ ཕ བ མ ཙ ཚ ཛ ཝ ཞ ཟ འ ཡ ར ལ ཤ ས ཧ ཨ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Brahmic-derived script used for Tibetan and related languages, preserving many historical spelling conventions.',
     sources: [
@@ -598,6 +610,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Ethiopic'],
     sampleGlyphs: ['ሀ', 'ለ', 'መ', 'ሰ'],
+    characterRows: 'ሀ ለ ሐ መ ሠ ረ ሰ ቀ በ ተ ኀ ነ አ ከ ወ ዐ ዘ የ ደ ገ ጠ ጰ ጸ ፀ ፈ ፐ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A South Semitic script that developed into a vocalized abugida. It is used for Amharic, Tigrinya, liturgical Geʽez, and related languages.',
     sources: [
@@ -703,14 +718,9 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['Hangul'],
     sampleGlyphs: ['ㄱ', 'ㄴ', 'ㄷ', 'ㅏ'],
-    characterRows: [
-      { glyph: 'ㄱ', label: 'g/k' },
-      { glyph: 'ㄴ', label: 'n' },
-      { glyph: 'ㄷ', label: 'd/t' },
-      { glyph: 'ㅁ', label: 'm' },
-      { glyph: 'ㅏ', label: 'a' },
-      { glyph: 'ㅓ', label: 'eo' },
-    ],
+    characterRows: 'ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A deliberately designed featural script for Korean, with letters grouped into syllable blocks. It is contextual rather than descended from the Phoenician alphabetic line.',
     sources: [
@@ -873,6 +883,10 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Unified Canadian Aboriginal Syllabics'],
     sampleGlyphs: ['ᐊ', 'ᐃ', 'ᐅ', 'ᐁ'],
+    characterRows:
+      'ᐁ ᐃ ᐄ ᐅ ᐆ ᐊ ᐋ ᐯ ᐱ ᐲ ᐳ ᐴ ᐸ ᐹ ᑌ ᑎ ᑏ ᑐ ᑑ ᑕ ᑖ ᑫ ᑭ ᑮ ᑯ ᑰ ᑲ ᑳ ᒉ ᒋ ᒌ ᒍ ᒎ ᒐ ᒑ ᒣ ᒥ ᒦ ᒧ ᒨ ᒪ ᒫ ᓀ ᓂ ᓃ ᓄ ᓅ ᓇ ᓈ ᓭ ᓯ ᓰ ᓱ ᓲ ᓴ ᓵ ᔦ ᔨ ᔩ ᔪ ᔫ ᔭ ᔮ ᕃ ᕆ ᕇ ᕈ ᕉ ᕋ ᕌ ᓓ ᓕ ᓖ ᓗ ᓘ ᓚ ᓛ ᐍ ᐏ ᐑ ᐓ ᐕ ᐘ ᐚ ᐦ ᑊ ᐟ ᐠ ᐨ ᒼ ᐣ ᐢ ᐩ ᕑ ᓫ ᐤ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
     summary:
       'A family of scripts used for Cree, Inuktitut, and other Indigenous languages in Canada. It is a modern constructed system influenced by shorthand and missionary literacy.',
     sources: [
