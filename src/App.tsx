@@ -32,9 +32,6 @@ import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -287,16 +284,11 @@ function Toolbar({
 
       <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" aria-expanded={filtersOpen}>
+          <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
             <Filter data-icon="inline-start" />
-            Filters
           </Button>
         </PopoverTrigger>
         <PopoverContent align="start" className="filter-popover">
-          <PopoverHeader>
-            <PopoverTitle>Filters</PopoverTitle>
-            <PopoverDescription>Limit the diagram without changing the relationship data.</PopoverDescription>
-          </PopoverHeader>
           <FilterSelect
             label="Type"
             value={filters.type}
