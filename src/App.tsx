@@ -1,7 +1,6 @@
 import {
   Background,
   BackgroundVariant,
-  Controls,
   Handle,
   Position,
   ReactFlow,
@@ -192,7 +191,6 @@ function AlphabetWorld() {
             aria-label="World alphabets family tree"
           >
             <Background color="var(--border)" gap={28} size={1} variant={BackgroundVariant.Dots} />
-            <Controls showInteractive={false} />
           </ReactFlow>
           <Legend />
         </div>
