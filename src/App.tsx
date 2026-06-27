@@ -251,7 +251,7 @@ function Toolbar({
       </div>
 
       <div className="relative flex h-9 items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-2 max-[820px]:col-span-full">
-        <Search aria-hidden="true" />
+        <Search aria-hidden="true" className="size-4 shrink-0" />
         <Input
           className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
           aria-label="Search scripts"
@@ -513,7 +513,7 @@ function Inspector({
 
       <section>
         <div className="mb-2.5 flex items-center gap-2">
-          <BookOpen />
+          <BookOpen className="size-4 shrink-0" />
           <h2 className="text-sm font-semibold">{script.type === 'alphabet' || script.type === 'abjad' ? 'Alphabet' : 'Representative signs'}</h2>
         </div>
         {script.visualGlyphs ? (
@@ -553,7 +553,7 @@ function Inspector({
 
       <section>
         <div className="mb-2.5 flex items-center gap-2">
-          <Info />
+          <Info className="size-4 shrink-0" />
           <h2 className="text-sm font-semibold">Historical note</h2>
         </div>
         <p className="text-sm leading-6">{script.summary}</p>
@@ -568,7 +568,7 @@ function Inspector({
 
       <section>
         <div className="mb-2.5 flex items-center gap-2">
-          <GitBranch />
+          <GitBranch className="size-4 shrink-0" />
           <h2 className="text-sm font-semibold">Lineage</h2>
         </div>
         <RelationGroup label="Ancestors" scripts={relatedScripts.ancestors} onSelect={onSelect} />
@@ -656,7 +656,7 @@ function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
 
   return (
     <span aria-label={label} className="inline-flex items-center text-muted-foreground" title={label}>
-      <Icon />
+      <Icon className="size-4 shrink-0" />
     </span>
   )
 }
