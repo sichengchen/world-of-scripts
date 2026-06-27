@@ -339,7 +339,7 @@ function Toolbar({
         size="sm"
         spacing={0}
         aria-label="View mode"
-        className="border bg-muted max-[820px]:hidden"
+        className="max-[820px]:hidden"
       >
         {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
           <ToggleGroupItem key={mode} value={mode}>
