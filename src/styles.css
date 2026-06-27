@@ -104,11 +104,6 @@ body,
   line-height: 1.12;
 }
 
-.script-node [data-slot="badge"] {
-  max-width: 78px;
-  text-transform: uppercase;
-}
-
 .node-handle {
   width: 8px;
   height: 8px;
