@@ -347,21 +347,26 @@ function Toolbar({
         ))}
       </ToggleGroup>
 
-      <div
-        className="flex min-w-0 items-center gap-1 overflow-x-auto pb-0.5 max-[1160px]:col-span-full max-[820px]:hidden"
-        aria-label="Guided traces"
-      >
-        {guidedTraces.map((trace) => (
-          <Button
-            key={trace.id}
-            variant={activeTrace === trace.id ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTrace(activeTrace === trace.id ? null : trace.id)}
-          >
-            <Compass data-icon="inline-start" />
-            {trace.label}
-          </Button>
-        ))}
+      <div className="min-w-0 max-[1160px]:col-span-full max-[820px]:hidden">
+        <Select
+          value={activeTrace ?? 'none'}
+          onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
+        >
+          <SelectTrigger className="w-[260px] max-w-full" aria-label="Guided trace">
+            <Compass aria-hidden="true" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="start">
+            <SelectGroup>
+              <SelectItem value="none">No guided trace</SelectItem>
+              {guidedTraces.map((trace) => (
+                <SelectItem key={trace.id} value={trace.id}>
+                  {trace.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="inline-flex items-center gap-1 max-[820px]:hidden" aria-label="Canvas controls">
