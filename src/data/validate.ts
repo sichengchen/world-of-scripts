@@ -13,6 +13,15 @@ export function validateContent() {
     if (!script.sampleGlyphs.length) errors.push(`${script.id} is missing sample glyphs`)
     if (!script.sources.length) errors.push(`${script.id} is missing sources`)
     if (!scriptTypes.includes(script.type)) errors.push(`${script.id} has an unknown type`)
+    for (const visualGlyph of script.visualGlyphs ?? []) {
+      if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)
+      if (!visualGlyph.sourceLabel.trim() || !visualGlyph.sourceUrl.trim()) {
+        errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing source attribution`)
+      }
+      if (!visualGlyph.viewBox.trim() || !visualGlyph.paths.length) {
+        errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing SVG geometry`)
+      }
+    }
   }
 
   for (const edge of edges) {

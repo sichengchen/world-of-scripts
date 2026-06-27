@@ -11,6 +11,10 @@ import {
 } from '@xyflow/react'
 import {
   ArrowRight,
+  ArrowDown,
+  ArrowDownUp,
+  ArrowLeft,
+  ArrowLeftRight,
   BookOpen,
   Compass,
   Filter,
@@ -109,6 +113,7 @@ function AlphabetWorld() {
           script.status,
           ...script.region,
           ...script.sampleGlyphs,
+          ...(script.visualGlyphs?.map((glyph) => glyph.label) ?? []),
         ]
           .filter(Boolean)
           .join(' ')
@@ -432,10 +437,14 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       </div>
       <div className="mt-2 flex justify-between gap-2 text-xs font-medium text-muted-foreground">
         <span>{formatDate(script)}</span>
-        <span>{script.direction?.toUpperCase()}</span>
+        <DirectionIcon direction={script.direction} />
       </div>
       <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
-        {script.sampleGlyphs.slice(0, 6).join(' ')}
+        {script.visualGlyphs ? (
+          <SvgGlyphStrip glyphs={script.visualGlyphs.slice(0, 4)} />
+        ) : (
+          script.sampleGlyphs.slice(0, 6).join(' ')
+        )}
       </div>
     </article>
   )
@@ -492,7 +501,13 @@ function Inspector({
         <MetadataItem label="Type" value={script.type} />
         <MetadataItem label="Region" value={script.region.join(', ')} />
         <MetadataItem label="Era" value={formatDate(script)} />
-        <MetadataItem label="Direction" value={directionLabel(script.direction)} />
+        <div className="rounded-lg border bg-background p-2.5">
+          <dt className="text-xs font-medium uppercase text-muted-foreground">Direction</dt>
+          <dd className="mt-1 flex items-center gap-2 text-sm font-medium text-foreground">
+            <DirectionIcon direction={script.direction} />
+            {directionLabel(script.direction)}
+          </dd>
+        </div>
       </dl>
 
       <Separator />
@@ -502,21 +517,37 @@ function Inspector({
           <BookOpen />
           <h2 className="text-sm font-semibold">{script.type === 'alphabet' || script.type === 'abjad' ? 'Alphabet' : 'Representative signs'}</h2>
         </div>
-        <div className="grid grid-cols-4 gap-2 max-[820px]:grid-cols-5" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
-          {characterRows.slice(0, 26).map((row, index) => (
-            <div
-              className="grid min-h-16 place-items-center gap-1 rounded-lg border bg-background px-1 py-2 text-center"
-              key={`${row.glyph}-${index}`}
-            >
-              <span className="script-glyph text-3xl leading-none">{row.glyph}</span>
-              {(row.label || row.transliteration) && (
-                <small className="text-xs font-medium text-muted-foreground">
-                  {[row.label, row.transliteration].filter(Boolean).join(' · ')}
-                </small>
-              )}
-            </div>
-          ))}
-        </div>
+        {script.visualGlyphs ? (
+          <div className="grid grid-cols-2 gap-2">
+            {script.visualGlyphs.map((glyph) => (
+              <div className="grid min-h-28 place-items-center gap-2 rounded-lg border bg-background px-3 py-3 text-center" key={glyph.label}>
+                <SvgGlyph glyph={glyph} className="h-14 w-14" />
+                <small className="text-xs font-medium text-muted-foreground">{glyph.label}</small>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-2 max-[820px]:grid-cols-5" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
+            {characterRows.slice(0, 26).map((row, index) => (
+              <div
+                className="grid min-h-16 place-items-center gap-1 rounded-lg border bg-background px-1 py-2 text-center"
+                key={`${row.glyph}-${index}`}
+              >
+                <span className="script-glyph text-3xl leading-none">{row.glyph}</span>
+                {(row.label || row.transliteration) && (
+                  <small className="text-xs font-medium text-muted-foreground">
+                    {[row.label, row.transliteration].filter(Boolean).join(' · ')}
+                  </small>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        {script.visualGlyphs && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            SVG glyph assets are shown for this script because plain Unicode/text samples are incomplete or misleading.
+          </p>
+        )}
       </section>
 
       <Separator />
@@ -566,12 +597,68 @@ function Inspector({
   )
 }
 
+function SvgGlyphStrip({ glyphs }: { glyphs: NonNullable<ScriptNode['visualGlyphs']> }) {
+  return (
+    <div className="flex items-center gap-2">
+      {glyphs.map((glyph) => (
+        <SvgGlyph className="h-7 w-7" glyph={glyph} key={glyph.label} />
+      ))}
+    </div>
+  )
+}
+
+function SvgGlyph({
+  className,
+  glyph,
+}: {
+  className?: string
+  glyph: NonNullable<ScriptNode['visualGlyphs']>[number]
+}) {
+  return (
+    <svg
+      aria-label={`${glyph.label}; source: ${glyph.sourceLabel}`}
+      className={className}
+      fill="none"
+      role="img"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3.5"
+      viewBox={glyph.viewBox}
+    >
+      {glyph.paths.map((path) => (
+        <path d={path} key={path} />
+      ))}
+    </svg>
+  )
+}
+
 function MetadataItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border bg-background p-2.5">
       <dt className="text-xs font-medium uppercase text-muted-foreground">{label}</dt>
       <dd className="mt-1 text-sm font-medium text-foreground">{value}</dd>
     </div>
+  )
+}
+
+function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
+  const label = directionLabel(direction)
+  const Icon =
+    direction === 'rtl'
+      ? ArrowLeft
+      : direction === 'ttb'
+        ? ArrowDown
+        : direction === 'btt'
+          ? ArrowDownUp
+          : direction === 'mixed'
+            ? ArrowLeftRight
+            : ArrowRight
+
+  return (
+    <span aria-label={label} className="inline-flex items-center text-muted-foreground" title={label}>
+      <Icon />
+    </span>
   )
 }
 

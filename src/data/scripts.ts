@@ -22,6 +22,13 @@ export type ScriptNode = {
   direction?: 'ltr' | 'rtl' | 'ttb' | 'btt' | 'mixed'
   unicodeBlock?: string[]
   sampleGlyphs: string[]
+  visualGlyphs?: Array<{
+    label: string
+    sourceLabel: string
+    sourceUrl: string
+    viewBox: string
+    paths: string[]
+  }>
   characterRows?: Array<{
     glyph: string
     label?: string
@@ -705,11 +712,41 @@ export const scripts: ScriptNode[] = [
     endYear: -1050,
     direction: 'ttb',
     sampleGlyphs: ['日', '月', '山', '水'],
+    visualGlyphs: [
+      {
+        label: 'sun / day',
+        sourceLabel: 'Oracle bone script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
+        viewBox: '0 0 64 64',
+        paths: ['M20 10 L45 15 L42 52 L18 48 Z', 'M25 29 L39 31'],
+      },
+      {
+        label: 'moon',
+        sourceLabel: 'Oracle bone script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
+        viewBox: '0 0 64 64',
+        paths: ['M40 9 C24 15 18 30 24 46 C28 55 39 58 47 50 C36 49 29 40 30 29 C31 20 35 14 40 9 Z'],
+      },
+      {
+        label: 'mountain',
+        sourceLabel: 'Oracle bone script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
+        viewBox: '0 0 64 64',
+        paths: ['M13 48 L24 18 L33 47 L42 14 L53 48', 'M10 49 L56 49'],
+      },
+      {
+        label: 'water',
+        sourceLabel: 'Oracle bone script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
+        viewBox: '0 0 64 64',
+        paths: ['M33 8 C24 20 43 28 30 39 C24 44 25 52 35 57', 'M18 18 C22 25 22 34 15 42', 'M49 18 C44 27 44 35 52 44'],
+      },
+    ],
     summary:
       'The earliest widely attested stage of Chinese writing, ancestral to later Chinese characters. It belongs to a separate logographic lineage.',
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Oracle_bone_script' },
-      { label: 'Unicode', url: 'https://www.unicode.org/charts/' },
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
     ],
   },
   {
@@ -759,6 +796,29 @@ export const scripts: ScriptNode[] = [
     endYear: 1700,
     direction: 'mixed',
     sampleGlyphs: ['AJ', 'KʼIN', 'BALAM'],
+    visualGlyphs: [
+      {
+        label: 'ajaw-style sign',
+        sourceLabel: 'Maya script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
+        viewBox: '0 0 64 64',
+        paths: ['M16 11 H48 Q55 11 55 18 V46 Q55 53 48 53 H16 Q9 53 9 46 V18 Q9 11 16 11 Z', 'M22 24 Q32 15 42 24', 'M23 38 Q32 45 41 38', 'M23 31 H41'],
+      },
+      {
+        label: 'kʼin sun sign',
+        sourceLabel: 'Maya script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
+        viewBox: '0 0 64 64',
+        paths: ['M32 14 L37 26 L50 26 L40 34 L44 48 L32 40 L20 48 L24 34 L14 26 L27 26 Z', 'M32 24 V40', 'M24 32 H40'],
+      },
+      {
+        label: 'balam-style sign',
+        sourceLabel: 'Maya script reference',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
+        viewBox: '0 0 64 64',
+        paths: ['M14 19 Q27 6 43 14 Q55 20 51 35 Q48 50 33 54 Q19 52 13 39 Q8 28 14 19 Z', 'M23 28 H42', 'M24 37 Q33 43 42 36', 'M22 20 L30 26 L38 19'],
+      },
+    ],
     summary:
       'A logosyllabic Mesoamerican writing system. It is included as a separate world writing tradition rather than an alphabetic descendant.',
     sources: [

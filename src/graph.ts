@@ -23,60 +23,68 @@ const typeColors: Record<ScriptNode['type'], string> = {
 }
 
 const lineagePositions: Record<string, { x: number; y: number }> = {
-  'egyptian-hieroglyphs': { x: 20, y: 120 },
-  'proto-sinaitic': { x: 260, y: 160 },
-  phoenician: { x: 500, y: 180 },
-  greek: { x: 760, y: 90 },
-  'old-italic': { x: 1020, y: 70 },
-  latin: { x: 1280, y: 40 },
-  coptic: { x: 1010, y: 200 },
-  gothic: { x: 1020, y: 315 },
-  cyrillic: { x: 1280, y: 240 },
-  aramaic: { x: 760, y: 390 },
-  hebrew: { x: 1020, y: 390 },
-  syriac: { x: 1020, y: 510 },
-  nabataean: { x: 1020, y: 640 },
-  arabic: { x: 1280, y: 640 },
-  brahmi: { x: 1020, y: 820 },
-  devanagari: { x: 1280, y: 790 },
-  'bengali-assamese': { x: 1510, y: 700 },
-  gujarati: { x: 1510, y: 820 },
-  gurmukhi: { x: 1510, y: 940 },
-  tamil: { x: 1280, y: 940 },
-  kannada: { x: 1510, y: 1060 },
-  telugu: { x: 1280, y: 1060 },
-  khmer: { x: 1280, y: 1190 },
-  thai: { x: 1510, y: 1190 },
-  tibetan: { x: 1280, y: 1320 },
-  geez: { x: 760, y: 670 },
-  armenian: { x: 1020, y: -45 },
-  georgian: { x: 1020, y: -160 },
-  runic: { x: 1280, y: 155 },
-  ogham: { x: 1510, y: 40 },
-  hangul: { x: 1550, y: 430 },
-  'oracle-bone': { x: 250, y: 1040 },
-  chinese: { x: 500, y: 1040 },
-  cuneiform: { x: 20, y: 880 },
-  maya: { x: 260, y: 1260 },
-  cherokee: { x: 1510, y: 270 },
-  'canadian-aboriginal': { x: 1510, y: 560 },
+  'egyptian-hieroglyphs': { x: 20, y: 180 },
+  'proto-sinaitic': { x: 250, y: 180 },
+  phoenician: { x: 480, y: 180 },
+  greek: { x: 710, y: 120 },
+  armenian: { x: 940, y: 0 },
+  'old-italic': { x: 940, y: 120 },
+  latin: { x: 1170, y: 110 },
+  ogham: { x: 1400, y: 60 },
+  runic: { x: 1400, y: 180 },
+  coptic: { x: 940, y: 250 },
+  gothic: { x: 1170, y: 250 },
+  cyrillic: { x: 1400, y: 300 },
+  aramaic: { x: 710, y: 420 },
+  hebrew: { x: 940, y: 420 },
+  syriac: { x: 940, y: 540 },
+  nabataean: { x: 940, y: 660 },
+  arabic: { x: 1170, y: 660 },
+  geez: { x: 480, y: 430 },
+  brahmi: { x: 710, y: 790 },
+  devanagari: { x: 940, y: 790 },
+  'bengali-assamese': { x: 1170, y: 790 },
+  gujarati: { x: 1400, y: 790 },
+  gurmukhi: { x: 1400, y: 910 },
+  tamil: { x: 940, y: 910 },
+  telugu: { x: 1170, y: 910 },
+  kannada: { x: 1400, y: 1030 },
+  khmer: { x: 940, y: 1030 },
+  thai: { x: 1170, y: 1030 },
+  tibetan: { x: 710, y: 1030 },
+  georgian: { x: 1170, y: -30 },
+  cherokee: { x: 1400, y: 420 },
+  'canadian-aboriginal': { x: 1400, y: 540 },
+  hangul: { x: 1400, y: 660 },
+  cuneiform: { x: 20, y: 650 },
+  'oracle-bone': { x: 250, y: 650 },
+  chinese: { x: 480, y: 650 },
+  maya: { x: 20, y: 800 },
 }
 
-function getTimelinePosition(script: ScriptNode, index: number) {
-  const year = script.startYear ?? 0
-  const x = ((year + 3400) / 5300) * 1680
-  const familyOffset =
-    script.type === 'abugida'
-      ? 780
-      : script.type === 'logographic'
-        ? 1040
-        : script.type === 'mixed'
-          ? 1160
-          : script.type === 'syllabary' || script.type === 'featural'
-            ? 500
-            : 120
+const timelinePositions = buildTimelinePositions()
 
-  return { x, y: familyOffset + (index % 4) * 115 }
+function buildTimelinePositions() {
+  const sorted = [...scripts].sort((a, b) => (a.startYear ?? 0) - (b.startYear ?? 0))
+  const laneLastX: number[] = []
+  const positions: Record<string, { x: number; y: number }> = {}
+  const nodeWidth = 188
+  const gap = 24
+
+  for (const script of sorted) {
+    const year = script.startYear ?? 0
+    const x = Math.round(((year + 3400) / 5300) * 1560)
+    let lane = laneLastX.findIndex((lastX) => x - lastX >= nodeWidth + gap)
+
+    if (lane === -1) {
+      lane = laneLastX.length
+    }
+
+    laneLastX[lane] = x
+    positions[script.id] = { x, y: lane * 130 }
+  }
+
+  return positions
 }
 
 function getAzPosition(script: ScriptNode, index: number) {
@@ -86,7 +94,7 @@ function getAzPosition(script: ScriptNode, index: number) {
 }
 
 function getPosition(script: ScriptNode, viewMode: ViewMode, index: number) {
-  if (viewMode === 'timeline') return getTimelinePosition(script, index)
+  if (viewMode === 'timeline') return timelinePositions[script.id]
   if (viewMode === 'az') return getAzPosition(script, index)
   return lineagePositions[script.id] ?? { x: index * 240, y: 0 }
 }
