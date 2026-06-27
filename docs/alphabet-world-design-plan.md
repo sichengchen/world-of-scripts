@@ -89,9 +89,9 @@ Connector styling:
 - Thin gray line: variant relationship.
 - Selected path: colored, thicker line.
 
-## Initial Content Scope
+## Content Scope
 
-Start with a curated, understandable MVP rather than every known script.
+Use a curated set of major scripts that makes the family tree understandable without trying to catalog every known writing system.
 
 Core lineage:
 
@@ -249,7 +249,7 @@ Recommended stack:
 - TanStack Router if routes are needed for `/script/:id`.
 - shadcn/ui for panels, drawer, command menu, tabs, tooltip, and sheet.
 - D3 only where needed for timeline scale or custom layout support.
-- Static JSON/TS dataset at first; no backend required for MVP.
+- Static JSON/TS dataset; no backend required.
 
 Why React Flow:
 
@@ -277,44 +277,29 @@ Rules:
 - Sources should be attached at node and edge level.
 - Avoid showing complete copyrighted charts or artwork from references inside the product unless licensing is clear.
 
-## Implementation Phases
+## Build Scope
 
-Phase 1: Static interactive MVP
+Build the app as a single complete experience:
 
-- Set up React app.
-- Add curated dataset for 25-35 scripts.
-- Render lineage graph with custom nodes.
-- Implement selected-node inspector.
-- Add search, filters, legend, and responsive panel/sheet.
-
-Phase 2: Content depth
-
-- Expand to 60-80 scripts.
-- Add citations to each node and edge.
+- Set up the React app.
+- Add the curated script dataset.
+- Render the lineage graph with custom nodes.
+- Implement the selected-node inspector.
+- Add search, filters, legend, and responsive panel/sheet behavior.
+- Add citations to nodes and relationships.
 - Add character grids for major scripts.
-- Add compare mode.
-
-Phase 3: Learning modes
-
-- Guided tours: "From Hieroglyphs to Latin", "From Phoenician to Arabic", "Brahmi and South Asia".
-- Quizzes or recognition cards.
-- Timeline animation.
-
-Phase 4: Data validation
-
-- Add content schema validation.
-- Add source completeness checks.
-- Add visual regression tests for diagram and inspector states.
+- Include guided traces for important paths: "Hieroglyphs to Latin", "Phoenician to Arabic", and "Brahmi and South Asia".
+- Add content schema validation and basic visual checks for the diagram and inspector states.
 
 ## Open Decisions
 
-- Whether the MVP should focus only on alphabetic systems or include all major writing-system families.
+- Whether the app should focus only on alphabetic systems or include all major writing-system families.
 - Whether to use a historically vertical tree or a left-to-right timeline graph.
 - How scholarly the tone should be: general audience, museum label, or academic.
 - Whether to support multiple languages in UI/content.
 - Whether to show exact glyph evolution for A/B/C/D as a special overlay inspired by the Starkey reference.
 
-## Recommended MVP Decision
+## Recommended Scope Decision
 
 Build a general-audience, single-page interactive graph with a left-to-right timeline layout. Include alphabetic systems plus closely related abjads and abugidas because users will expect Arabic, Hebrew, and Brahmi-derived scripts. Treat non-related systems as separate clusters, not descendants of the same family.
 
