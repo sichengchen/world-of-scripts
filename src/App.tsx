@@ -698,7 +698,6 @@ function Legend() {
       <span>
         <i className="inline-block w-7 border-t-2 border-foreground" /> selected path
       </span>
-      <span className="text-foreground">only sourced relationships are connected</span>
     </div>
   )
 }
