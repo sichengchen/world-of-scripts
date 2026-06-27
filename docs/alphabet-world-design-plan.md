@@ -18,13 +18,13 @@ The app should feel like an interactive museum wall chart: dense, legible, schol
 
 Visual style:
 
-- Canvas-like off-white background with subtle grid or timeline guides.
-- Strong black or deep ink labels for readability.
-- Distinct branch colors by lineage family, not by arbitrary decoration.
+- shadcn-style white background with subtle neutral grid or timeline guides.
+- Strong black labels and neutral gray secondary text for readability.
+- Distinct branch weights and line styles before color; use neutral black/gray tones by default.
 - Compact rounded rectangles for nodes, 6-8px radius.
 - Fine connector lines with arrowheads or tapered curves.
 - Script glyph previews as the visual anchor of each node.
-- Keep the palette varied but restrained: ink, parchment, teal, ochre, brick, violet, and green accents. Avoid a single beige/brown-only museum palette.
+- Keep the palette close to shadcn defaults: black, white, neutral grays, semantic border/muted tokens, and minimal accent color.
 
 The Starkey reference should influence the overall mental model: visible branching, historical compression, and small glyph samples that make relationships tangible. The app should not copy the illustration; it should make the concept searchable, zoomable, and inspectable.
 
@@ -73,6 +73,8 @@ Mobile:
 ## Diagram Model
 
 Use a directed acyclic graph, not a strict tree. Script history includes disputed origins, inspiration, borrowing, and parallel development, so forcing a single parent would be misleading.
+
+Draw a connector only when the relationship is directly supported by the node/edge sources. Visual resemblance, broad literacy context, geographic proximity, or a speculative origin should not create an edge. Scripts with no supported relationship to the selected lineage stay visible as separate clusters.
 
 Relationship types:
 
@@ -275,6 +277,8 @@ Rules:
 - Disputed relationships must be styled and labeled as disputed.
 - "Alphabet" should not be used as a blanket label for abjads, abugidas, syllabaries, or logographic systems.
 - Sources should be attached at node and edge level.
+- Low-confidence relationships should not be rendered as graph edges.
+- Contextual scripts can be shown without connectors when the relationship is visual, modern, speculative, or only broadly cultural.
 - Avoid showing complete copyrighted charts or artwork from references inside the product unless licensing is clear.
 
 ## Build Scope
