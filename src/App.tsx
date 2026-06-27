@@ -47,11 +47,11 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
-import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type ViewMode } from './graph'
+import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
 
 validateContent()
 
-const nodeTypes = { scriptNode: ScriptGraphNode }
+const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode }
 
 type Filters = {
   type: 'all' | ScriptNode['type']
@@ -139,7 +139,9 @@ function AlphabetWorld() {
     selectScript(script.id)
   }
 
-  const handleNodeClick: NodeMouseHandler = (_, node) => selectScript(node.id)
+  const handleNodeClick: NodeMouseHandler = (_, node) => {
+    if (node.type === 'scriptNode') selectScript(node.id)
+  }
 
   return (
     <main className="grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[auto_1fr]">
@@ -166,16 +168,6 @@ function AlphabetWorld() {
         aria-label="Alphabet relationship explorer"
       >
         <div className="relative min-h-0 min-w-0 border-r max-[820px]:h-full max-[820px]:border-r-0">
-          <div
-            className="pointer-events-none absolute left-4 right-4 top-3 z-10 flex justify-between text-xs font-medium uppercase text-muted-foreground max-[820px]:hidden"
-            aria-hidden="true"
-          >
-            <span>3400 BCE</span>
-            <span>1000 BCE</span>
-            <span>0</span>
-            <span>1000 CE</span>
-            <span>Today</span>
-          </div>
           <ReactFlow
             nodes={nodes}
             edges={graphEdges}
@@ -441,6 +433,15 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         )}
       </div>
     </article>
+  )
+}
+
+function TimelineTickNode({ data }: { data: TimelineTickData }) {
+  return (
+    <div className="pointer-events-none flex w-[104px] flex-col items-center gap-2 text-xs font-medium uppercase text-muted-foreground">
+      <span>{data.label}</span>
+      <span className="h-8 border-l" aria-hidden="true" />
+    </div>
   )
 }
 
