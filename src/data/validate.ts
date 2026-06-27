@@ -13,6 +13,9 @@ export function validateContent() {
     if (!script.sampleGlyphs.length) errors.push(`${script.id} is missing sample glyphs`)
     if (!script.sources.length) errors.push(`${script.id} is missing sources`)
     if (!scriptTypes.includes(script.type)) errors.push(`${script.id} has an unknown type`)
+    if (script.type === 'alphabet' && (!script.characterRows || script.characterRows.length < 20)) {
+      errors.push(`${script.id} is an alphabet and must list the full alphabet in characterRows`)
+    }
     for (const visualGlyph of script.visualGlyphs ?? []) {
       if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)
       if (!visualGlyph.sourceLabel.trim() || !visualGlyph.sourceUrl.trim()) {

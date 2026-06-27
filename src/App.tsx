@@ -523,7 +523,7 @@ function Inspector({
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-2 max-[820px]:grid-cols-5" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
-            {characterRows.slice(0, 26).map((row, index) => (
+            {characterRows.map((row, index) => (
               <div
                 className="grid min-h-16 place-items-center gap-1 rounded-lg border bg-background px-1 py-2 text-center"
                 key={`${row.glyph}-${index}`}

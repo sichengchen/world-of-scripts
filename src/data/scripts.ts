@@ -137,14 +137,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Greek and Coptic'],
     sampleGlyphs: ['Α', 'Β', 'Γ', 'Δ', 'Ω'],
-    characterRows: [
-      { glyph: 'Α', label: 'alpha', transliteration: 'a' },
-      { glyph: 'Β', label: 'beta', transliteration: 'b' },
-      { glyph: 'Γ', label: 'gamma', transliteration: 'g' },
-      { glyph: 'Δ', label: 'delta', transliteration: 'd' },
-      { glyph: 'Ε', label: 'epsilon', transliteration: 'e' },
-      { glyph: 'Ω', label: 'omega', transliteration: 'o' },
-    ],
+    characterRows: 'Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'Adapted from Phoenician, Greek added systematic vowel letters and became a key ancestor of several European alphabets.',
     sources: [
@@ -163,6 +158,9 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['Old Italic'],
     sampleGlyphs: ['𐌀', '𐌁', '𐌂', '𐌃'],
+    characterRows: '𐌀 𐌁 𐌂 𐌃 𐌄 𐌅 𐌆 𐌇 𐌈 𐌉 𐌊 𐌋 𐌌 𐌍 𐌎 𐌏 𐌐 𐌑 𐌒 𐌓 𐌔 𐌕 𐌖 𐌗 𐌘 𐌙 𐌚'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A family of scripts used in ancient Italy, including Etruscan. It transmitted Greek-derived letterforms toward Latin and other Italic writing traditions.',
     sources: [
@@ -201,6 +199,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Coptic'],
     sampleGlyphs: ['Ⲁ', 'Ⲃ', 'Ⲅ', 'Ⲇ'],
+    characterRows: 'Ⲁ Ⲃ Ⲅ Ⲇ Ⲉ Ⲋ Ⲍ Ⲏ Ⲑ Ⲓ Ⲕ Ⲗ Ⲙ Ⲛ Ⲝ Ⲟ Ⲡ Ⲣ Ⲥ Ⲧ Ⲩ Ⲫ Ⲭ Ⲯ Ⲱ Ϣ Ϥ Ϧ Ϩ Ϫ Ϭ Ϯ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An Egyptian Christian script based largely on Greek letters with additional signs from Demotic for Egyptian sounds.',
     sources: [
@@ -219,6 +220,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Gothic'],
     sampleGlyphs: ['𐌰', '𐌱', '𐌲', '𐌳'],
+    characterRows: '𐌰 𐌱 𐌲 𐌳 𐌴 𐌵 𐌶 𐌷 𐌸 𐌹 𐌺 𐌻 𐌼 𐌽 𐌾 𐌿 𐍀 𐍁 𐍂 𐍃 𐍄 𐍅 𐍆 𐍇 𐍈 𐍉 𐍊'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A late antique alphabet created for the Gothic language, drawing primarily from Greek with influence from Latin and Runic forms.',
     sources: [
@@ -238,9 +242,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Cyrillic'],
     sampleGlyphs: ['А', 'Б', 'В', 'Г', 'Д'],
-    characterRows: ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М'].map((glyph) => ({
-      glyph,
-    })),
+    characterRows: 'А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Slavic alphabet developed in the orbit of Greek Christian literacy. It is used for Russian, Bulgarian, Serbian, Ukrainian, and many other languages.',
     sources: [
@@ -613,6 +617,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Armenian'],
     sampleGlyphs: ['Ա', 'Բ', 'Գ', 'Դ'],
+    characterRows: 'Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ և'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A Christian-era alphabet created for Armenian. It reflects regional influences while remaining a distinct script family.',
     sources: [
@@ -632,6 +639,9 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Georgian'],
     sampleGlyphs: ['ა', 'ბ', 'გ', 'დ'],
+    characterRows: 'ა ბ გ დ ე ვ ზ თ ი კ ლ მ ნ ო პ ჟ რ ს ტ უ ფ ქ ღ ყ შ ჩ ც ძ წ ჭ ხ ჯ ჰ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A distinctive Caucasian alphabet used for Georgian and related languages, with historical forms including Asomtavruli, Nuskhuri, and Mkhedruli.',
     sources: [
@@ -650,6 +660,9 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['Runic'],
     sampleGlyphs: ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ'],
+    characterRows: 'ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'A family of Germanic alphabets with debated letterform influences from Italic, Latin, and other Mediterranean scripts.',
     sources: [
@@ -668,6 +681,9 @@ export const scripts: ScriptNode[] = [
     direction: 'btt',
     unicodeBlock: ['Ogham'],
     sampleGlyphs: ['ᚁ', 'ᚂ', 'ᚃ', 'ᚄ'],
+    characterRows: 'ᚁ ᚂ ᚃ ᚄ ᚅ ᚆ ᚇ ᚈ ᚉ ᚊ ᚋ ᚌ ᚍ ᚎ ᚏ ᚐ ᚑ ᚒ ᚓ ᚔ'
+      .split(' ')
+      .map((glyph) => ({ glyph })),
     summary:
       'An early medieval alphabet used mainly for Primitive Irish inscriptions. It is graphically unlike Latin but historically belongs near literate contact with Roman Britain.',
     sources: [
