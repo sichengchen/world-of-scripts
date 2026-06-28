@@ -277,10 +277,6 @@ function createEdge(
         edge.relationship === 'influenced_by' || edge.relationship === 'disputed' ? '7 6' : undefined,
       opacity: selectedId || activeTraceIds.size ? (isTrace || isRelated ? 0.95 : 0.18) : 0.74,
     },
-    markerEnd: {
-      type: 'arrowclosed',
-      color: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
-    },
   }
 }
 
