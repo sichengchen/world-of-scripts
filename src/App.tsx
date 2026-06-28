@@ -14,12 +14,14 @@ import {
   ArrowLeft,
   ArrowUp,
   BookOpen,
-  Bug,
+  Check,
   CircleHelp,
   Compass,
   Filter,
+  Github,
   GitBranch,
   Info,
+  MessageSquare,
   Minus,
   Plus,
   RotateCcw,
@@ -31,6 +33,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -68,6 +78,13 @@ const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode 
 const letterBasedTypes: ScriptNode['type'][] = ['alphabet', 'abjad', 'abugida', 'featural']
 const representativeExampleLimit = 16
 const finiteInventoryTypes: ScriptNode['type'][] = [...letterBasedTypes, 'syllabary']
+const repositoryUrl = 'https://github.com/sichengchen/world-of-scripts'
+const feedbackUrl = `${repositoryUrl}/issues`
+const referenceLinks = [
+  { label: 'Wikipedia: Alphabet', url: 'https://en.wikipedia.org/wiki/Alphabet' },
+  { label: 'The ABCD Family Tree', url: 'https://starkeycomics.com/2018/12/11/the-abcd-family-tree/' },
+  { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+]
 const fallbackScriptFont = '"Noto Sans", "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", serif'
 const scriptFontStacks: Record<string, string> = {
   'egyptian-hieroglyphs': `"Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -383,6 +400,7 @@ function Toolbar({
   onSearchSelect: (script: ScriptNode) => void
 }) {
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   useEffect(() => {
     if (!searchOpen) return
@@ -397,9 +415,9 @@ function Toolbar({
 
   return (
     <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:gap-2 max-[820px]:p-2">
-      <div className="flex min-w-0 flex-1 items-center gap-2.5">
+      <div className="flex min-w-0 items-center gap-2.5">
         <div className="min-w-max font-semibold text-foreground">
-          <span>Alphabet World</span>
+          <span>World of Scripts</span>
         </div>
 
         <ToggleGroup
@@ -418,37 +436,15 @@ function Toolbar({
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
-
-        <div className="min-w-0 max-[820px]:hidden">
-          <Select
-            value={activeTrace ?? 'none'}
-            onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
-          >
-            <SelectTrigger className="w-[250px] max-w-full" aria-label="Guided trace">
-              <Compass aria-hidden="true" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
-              <SelectGroup>
-                <SelectItem value="none">No guided trace</SelectItem>
-                {guidedTraces.map((trace) => (
-                  <SelectItem key={trace.id} value={trace.id}>
-                    {trace.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
 
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
         <div
           className={cn(
-            'relative h-9 shrink-0 transition-[width,max-width,flex-basis] duration-200 ease-out',
+            'relative h-8 shrink-0 transition-[width,max-width,flex-basis] duration-200 ease-out',
             searchOpen
               ? 'w-[300px] max-w-[32vw] max-[820px]:order-3 max-[820px]:w-full max-[820px]:basis-full max-[820px]:max-w-none'
-              : 'w-9',
+              : 'w-8',
           )}
         >
           <Button
@@ -471,7 +467,7 @@ function Toolbar({
             <Search aria-hidden="true" className="size-4 shrink-0" />
             <Input
               ref={searchInputRef}
-              className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
+              className="h-6 border-0 px-0 shadow-none focus-visible:ring-0"
               aria-label="Search scripts"
               placeholder="Search scripts"
               value={query}
@@ -511,6 +507,43 @@ function Toolbar({
             </div>
           )}
         </div>
+
+        <Popover open={guideOpen} onOpenChange={setGuideOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={guideOpen}>
+              <Compass data-icon="inline-start" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-64 p-1">
+            <div className="flex flex-col gap-1">
+              <Button
+                className="w-full justify-between"
+                variant={activeTrace === null ? 'secondary' : 'ghost'}
+                onClick={() => {
+                  setActiveTrace(null)
+                  setGuideOpen(false)
+                }}
+              >
+                No guided trace
+                {activeTrace === null && <Check data-icon="inline-end" />}
+              </Button>
+              {guidedTraces.map((trace) => (
+                <Button
+                  key={trace.id}
+                  className="w-full justify-between"
+                  variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
+                  onClick={() => {
+                    setActiveTrace(trace.id)
+                    setGuideOpen(false)
+                  }}
+                >
+                  {trace.label}
+                  {activeTrace === trace.id && <Check data-icon="inline-end" />}
+                </Button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
 
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
@@ -553,11 +586,51 @@ function Toolbar({
         </Popover>
 
         <Button variant="outline" className="max-[820px]:hidden" asChild>
-          <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
-            <Bug data-icon="inline-start" />
-            Report Issues
+          <a href={feedbackUrl} target="_blank" rel="noreferrer">
+            <MessageSquare data-icon="inline-start" />
+            Feedback
           </a>
         </Button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="icon" aria-label="About World of Scripts">
+              <Info data-icon="inline-start" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>World of Scripts</DialogTitle>
+              <DialogDescription>
+                An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 text-sm">
+              <section className="grid gap-2">
+                <h2 className="font-medium">Project</h2>
+                <Button variant="outline" asChild>
+                  <a href={repositoryUrl} target="_blank" rel="noreferrer">
+                    <Github data-icon="inline-start" />
+                    sichengchen/world-of-scripts
+                  </a>
+                </Button>
+              </section>
+              <section className="grid gap-2">
+                <h2 className="font-medium">References</h2>
+                <div className="flex flex-col gap-1.5">
+                  {referenceLinks.map((link) => (
+                    <Button key={link.url} variant="ghost" className="justify-start" asChild>
+                      <a href={link.url} target="_blank" rel="noreferrer">
+                        {link.label}
+                        <ArrowRight data-icon="inline-end" />
+                      </a>
+                    </Button>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </header>
   )

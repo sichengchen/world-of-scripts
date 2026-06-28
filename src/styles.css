@@ -88,7 +88,8 @@ body,
 
 .react-flow__edge.guide-edge.animated .react-flow__edge-path {
   stroke-dasharray: none !important;
-  animation: guide-path-pulse 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 2px oklch(0 0 0 / 26%));
+  animation: guide-path-pulse 900ms ease-in-out infinite;
 }
 
 .script-node {
@@ -172,11 +173,13 @@ body,
 @keyframes guide-path-pulse {
   0%,
   100% {
-    stroke-opacity: 0.72;
+    stroke-opacity: 0.62;
+    stroke-width: 1.8;
   }
 
   50% {
     stroke-opacity: 1;
+    stroke-width: 2.8;
   }
 }
 
