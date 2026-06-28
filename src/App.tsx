@@ -48,7 +48,16 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
-import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
+import {
+  createGraph,
+  getRelatedIds,
+  getTypeColor,
+  SCRIPT_NODE_HEIGHT,
+  SCRIPT_NODE_WIDTH,
+  type ScriptNodeData,
+  type TimelineTickData,
+  type ViewMode,
+} from './graph'
 
 validateContent()
 
@@ -80,7 +89,7 @@ function AlphabetWorld() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const { fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
 
-  const activeTraceIds = useMemo(
+  const activeTraceIds = useMemo<Set<string>>(
     () => new Set(guidedTraces.find((trace) => trace.id === activeTrace)?.nodeIds ?? []),
     [activeTrace],
   )
@@ -124,9 +133,38 @@ function AlphabetWorld() {
   }, [query])
 
   useEffect(() => {
-    const handle = window.setTimeout(() => fitView({ padding: 0.18, duration: 600 }), 80)
+    const handle = window.setTimeout(() => {
+      if (viewMode === 'lineage') {
+        if (activeTraceIds.size === 0) return
+
+        const traceNodes = nodes.filter((node) => activeTraceIds.has(node.id))
+        if (traceNodes.length === 0) return
+
+        const bounds = traceNodes.reduce(
+          (current, node) => ({
+            minX: Math.min(current.minX, node.position.x),
+            minY: Math.min(current.minY, node.position.y),
+            maxX: Math.max(current.maxX, node.position.x + SCRIPT_NODE_WIDTH),
+            maxY: Math.max(current.maxY, node.position.y + SCRIPT_NODE_HEIGHT),
+          }),
+          { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
+        )
+        const graphRect = document.querySelector('.react-flow')?.getBoundingClientRect()
+        const width = bounds.maxX - bounds.minX
+        const height = bounds.maxY - bounds.minY
+        const zoom = Math.max(
+          0.44,
+          Math.min(1.05, ((graphRect?.width ?? 1000) * 0.86) / width, ((graphRect?.height ?? 700) * 0.86) / height),
+        )
+
+        setCenter((bounds.minX + bounds.maxX) / 2, (bounds.minY + bounds.maxY) / 2, { zoom, duration: 600 })
+        return
+      }
+
+      fitView({ padding: 0.18, duration: 600 })
+    }, 80)
     return () => window.clearTimeout(handle)
-  }, [fitView, viewMode, filters])
+  }, [activeTrace, activeTraceIds, filters, fitView, nodes, setCenter, viewMode])
 
   function selectScript(id: string) {
     const node = nodes.find((item) => item.id === id)
