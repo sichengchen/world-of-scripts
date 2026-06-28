@@ -19,6 +19,8 @@ import {
   Filter,
   GitBranch,
   Info,
+  Minus,
+  Plus,
   RotateCcw,
   Search,
   Waypoints,
@@ -269,10 +271,7 @@ function AlphabetWorld() {
         setQuery={setQuery}
         setViewMode={setViewMode}
         viewMode={viewMode}
-        onFit={() => fitView({ padding: 0.18, duration: 600 })}
         onSearchSelect={searchSelect}
-        onZoomIn={() => zoomIn({ duration: 250 })}
-        onZoomOut={() => zoomOut({ duration: 250 })}
       />
 
       <section
@@ -297,6 +296,11 @@ function AlphabetWorld() {
             <Background color="var(--border)" gap={28} size={1} variant={BackgroundVariant.Dots} />
           </ReactFlow>
           <Legend />
+          <CanvasControls
+            onFit={() => fitView({ padding: 0.18, duration: 600 })}
+            onZoomIn={() => zoomIn({ duration: 250 })}
+            onZoomOut={() => zoomOut({ duration: 250 })}
+          />
         </div>
 
         <Inspector
@@ -322,10 +326,7 @@ function Toolbar({
   setQuery,
   setViewMode,
   viewMode,
-  onFit,
   onSearchSelect,
-  onZoomIn,
-  onZoomOut,
 }: {
   activeTrace: string | null
   filters: Filters
@@ -338,150 +339,166 @@ function Toolbar({
   setQuery: (query: string) => void
   setViewMode: (mode: ViewMode) => void
   viewMode: ViewMode
-  onFit: () => void
   onSearchSelect: (script: ScriptNode) => void
+}) {
+  return (
+    <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:gap-2 max-[820px]:p-2">
+      <div className="flex min-w-0 flex-1 items-center gap-2.5">
+        <div className="min-w-max font-semibold text-foreground">
+          <span>Alphabet World</span>
+        </div>
+
+        <ToggleGroup
+          type="single"
+          value={viewMode}
+          onValueChange={(mode) => mode && setViewMode(mode as ViewMode)}
+          variant="outline"
+          size="sm"
+          spacing={0}
+          aria-label="View mode"
+          className="max-[820px]:hidden"
+        >
+          {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
+            <ToggleGroupItem key={mode} value={mode}>
+              {mode === 'az' ? 'A-Z' : capitalize(mode)}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+
+        <div className="min-w-0 max-[820px]:hidden">
+          <Select
+            value={activeTrace ?? 'none'}
+            onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
+          >
+            <SelectTrigger className="w-[250px] max-w-full" aria-label="Guided trace">
+              <Compass aria-hidden="true" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
+              <SelectGroup>
+                <SelectItem value="none">No guided trace</SelectItem>
+                {guidedTraces.map((trace) => (
+                  <SelectItem key={trace.id} value={trace.id}>
+                    {trace.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
+        <div className="relative flex h-9 w-[300px] max-w-[32vw] items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-3 max-[820px]:basis-full max-[820px]:max-w-none">
+          <Search aria-hidden="true" className="size-4 shrink-0" />
+          <Input
+            className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
+            aria-label="Search scripts"
+            placeholder="Search scripts"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {query && (
+            <Button variant="ghost" size="icon-xs" aria-label="Clear search" onClick={() => setQuery('')}>
+              <X data-icon="inline-start" />
+            </Button>
+          )}
+          {matchingScripts.length > 0 && (
+            <div
+              className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
+              role="listbox"
+              aria-label="Search results"
+            >
+              {matchingScripts.map((script) => (
+                <Button
+                  key={script.id}
+                  className="w-full justify-between rounded-none"
+                  variant="ghost"
+                  onClick={() => onSearchSelect(script)}
+                >
+                  <span>{script.name}</span>
+                  <Badge variant="secondary">{script.type}</Badge>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
+              <Filter data-icon="inline-start" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="filter-popover">
+            <FilterSelect
+              label="Type"
+              value={filters.type}
+              onValueChange={(type) => setFilters({ ...filters, type: type as Filters['type'] })}
+              options={[
+                { value: 'all', label: 'All types' },
+                ...scriptTypes.map((type) => ({ value: type, label: capitalize(type) })),
+              ]}
+            />
+            <FilterSelect
+              label="Region"
+              value={filters.region}
+              onValueChange={(region) => setFilters({ ...filters, region })}
+              options={[
+                { value: 'all', label: 'All regions' },
+                ...regions.map((region) => ({ value: region, label: region })),
+              ]}
+            />
+            <FilterSelect
+              label="Status"
+              value={filters.status}
+              onValueChange={(status) => setFilters({ ...filters, status: status as Filters['status'] })}
+              options={[
+                { value: 'all', label: 'All statuses' },
+                { value: 'living', label: 'Living' },
+                { value: 'historical', label: 'Historical' },
+                { value: 'revived', label: 'Revived' },
+                { value: 'constructed', label: 'Constructed' },
+              ]}
+            />
+          </PopoverContent>
+        </Popover>
+
+        <Button variant="outline" className="max-[820px]:hidden" asChild>
+          <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
+            <Bug data-icon="inline-start" />
+            Report Issues
+          </a>
+        </Button>
+      </div>
+    </header>
+  )
+}
+
+function CanvasControls({
+  onFit,
+  onZoomIn,
+  onZoomOut,
+}: {
+  onFit: () => void
   onZoomIn: () => void
   onZoomOut: () => void
 }) {
   return (
-    <header className="relative z-20 grid grid-cols-[auto_auto_minmax(220px,260px)_minmax(220px,1fr)_auto_auto_auto] items-center gap-2.5 border-b bg-background px-3.5 py-2.5 max-[1160px]:grid-cols-[auto_auto_auto_minmax(220px,1fr)_auto_auto] max-[820px]:grid-cols-[1fr_auto] max-[820px]:gap-2 max-[820px]:p-2">
-      <div className="min-w-max font-semibold text-foreground">
-        <span>Alphabet World</span>
-      </div>
-
-      <ToggleGroup
-        type="single"
-        value={viewMode}
-        onValueChange={(mode) => mode && setViewMode(mode as ViewMode)}
-        variant="outline"
-        size="sm"
-        spacing={0}
-        aria-label="View mode"
-        className="max-[820px]:hidden"
-      >
-        {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
-          <ToggleGroupItem key={mode} value={mode}>
-            {mode === 'az' ? 'A-Z' : capitalize(mode)}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-
-      <div className="min-w-0 max-[820px]:hidden">
-        <Select
-          value={activeTrace ?? 'none'}
-          onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
-        >
-          <SelectTrigger className="w-[260px] max-w-full" aria-label="Guided trace">
-            <Compass aria-hidden="true" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
-            <SelectGroup>
-              <SelectItem value="none">No guided trace</SelectItem>
-              {guidedTraces.map((trace) => (
-                <SelectItem key={trace.id} value={trace.id}>
-                  {trace.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="relative flex h-9 min-w-0 items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-2 max-[820px]:col-span-full">
-        <Search aria-hidden="true" className="size-4 shrink-0" />
-        <Input
-          className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
-          aria-label="Search scripts"
-          placeholder="Search scripts"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        {query && (
-          <Button variant="ghost" size="icon-xs" aria-label="Clear search" onClick={() => setQuery('')}>
-            <X data-icon="inline-start" />
-          </Button>
-        )}
-        {matchingScripts.length > 0 && (
-          <div
-            className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
-            role="listbox"
-            aria-label="Search results"
-          >
-            {matchingScripts.map((script) => (
-              <Button
-                key={script.id}
-                className="w-full justify-between rounded-none"
-                variant="ghost"
-                onClick={() => onSearchSelect(script)}
-              >
-                <span>{script.name}</span>
-                <Badge variant="secondary">{script.type}</Badge>
-              </Button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
-            <Filter data-icon="inline-start" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="filter-popover">
-          <FilterSelect
-            label="Type"
-            value={filters.type}
-            onValueChange={(type) => setFilters({ ...filters, type: type as Filters['type'] })}
-            options={[
-              { value: 'all', label: 'All types' },
-              ...scriptTypes.map((type) => ({ value: type, label: capitalize(type) })),
-            ]}
-          />
-          <FilterSelect
-            label="Region"
-            value={filters.region}
-            onValueChange={(region) => setFilters({ ...filters, region })}
-            options={[
-              { value: 'all', label: 'All regions' },
-              ...regions.map((region) => ({ value: region, label: region })),
-            ]}
-          />
-          <FilterSelect
-            label="Status"
-            value={filters.status}
-            onValueChange={(status) => setFilters({ ...filters, status: status as Filters['status'] })}
-            options={[
-              { value: 'all', label: 'All statuses' },
-              { value: 'living', label: 'Living' },
-              { value: 'historical', label: 'Historical' },
-              { value: 'revived', label: 'Revived' },
-              { value: 'constructed', label: 'Constructed' },
-            ]}
-          />
-        </PopoverContent>
-      </Popover>
-
-      <div className="inline-flex items-center gap-1 max-[820px]:hidden" aria-label="Canvas controls">
-        <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
-          -
-        </Button>
-        <Button variant="outline" size="icon" aria-label="Reset view" onClick={onFit}>
-          <RotateCcw data-icon="inline-start" />
-        </Button>
-        <Button variant="outline" size="icon" aria-label="Zoom in" onClick={onZoomIn}>
-          +
-        </Button>
-      </div>
-
-      <Button variant="outline" className="max-[820px]:hidden" asChild>
-        <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
-          <Bug data-icon="inline-start" />
-          Report Issues
-        </a>
+    <div
+      className="absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 max-[820px]:bottom-[calc(48%+1rem)] max-[820px]:right-3"
+      aria-label="Canvas controls"
+    >
+      <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
+        <Minus data-icon="inline-start" />
       </Button>
-    </header>
+      <Button variant="outline" size="icon" aria-label="Reset view" onClick={onFit}>
+        <RotateCcw data-icon="inline-start" />
+      </Button>
+      <Button variant="outline" size="icon" aria-label="Zoom in" onClick={onZoomIn}>
+        <Plus data-icon="inline-start" />
+      </Button>
+    </div>
   )
 }
 
