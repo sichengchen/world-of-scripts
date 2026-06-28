@@ -5,8 +5,10 @@ import {
   Position,
   ReactFlow,
   ReactFlowProvider,
+  getViewportForBounds,
   useReactFlow,
   type NodeMouseHandler,
+  type Rect,
 } from '@xyflow/react'
 import {
   ArrowRight,
@@ -30,7 +32,7 @@ import {
   Waypoints,
   X,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -76,6 +78,11 @@ import {
 validateContent()
 
 const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode }
+const flowMinZoom = 0.28
+const flowMaxZoom = 1.45
+const mobileBreakpoint = 820
+const mobileSheetRatio = 0.48
+const mobileSheetGap = 12
 const letterBasedTypes: ScriptNode['type'][] = ['alphabet', 'abjad', 'abugida', 'featural']
 const representativeExampleLimit = 16
 const finiteInventoryTypes: ScriptNode['type'][] = [...letterBasedTypes, 'syllabary']
@@ -219,7 +226,8 @@ function AlphabetWorld() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [inspectorExpanded, setInspectorExpanded] = useState(false)
-  const { fitBounds, fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
+  const flowPaneRef = useRef<HTMLDivElement>(null)
+  const { fitBounds, fitView, setCenter, setViewport, zoomIn, zoomOut } = useReactFlow()
 
   const activeTraceIds = useMemo<Set<string>>(
     () => new Set(guidedTraces.find((trace) => trace.id === activeTrace)?.nodeIds ?? []),
@@ -252,6 +260,17 @@ function AlphabetWorld() {
 
     return { x: left, y: top, width: right - left, height: bottom - top }
   }, [activeTraceIds, nodes])
+  const visibleGraphBounds = useMemo(() => {
+    const scriptNodes = nodes.filter((node) => node.type === 'scriptNode')
+    if (!scriptNodes.length) return null
+
+    const left = Math.min(...scriptNodes.map((node) => node.position.x))
+    const top = Math.min(...scriptNodes.map((node) => node.position.y))
+    const right = Math.max(...scriptNodes.map((node) => node.position.x + SCRIPT_NODE_WIDTH))
+    const bottom = Math.max(...scriptNodes.map((node) => node.position.y + SCRIPT_NODE_HEIGHT))
+
+    return { x: left, y: top, width: right - left, height: bottom - top }
+  }, [nodes])
 
   const matchingScripts = useMemo(() => {
     const normalized = query.trim().toLowerCase()
@@ -275,22 +294,100 @@ function AlphabetWorld() {
       .slice(0, 5)
   }, [query])
 
+  const getMobileFlowSize = useCallback((reserveInspector = false) => {
+    const pane = flowPaneRef.current
+    if (!pane || !window.matchMedia(`(max-width: ${mobileBreakpoint}px)`).matches) return null
+
+    const rect = pane.getBoundingClientRect()
+    const reservedHeight = selectedScript || reserveInspector ? window.innerHeight * mobileSheetRatio + mobileSheetGap : 0
+    const availableHeight = Math.max(180, rect.height - reservedHeight)
+
+    return { width: rect.width, height: availableHeight }
+  }, [selectedScript])
+
+  const fitBoundsForLayout = useCallback(
+    (bounds: Rect, padding: number, duration: number) => {
+      const mobileSize = getMobileFlowSize()
+
+      if (!mobileSize) {
+        fitBounds(bounds, { padding, duration })
+        return
+      }
+
+      const viewport = getViewportForBounds(bounds, mobileSize.width, mobileSize.height, flowMinZoom, flowMaxZoom, padding)
+      setViewport(viewport, { duration })
+    },
+    [fitBounds, getMobileFlowSize, setViewport],
+  )
+
+  const fitGraphForLayout = useCallback(
+    (duration = 600) => {
+      if (!visibleGraphBounds) {
+        fitView({ padding: 0.18, duration })
+        return
+      }
+
+      fitBoundsForLayout(visibleGraphBounds, 0.18, duration)
+    },
+    [fitBoundsForLayout, fitView, visibleGraphBounds],
+  )
+
+  const centerNodeForLayout = useCallback(
+    (x: number, y: number, zoom: number, duration: number) => {
+      const mobileSize = getMobileFlowSize(true)
+
+      if (!mobileSize) {
+        setCenter(x, y, { zoom, duration })
+        return
+      }
+
+      setViewport(
+        {
+          x: mobileSize.width / 2 - x * zoom,
+          y: mobileSize.height / 2 - y * zoom,
+          zoom,
+        },
+        { duration },
+      )
+    },
+    [getMobileFlowSize, setCenter, setViewport],
+  )
+
+  const resetViewForLayout = useCallback(
+    (duration = 600) => {
+      const mobileSize = getMobileFlowSize()
+
+      if (mobileSize) {
+        if (activeTrace && activeTraceBounds) {
+          fitBoundsForLayout(activeTraceBounds, 0.24, duration)
+          return
+        }
+
+        const selectedNode = selectedId ? nodes.find((node) => node.id === selectedId) : null
+        if (selectedNode) {
+          centerNodeForLayout(selectedNode.position.x + SCRIPT_NODE_WIDTH / 2, selectedNode.position.y + SCRIPT_NODE_HEIGHT / 2, 1.05, duration)
+          return
+        }
+      }
+
+      fitGraphForLayout(duration)
+    },
+    [activeTrace, activeTraceBounds, centerNodeForLayout, fitBoundsForLayout, fitGraphForLayout, getMobileFlowSize, nodes, selectedId],
+  )
+
   useEffect(() => {
-    if (activeTrace) return undefined
-    const handle = window.setTimeout(() => fitView({ padding: 0.18, duration: 600 }), 80)
+    if (activeTrace || selectedId) return undefined
+    const handle = window.setTimeout(() => fitGraphForLayout(600), 80)
     return () => window.clearTimeout(handle)
-  }, [activeTrace, fitView, viewMode, filters])
+  }, [activeTrace, fitGraphForLayout, selectedId, viewMode, filters])
 
   useEffect(() => {
     if (!activeTrace || !activeTraceBounds) return undefined
     const handle = window.setTimeout(() => {
-      fitBounds(activeTraceBounds, {
-        padding: 0.24,
-        duration: 650,
-      })
+      fitBoundsForLayout(activeTraceBounds, 0.24, 650)
     }, 80)
     return () => window.clearTimeout(handle)
-  }, [activeTrace, activeTraceBounds, fitBounds, viewMode])
+  }, [activeTrace, activeTraceBounds, fitBoundsForLayout, viewMode])
 
   useEffect(() => {
     setInspectorExpanded(false)
@@ -301,7 +398,7 @@ function AlphabetWorld() {
     setSelectedId(id)
     setActiveTrace(null)
     if (node) {
-      setCenter(node.position.x + 94, node.position.y + 56, { zoom: 1.05, duration: 550 })
+      centerNodeForLayout(node.position.x + 94, node.position.y + 56, 1.05, 550)
     }
   }
 
@@ -338,15 +435,15 @@ function AlphabetWorld() {
         className="grid min-h-0 grid-cols-[minmax(0,1fr)_390px] overflow-hidden max-[820px]:relative max-[820px]:block"
         aria-label="Alphabet relationship explorer"
       >
-        <div className="relative min-h-0 min-w-0 border-r max-[820px]:h-full max-[820px]:border-r-0">
+        <div ref={flowPaneRef} className="relative min-h-0 min-w-0 border-r max-[820px]:h-full max-[820px]:border-r-0">
           <ReactFlow
             nodes={nodes}
             edges={graphEdges}
             nodeTypes={nodeTypes}
             onNodeClick={handleNodeClick}
             fitView
-            minZoom={0.28}
-            maxZoom={1.45}
+            minZoom={flowMinZoom}
+            maxZoom={flowMaxZoom}
             proOptions={{ hideAttribution: true }}
             nodesDraggable={false}
             nodesConnectable={false}
@@ -355,10 +452,14 @@ function AlphabetWorld() {
           >
             <Background color="var(--border)" gap={28} size={1} variant={BackgroundVariant.Dots} />
           </ReactFlow>
-          <Legend inspectorExpanded={Boolean(selectedScript && inspectorExpanded)} />
-          <CanvasControls
+          <Legend
+            inspectorDocked={Boolean(selectedScript && !inspectorExpanded)}
             inspectorExpanded={Boolean(selectedScript && inspectorExpanded)}
-            onFit={() => fitView({ padding: 0.18, duration: 600 })}
+          />
+          <CanvasControls
+            inspectorDocked={Boolean(selectedScript && !inspectorExpanded)}
+            inspectorExpanded={Boolean(selectedScript && inspectorExpanded)}
+            onFit={() => resetViewForLayout(600)}
             onZoomIn={() => zoomIn({ duration: 250 })}
             onZoomOut={() => zoomOut({ duration: 250 })}
           />
@@ -653,11 +754,13 @@ function Toolbar({
 }
 
 function CanvasControls({
+  inspectorDocked,
   inspectorExpanded,
   onFit,
   onZoomIn,
   onZoomOut,
 }: {
+  inspectorDocked: boolean
   inspectorExpanded: boolean
   onFit: () => void
   onZoomIn: () => void
@@ -667,7 +770,8 @@ function CanvasControls({
     <div
       className={cn(
         'absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 max-[820px]:right-3',
-        inspectorExpanded ? 'max-[820px]:hidden' : 'max-[820px]:bottom-[calc(48dvh+1rem)]',
+        inspectorExpanded && 'max-[820px]:hidden',
+        inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
       aria-label="Canvas controls"
     >
@@ -1098,12 +1202,19 @@ function RelationGroup({
   )
 }
 
-function Legend({ inspectorExpanded }: { inspectorExpanded: boolean }) {
+function Legend({
+  inspectorDocked,
+  inspectorExpanded,
+}: {
+  inspectorDocked: boolean
+  inspectorExpanded: boolean
+}) {
   return (
     <div
       className={cn(
         'group absolute bottom-4 left-4 z-10 inline-flex items-center whitespace-nowrap rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground shadow-sm transition-all focus-within:px-3 hover:px-3 max-[820px]:left-3',
-        inspectorExpanded ? 'max-[820px]:hidden' : 'max-[820px]:bottom-[calc(48dvh+1rem)]',
+        inspectorExpanded && 'max-[820px]:hidden',
+        inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
       aria-label="Relationship legend"
       tabIndex={0}
