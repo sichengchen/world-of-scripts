@@ -194,7 +194,7 @@ export const scripts: ScriptNode[] = [
     sampleGlyphs: ['A', 'B', 'C', 'D', 'E', 'F'],
     characterRows: characterRows(
       'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').join(' '),
-      'a|bee|cee|dee|e|ef|gee|aitch|i|jay|kay|el|em|en|o|pee|cue|ar|ess|tee|u|vee|double u|ex|wye|zed / zee',
+      undefined,
       'abcdefghijklmnopqrstuvwxyz'.split('').join(' '),
     ),
     summary:
