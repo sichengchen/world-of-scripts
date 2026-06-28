@@ -443,8 +443,31 @@ function Toolbar({
       </div>
 
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
-        {searchOpen ? (
-          <div className="relative flex h-9 w-[300px] max-w-[32vw] items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-3 max-[820px]:basis-full max-[820px]:max-w-none">
+        <div
+          className={cn(
+            'relative h-9 shrink-0 transition-[width,max-width,flex-basis] duration-200 ease-out',
+            searchOpen
+              ? 'w-[300px] max-w-[32vw] max-[820px]:order-3 max-[820px]:w-full max-[820px]:basis-full max-[820px]:max-w-none'
+              : 'w-9',
+          )}
+        >
+          <Button
+            className={cn('absolute inset-0 transition-opacity duration-150', searchOpen && 'pointer-events-none opacity-0')}
+            variant="outline"
+            size="icon"
+            aria-label="Search scripts"
+            aria-expanded={searchOpen}
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search data-icon="inline-start" />
+          </Button>
+          <div
+            className={cn(
+              'absolute inset-0 flex items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground transition-opacity duration-150',
+              searchOpen ? 'opacity-100 delay-100' : 'pointer-events-none opacity-0',
+            )}
+            aria-hidden={!searchOpen}
+          >
             <Search aria-hidden="true" className="size-4 shrink-0" />
             <Input
               ref={searchInputRef}
@@ -453,38 +476,41 @@ function Toolbar({
               placeholder="Search scripts"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
+              tabIndex={searchOpen ? undefined : -1}
             />
-            <Button variant="ghost" size="icon-xs" aria-label="Close search" onClick={closeSearch}>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              aria-label="Close search"
+              onClick={closeSearch}
+              tabIndex={searchOpen ? undefined : -1}
+            >
               <X data-icon="inline-start" />
             </Button>
-            {matchingScripts.length > 0 && (
-              <div
-                className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
-                role="listbox"
-                aria-label="Search results"
-              >
-                {matchingScripts.map((script) => (
-                  <Button
-                    key={script.id}
-                    className="w-full justify-between rounded-none"
-                    variant="ghost"
-                    onClick={() => {
-                      onSearchSelect(script)
-                      setSearchOpen(false)
-                    }}
-                  >
-                    <span>{script.name}</span>
-                    <Badge variant="secondary">{script.type}</Badge>
-                  </Button>
-                ))}
-              </div>
-            )}
           </div>
-        ) : (
-          <Button variant="outline" size="icon" aria-label="Search scripts" onClick={() => setSearchOpen(true)}>
-            <Search data-icon="inline-start" />
-          </Button>
-        )}
+          {searchOpen && matchingScripts.length > 0 && (
+            <div
+              className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
+              role="listbox"
+              aria-label="Search results"
+            >
+              {matchingScripts.map((script) => (
+                <Button
+                  key={script.id}
+                  className="w-full justify-between rounded-none"
+                  variant="ghost"
+                  onClick={() => {
+                    onSearchSelect(script)
+                    setSearchOpen(false)
+                  }}
+                >
+                  <span>{script.name}</span>
+                  <Badge variant="secondary">{script.type}</Badge>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
