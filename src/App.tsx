@@ -11,8 +11,8 @@ import {
 import {
   ArrowRight,
   ArrowDown,
-  ArrowDownUp,
   ArrowLeft,
+  ArrowUp,
   BookOpen,
   Bug,
   Compass,
@@ -795,7 +795,7 @@ function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
       : direction === 'ttb'
         ? ArrowDown
         : direction === 'btt'
-          ? ArrowDownUp
+          ? ArrowUp
           : direction === 'mixed'
             ? Waypoints
             : ArrowRight
