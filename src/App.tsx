@@ -236,12 +236,51 @@ function Toolbar({
   onZoomOut: () => void
 }) {
   return (
-    <header className="relative z-20 grid grid-cols-[auto_minmax(210px,360px)_auto_auto_minmax(240px,1fr)_auto] items-center gap-2.5 border-b bg-background px-3.5 py-2.5 max-[1160px]:grid-cols-[auto_minmax(180px,1fr)_auto_auto_auto] max-[820px]:grid-cols-[1fr_auto_auto] max-[820px]:gap-2 max-[820px]:p-2">
+    <header className="relative z-20 grid grid-cols-[auto_auto_minmax(220px,260px)_minmax(220px,1fr)_auto_auto_auto] items-center gap-2.5 border-b bg-background px-3.5 py-2.5 max-[1160px]:grid-cols-[auto_auto_auto_minmax(220px,1fr)_auto_auto] max-[820px]:grid-cols-[1fr_auto] max-[820px]:gap-2 max-[820px]:p-2">
       <div className="min-w-max font-semibold text-foreground">
         <span>Alphabet World</span>
       </div>
 
-      <div className="relative flex h-9 items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-2 max-[820px]:col-span-full">
+      <ToggleGroup
+        type="single"
+        value={viewMode}
+        onValueChange={(mode) => mode && setViewMode(mode as ViewMode)}
+        variant="outline"
+        size="sm"
+        spacing={0}
+        aria-label="View mode"
+        className="max-[820px]:hidden"
+      >
+        {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
+          <ToggleGroupItem key={mode} value={mode}>
+            {mode === 'az' ? 'A-Z' : capitalize(mode)}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+
+      <div className="min-w-0 max-[820px]:hidden">
+        <Select
+          value={activeTrace ?? 'none'}
+          onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
+        >
+          <SelectTrigger className="w-[260px] max-w-full" aria-label="Guided trace">
+            <Compass aria-hidden="true" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
+            <SelectGroup>
+              <SelectItem value="none">No guided trace</SelectItem>
+              {guidedTraces.map((trace) => (
+                <SelectItem key={trace.id} value={trace.id}>
+                  {trace.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="relative flex h-9 min-w-0 items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-2 max-[820px]:col-span-full">
         <Search aria-hidden="true" className="size-4 shrink-0" />
         <Input
           className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
@@ -316,52 +355,7 @@ function Toolbar({
         </PopoverContent>
       </Popover>
 
-      <ToggleGroup
-        type="single"
-        value={viewMode}
-        onValueChange={(mode) => mode && setViewMode(mode as ViewMode)}
-        variant="outline"
-        size="sm"
-        spacing={0}
-        aria-label="View mode"
-        className="max-[820px]:hidden"
-      >
-        {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
-          <ToggleGroupItem key={mode} value={mode}>
-            {mode === 'az' ? 'A-Z' : capitalize(mode)}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-
-      <div className="min-w-0 max-[1160px]:col-span-full max-[820px]:hidden">
-        <Select
-          value={activeTrace ?? 'none'}
-          onValueChange={(traceId) => setActiveTrace(traceId === 'none' ? null : traceId)}
-        >
-          <SelectTrigger className="w-[260px] max-w-full" aria-label="Guided trace">
-            <Compass aria-hidden="true" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
-            <SelectGroup>
-              <SelectItem value="none">No guided trace</SelectItem>
-              {guidedTraces.map((trace) => (
-                <SelectItem key={trace.id} value={trace.id}>
-                  {trace.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-
       <div className="inline-flex items-center gap-1 max-[820px]:hidden" aria-label="Canvas controls">
-        <Button variant="outline" asChild>
-          <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
-            <Bug data-icon="inline-start" />
-            Report Issues
-          </a>
-        </Button>
         <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
           -
         </Button>
@@ -372,6 +366,13 @@ function Toolbar({
           +
         </Button>
       </div>
+
+      <Button variant="outline" className="max-[820px]:hidden" asChild>
+        <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
+          <Bug data-icon="inline-start" />
+          Report Issues
+        </a>
+      </Button>
     </header>
   )
 }
