@@ -219,6 +219,7 @@ export function createGraph({
         type: 'scriptNode',
         position: getPosition(script, viewMode, index),
         data: { script, isSelected, isRelated, isTraced, dimmed },
+        zIndex: isSelected || isTraced ? 12 : 10,
       }
     })
   const tickNodes: Node<TimelineTickData>[] =
@@ -268,11 +269,11 @@ function createEdge(
     targetHandle: 'target',
     type: 'default',
     animated: isTrace,
-    zIndex: isTrace ? 20 : isRelated ? 12 : 0,
+    zIndex: isTrace ? 2 : isRelated ? 1 : 0,
     label: edge.relationship === 'disputed' ? 'disputed' : undefined,
     style: {
       stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
-      strokeWidth: isTrace ? 3.4 : isRelated ? 2.4 : 1.3,
+      strokeWidth: isTrace ? 2 : isRelated ? 1.5 : 1,
       strokeDasharray:
         edge.relationship === 'influenced_by' || edge.relationship === 'disputed' ? '7 6' : undefined,
       opacity: selectedId || activeTraceIds.size ? (isTrace || isRelated ? 0.95 : 0.18) : 0.74,

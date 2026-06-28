@@ -848,13 +848,13 @@ function Legend() {
       aria-label="Relationship legend"
     >
       <span>
-        <i className="inline-block w-7 border-t-2 border-muted-foreground" /> descended/adapted
+        <i className="inline-block w-7 border-t border-muted-foreground" /> descended/adapted
       </span>
       <span>
-        <i className="inline-block w-7 border-t-2 border-dashed border-muted-foreground" /> influenced/disputed
+        <i className="inline-block w-7 border-t border-dashed border-muted-foreground" /> influenced/disputed
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <i className="inline-block w-7 border-t-[3px] border-foreground" />
+        <i className="inline-block w-7 border-t-2 border-foreground" />
         selected path
       </span>
     </div>

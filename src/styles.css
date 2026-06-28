@@ -78,6 +78,14 @@ body,
   font-weight: 700;
 }
 
+.react-flow__edges {
+  z-index: 0;
+}
+
+.react-flow__nodes {
+  z-index: 1;
+}
+
 .script-node {
   width: 188px;
   min-height: 106px;
