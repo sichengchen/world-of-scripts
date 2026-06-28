@@ -342,7 +342,7 @@ function Toolbar({
             <Compass aria-hidden="true" />
             <SelectValue />
           </SelectTrigger>
-          <SelectContent align="start">
+          <SelectContent align="start" position="popper" className="w-[var(--radix-select-trigger-width)]">
             <SelectGroup>
               <SelectItem value="none">No guided trace</SelectItem>
               {guidedTraces.map((trace) => (
