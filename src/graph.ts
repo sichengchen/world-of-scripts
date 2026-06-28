@@ -18,7 +18,9 @@ export type TimelineTickData = {
 
 export type GraphNodeData = ScriptNodeData | TimelineTickData
 
-export const TIMELINE_NODE_WIDTH = 188
+export const SCRIPT_NODE_WIDTH = 188
+export const SCRIPT_NODE_HEIGHT = 106
+export const TIMELINE_NODE_WIDTH = SCRIPT_NODE_WIDTH
 const TIMELINE_START_YEAR = -3400
 const TIMELINE_END_YEAR = new Date().getFullYear()
 const TIMELINE_WIDTH = 3000
@@ -50,40 +52,74 @@ const lineagePositions: Record<string, { x: number; y: number }> = {
   'egyptian-hieroglyphs': { x: 20, y: 180 },
   'proto-sinaitic': { x: 250, y: 180 },
   phoenician: { x: 480, y: 180 },
-  greek: { x: 710, y: 120 },
-  armenian: { x: 940, y: 0 },
-  'old-italic': { x: 940, y: 120 },
-  latin: { x: 1170, y: 110 },
-  ogham: { x: 1400, y: 60 },
-  runic: { x: 1400, y: 180 },
-  coptic: { x: 940, y: 250 },
-  gothic: { x: 1170, y: 250 },
-  cyrillic: { x: 1400, y: 300 },
-  aramaic: { x: 710, y: 420 },
-  hebrew: { x: 940, y: 420 },
-  syriac: { x: 940, y: 540 },
-  nabataean: { x: 940, y: 660 },
-  arabic: { x: 1170, y: 660 },
-  geez: { x: 480, y: 430 },
-  brahmi: { x: 710, y: 790 },
-  devanagari: { x: 940, y: 790 },
-  'bengali-assamese': { x: 1170, y: 790 },
-  gujarati: { x: 1400, y: 790 },
-  gurmukhi: { x: 1400, y: 910 },
-  tamil: { x: 940, y: 910 },
-  telugu: { x: 1170, y: 910 },
-  kannada: { x: 1400, y: 1030 },
-  khmer: { x: 940, y: 1030 },
-  thai: { x: 1170, y: 1030 },
-  tibetan: { x: 710, y: 1030 },
-  georgian: { x: 1170, y: -30 },
-  cherokee: { x: 1400, y: 420 },
-  'canadian-aboriginal': { x: 1400, y: 540 },
-  hangul: { x: 1400, y: 660 },
-  cuneiform: { x: 20, y: 650 },
-  'oracle-bone': { x: 250, y: 650 },
-  chinese: { x: 480, y: 650 },
-  maya: { x: 20, y: 800 },
+  greek: { x: 710, y: 40 },
+  armenian: { x: 940, y: -160 },
+  georgian: { x: 1170, y: -160 },
+  'old-italic': { x: 940, y: -20 },
+  latin: { x: 1170, y: -20 },
+  ogham: { x: 1400, y: -160 },
+  runic: { x: 1170, y: 120 },
+  deseret: { x: 1400, y: 120 },
+  osage: { x: 1400, y: 260 },
+  coptic: { x: 940, y: 120 },
+  gothic: { x: 940, y: 260 },
+  glagolitic: { x: 940, y: 400 },
+  cyrillic: { x: 940, y: 540 },
+  aramaic: { x: 710, y: 900 },
+  hebrew: { x: 940, y: 760 },
+  syriac: { x: 940, y: 900 },
+  samaritan: { x: 940, y: 1040 },
+  mandaic: { x: 940, y: 1180 },
+  nabataean: { x: 940, y: 1320 },
+  arabic: { x: 1170, y: 1320 },
+  mongolian: { x: 940, y: 1460 },
+  geez: { x: 480, y: 540 },
+  cuneiform: { x: 20, y: 620 },
+  'old-persian': { x: 250, y: 620 },
+  ugaritic: { x: 250, y: 760 },
+  'linear-b': { x: 20, y: 900 },
+  maya: { x: 20, y: 1040 },
+  'oracle-bone': { x: 250, y: 1220 },
+  chinese: { x: 480, y: 1220 },
+  hiragana: { x: 710, y: 1080 },
+  katakana: { x: 710, y: 1220 },
+  bopomofo: { x: 710, y: 1360 },
+  yi: { x: 710, y: 1500 },
+  tangut: { x: 710, y: 1640 },
+  nushu: { x: 710, y: 1780 },
+  lisu: { x: 710, y: 1920 },
+  hangul: { x: 1170, y: 1600 },
+  brahmi: { x: 710, y: 2200 },
+  sinhala: { x: 940, y: 1900 },
+  tibetan: { x: 940, y: 2040 },
+  devanagari: { x: 940, y: 2180 },
+  'bengali-assamese': { x: 940, y: 2320 },
+  odia: { x: 940, y: 2460 },
+  gujarati: { x: 940, y: 2600 },
+  gurmukhi: { x: 940, y: 2740 },
+  tamil: { x: 940, y: 2880 },
+  malayalam: { x: 940, y: 3020 },
+  telugu: { x: 940, y: 3160 },
+  kannada: { x: 940, y: 3300 },
+  'meetei-mayek': { x: 940, y: 3440 },
+  myanmar: { x: 940, y: 3580 },
+  cham: { x: 940, y: 3720 },
+  javanese: { x: 940, y: 3860 },
+  balinese: { x: 940, y: 4000 },
+  sundanese: { x: 940, y: 4140 },
+  tagalog: { x: 940, y: 4280 },
+  khmer: { x: 940, y: 4420 },
+  thai: { x: 1170, y: 4420 },
+  lao: { x: 1400, y: 4420 },
+  'ol-chiki': { x: 1170, y: 2180 },
+  thaana: { x: 1170, y: 2320 },
+  tifinagh: { x: 1170, y: 2600 },
+  nko: { x: 1170, y: 2740 },
+  adlam: { x: 1170, y: 2880 },
+  vai: { x: 1170, y: 3020 },
+  cherokee: { x: 1170, y: 3300 },
+  'canadian-aboriginal': { x: 1170, y: 3440 },
+  'old-turkic': { x: 1170, y: 3720 },
 }
 
 const timelinePositions = buildTimelinePositions()
@@ -122,7 +158,7 @@ function getAzPosition(script: ScriptNode, index: number) {
 function getLineageFallbackPosition(index: number) {
   const column = index % 4
   const row = Math.floor(index / 4)
-  return { x: 1700 + column * 240, y: -40 + row * 145 }
+  return { x: 1640 + column * 240, y: -160 + row * 145 }
 }
 
 function getPosition(script: ScriptNode, viewMode: ViewMode, index: number) {
@@ -200,9 +236,12 @@ export function createGraph({
         }))
       : []
 
-  const graphEdges = edges
-    .filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to))
-    .map((edge) => createEdge(edge, activeTraceIds, relatedIds, selectedId))
+  const graphEdges =
+    viewMode === 'lineage'
+      ? edges
+          .filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to))
+          .map((edge) => createEdge(edge, activeTraceIds, relatedIds, selectedId))
+      : []
 
   return { nodes: [...tickNodes, ...scriptNodes], graphEdges }
 }
@@ -226,6 +265,7 @@ function createEdge(
     id: `${edge.from}-${edge.to}`,
     source: edge.from,
     target: edge.to,
+    type: 'smoothstep',
     animated: isTrace,
     label: edge.relationship === 'disputed' ? 'disputed' : undefined,
     style: {
