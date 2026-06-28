@@ -1833,6 +1833,11 @@ export const guidedTraces = [
     label: 'Brahmi and South Asia',
     nodeIds: ['brahmi', 'devanagari', 'tamil', 'kannada', 'telugu', 'tibetan'],
   },
+  {
+    id: 'chinese-path',
+    label: 'Chinese Characters',
+    nodeIds: ['oracle-bone', 'chinese', 'hiragana', 'katakana', 'bopomofo'],
+  },
 ] as const
 
 export const scriptTypes: ScriptType[] = [
