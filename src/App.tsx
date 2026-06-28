@@ -90,7 +90,6 @@ const repositoryUrl = 'https://github.com/sichengchen/world-of-scripts'
 const feedbackUrl = `${repositoryUrl}/issues`
 const referenceLinks = [
   { label: 'Wikipedia: Alphabet', url: 'https://en.wikipedia.org/wiki/Alphabet' },
-  { label: 'The ABCD Family Tree', url: 'https://starkeycomics.com/2018/12/11/the-abcd-family-tree/' },
   { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
 ]
 const appSummary =

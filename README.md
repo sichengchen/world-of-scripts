@@ -18,7 +18,6 @@ The main view is a zoomable family-tree style diagram. Select a script node to s
 This project draws on public references including:
 
 - [Wikipedia: Alphabet](https://en.wikipedia.org/wiki/Alphabet)
-- [The ABCD Family Tree](https://starkeycomics.com/2018/12/11/the-abcd-family-tree/)
 - [World Writing Systems](https://www.worldswritingsystems.org/)
 
 Relationship data is curated conservatively. A missing line does not mean two scripts are unrelated; it means the app is not currently showing a sourced direct relationship.
