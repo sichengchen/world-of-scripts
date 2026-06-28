@@ -1943,7 +1943,7 @@ export const scripts: ScriptNode[] = [
       'aleph|beth|gimel|he|waw|zayin|heth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|sadhe|resh|shin|taw|feth|lesh',
     ),
     summary:
-      'An Aramaic-derived Central Asian script used for the Sogdian language. Its cursive forms are an important ancestor of Old Uyghur and, through that branch, Mongolian writing.',
+      'A Syriac-derived Central Asian script used for the Sogdian language, within the broader Aramaic script family. Its cursive forms are an important ancestor of Old Uyghur and, through that branch, Mongolian writing.',
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Sogdian_alphabet' },
       { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
@@ -1966,7 +1966,8 @@ export const scripts: ScriptNode[] = [
       'aleph|beth|gimel-heth|waw|zayin|final heth|yodh|kaph|lamedh|mem|nun|samekh|pe|resh|shin|taw|leshz|beth-2',
     ),
     summary:
-      'A Central Asian alphabet developed from cursive Sogdian and used for Old Uyghur and related manuscript traditions. It is the immediate historical model for traditional Mongolian writing.',
+      'A Central Asian cursive joining alphabet developed from Sogdian and used for Old Uyghur and related manuscript traditions. It is the immediate historical model for traditional Mongolian writing.',
+    notes: ['Old Uyghur inherits abjad features from Sogdian, but sources describe it as largely alphabetized because vowel letters were used more systematically.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Uyghur_alphabet' },
       { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
@@ -1990,7 +1991,7 @@ export const scripts: ScriptNode[] = [
         .split(' ')
         .map((glyph) => ({ glyph })),
     summary:
-      'A vertical alphabet used for Mongolian and related languages. Its lineage runs through Old Uyghur and ultimately the Aramaic-derived Central Asian branch.',
+      'A vertical alphabet used for Mongolian and related languages, now especially in Inner Mongolia, China. The state of Mongolia mainly uses the Cyrillic alphabet for everyday Mongolian writing.',
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Mongolian_script' },
@@ -2133,7 +2134,7 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'syriac', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Syriac_alphabet'] },
   { from: 'aramaic', to: 'nabataean', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Nabataean_script'] },
   { from: 'aramaic', to: 'kharoshthi', relationship: 'adapted_from', confidence: 'medium', note: 'Kharoshthi is usually linked to Aramaic influence, while the exact mechanism of adaptation is reconstructed.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
-  { from: 'aramaic', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'syriac', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sogdian_alphabet', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'nabataean', to: 'arabic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Arabic_alphabet'] },
   { from: 'brahmi', to: 'devanagari', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Devanagari'] },
   { from: 'brahmi', to: 'bengali-assamese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Bengali%E2%80%93Assamese_script'] },

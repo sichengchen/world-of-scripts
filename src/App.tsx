@@ -163,6 +163,8 @@ const scriptFontStacks: Record<string, string> = {
   adlam: `"Noto Sans Adlam", "Ebrima", ${fallbackScriptFont}`,
   vai: `"Noto Sans Vai", ${fallbackScriptFont}`,
   'old-turkic': `"Noto Sans Old Turkic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  sogdian: `"Noto Sans Sogdian", "Segoe UI Historic", ${fallbackScriptFont}`,
+  'old-uyghur': `"Noto Serif Old Uyghur", "Noto Sans Old Uyghur", ${fallbackScriptFont}`,
   mongolian: `"Noto Sans Mongolian", "Mongolian Baiti", ${fallbackScriptFont}`,
   ugaritic: `"Noto Sans Ugaritic", "Segoe UI Historic", ${fallbackScriptFont}`,
   samaritan: `"Noto Sans Samaritan", ${fallbackScriptFont}`,
@@ -1072,7 +1074,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         ) : isVertical ? (
           <span className="node-vertical-glyphs">
             {script.sampleGlyphs.slice(0, 4).map((glyph) => (
-              <span className="script-glyph node-vertical-glyph" key={glyph}>
+              <span className="script-glyph node-vertical-sample is-vertical" key={glyph}>
                 {glyph}
               </span>
             ))}
