@@ -80,7 +80,7 @@ const lineagePositions: Record<string, { x: number; y: number }> = {
   katakana: { x: 2420, y: 120 },
   bopomofo: { x: 2420, y: 260 },
   yi: { x: 2680, y: -20 },
-  tangut: { x: 2680, y: 120 },
+  tangut: { x: 2420, y: 400 },
   nushu: { x: 2680, y: 260 },
   lisu: { x: 2680, y: 400 },
   hangul: { x: 2680, y: 540 },

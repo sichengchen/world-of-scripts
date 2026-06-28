@@ -1798,6 +1798,7 @@ export const edges: ScriptEdge[] = [
   { from: 'chinese', to: 'hiragana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hiragana'] },
   { from: 'chinese', to: 'katakana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Katakana'] },
   { from: 'chinese', to: 'bopomofo', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Bopomofo'] },
+  { from: 'chinese', to: 'tangut', relationship: 'influenced_by', confidence: 'medium', note: 'Tangut was constructed for a separate language and is graphically inspired by Chinese characters, not descended from them.', sources: ['https://en.wikipedia.org/wiki/Tangut_script'] },
   { from: 'greek', to: 'glagolitic', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Glagolitic_script'] },
   { from: 'brahmi', to: 'sinhala', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sinhala_script'] },
   { from: 'brahmi', to: 'odia', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Odia_script'] },
