@@ -630,6 +630,11 @@ function Toolbar({
                   ))}
                 </div>
               </section>
+              <Separator />
+              <p className="text-sm leading-6 text-muted-foreground">
+                This project is for reference only and is not a professional source. It may contain mistakes. If you find an
+                error or have suggestions for additional content, use the Feedback button in the header.
+              </p>
             </div>
           </DialogContent>
         </Dialog>
