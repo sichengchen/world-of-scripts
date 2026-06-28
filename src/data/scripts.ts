@@ -21,6 +21,7 @@ export type ScriptNode = {
   endYear?: number | 'present'
   direction?: 'ltr' | 'rtl' | 'ttb' | 'btt' | 'mixed'
   unicodeBlock?: string[]
+  inventoryMode?: 'full' | 'representative'
   sampleGlyphs: string[]
   visualGlyphs?: Array<{
     label: string
@@ -916,10 +917,10 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Cherokee'],
     sampleGlyphs: ['Ꭰ', 'Ꭱ', 'Ꭲ', 'Ꭳ'],
-    characterRows: characterRows(
-      'Ꭰ Ꭱ Ꭲ Ꭳ Ꭴ Ꭵ Ꭶ Ꭷ Ꭸ Ꭹ Ꭺ Ꭻ Ꭼ Ꭽ Ꭾ Ꭿ',
-      'a|e|i|o|u|v|ga|ka|ge|gi|go|gu|gv|ha|he|hi',
-    ),
+    characterRows:
+      'Ꭰ Ꭱ Ꭲ Ꭳ Ꭴ Ꭵ Ꭶ Ꭷ Ꭸ Ꭹ Ꭺ Ꭻ Ꭼ Ꭽ Ꭾ Ꭿ Ꮀ Ꮁ Ꮂ Ꮃ Ꮄ Ꮅ Ꮆ Ꮇ Ꮈ Ꮉ Ꮊ Ꮋ Ꮌ Ꮍ Ꮎ Ꮏ Ꮐ Ꮑ Ꮒ Ꮓ Ꮔ Ꮕ Ꮖ Ꮗ Ꮘ Ꮙ Ꮚ Ꮛ Ꮜ Ꮝ Ꮞ Ꮟ Ꮠ Ꮡ Ꮢ Ꮣ Ꮤ Ꮥ Ꮦ Ꮧ Ꮨ Ꮩ Ꮪ Ꮫ Ꮬ Ꮭ Ꮮ Ꮯ Ꮰ Ꮱ Ꮳ Ꮴ Ꮵ Ꮶ Ꮷ Ꮸ Ꮹ Ꮺ Ꮻ Ꮼ Ꮽ Ꮾ Ꮿ Ᏸ Ᏹ Ᏺ Ᏻ Ᏼ Ᏽ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
     summary:
       'A syllabary created by Sequoyah for the Cherokee language. Some glyphs resemble Latin letters, but the system assigns syllabic values.',
     sources: [
@@ -948,6 +949,820 @@ export const scripts: ScriptNode[] = [
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Canadian_Aboriginal_syllabics' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1400.pdf' },
+    ],
+  },
+  {
+    id: 'hiragana',
+    name: 'Hiragana',
+    nativeName: 'ひらがな',
+    type: 'syllabary',
+    status: 'living',
+    region: ['East Asia'],
+    startYear: 800,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Hiragana'],
+    sampleGlyphs: ['あ', 'い', 'う', 'え'],
+    characterRows: characterRows(
+      'あ い う え お か き く け こ さ し す せ そ た ち つ て と な に ぬ ね の は ひ ふ へ ほ ま み む め も や ゆ よ ら り る れ ろ わ を ん',
+      'a|i|u|e|o|ka|ki|ku|ke|ko|sa|shi|su|se|so|ta|chi|tsu|te|to|na|ni|nu|ne|no|ha|hi|fu|he|ho|ma|mi|mu|me|mo|ya|yu|yo|ra|ri|ru|re|ro|wa|wo|n',
+    ),
+    summary:
+      'A Japanese syllabary used with katakana and kanji. Hiragana developed from cursive forms of Chinese characters used phonetically.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Hiragana' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U3040.pdf' },
+    ],
+  },
+  {
+    id: 'katakana',
+    name: 'Katakana',
+    nativeName: 'カタカナ',
+    type: 'syllabary',
+    status: 'living',
+    region: ['East Asia'],
+    startYear: 800,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Katakana'],
+    sampleGlyphs: ['ア', 'イ', 'ウ', 'エ'],
+    characterRows: characterRows(
+      'ア イ ウ エ オ カ キ ク ケ コ サ シ ス セ ソ タ チ ツ テ ト ナ ニ ヌ ネ ノ ハ ヒ フ ヘ ホ マ ミ ム メ モ ヤ ユ ヨ ラ リ ル レ ロ ワ ヲ ン',
+      'a|i|u|e|o|ka|ki|ku|ke|ko|sa|shi|su|se|so|ta|chi|tsu|te|to|na|ni|nu|ne|no|ha|hi|fu|he|ho|ma|mi|mu|me|mo|ya|yu|yo|ra|ri|ru|re|ro|wa|wo|n',
+    ),
+    summary:
+      'A Japanese syllabary used for loanwords, emphasis, transcription, and technical terms. Katakana developed from parts of Chinese characters used phonetically.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Katakana' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U30A0.pdf' },
+    ],
+  },
+  {
+    id: 'bopomofo',
+    name: 'Bopomofo',
+    nativeName: '注音符號',
+    type: 'alphabet',
+    status: 'living',
+    region: ['East Asia'],
+    startYear: 1913,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Bopomofo'],
+    sampleGlyphs: ['ㄅ', 'ㄆ', 'ㄇ', 'ㄈ'],
+    characterRows: characterRows(
+      'ㄅ ㄆ ㄇ ㄈ ㄉ ㄊ ㄋ ㄌ ㄍ ㄎ ㄏ ㄐ ㄑ ㄒ ㄓ ㄔ ㄕ ㄖ ㄗ ㄘ ㄙ ㄚ ㄛ ㄜ ㄝ ㄞ ㄟ ㄠ ㄡ ㄢ ㄣ ㄤ ㄥ ㄦ ㄧ ㄨ ㄩ',
+      'b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|a|o|e|eh|ai|ei|ao|ou|an|en|ang|eng|er|i|u|yu',
+    ),
+    summary:
+      'A phonetic script for Mandarin, used especially in Taiwan. Its forms are drawn from older Chinese character shapes and strokes.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Bopomofo' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U3100.pdf' },
+    ],
+  },
+  {
+    id: 'yi',
+    name: 'Yi',
+    nativeName: 'ꆈꌠꁱꂷ',
+    type: 'syllabary',
+    status: 'living',
+    region: ['East Asia'],
+    startYear: 1400,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Yi Syllables'],
+    inventoryMode: 'representative',
+    sampleGlyphs: ['ꀀ', 'ꀁ', 'ꀂ', 'ꀃ'],
+    characterRows:
+      'ꀀ ꀁ ꀂ ꀃ ꀄ ꀅ ꀆ ꀇ ꀈ ꀉ ꀊ ꀋ ꀌ ꀍ ꀎ ꀏ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A family of scripts for Yi languages. The modern standardized Yi syllabary has a large encoded inventory, so the inspector shows representative signs.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Yi_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UA000.pdf' },
+    ],
+  },
+  {
+    id: 'tangut',
+    name: 'Tangut',
+    type: 'logographic',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: 1036,
+    endYear: 1500,
+    direction: 'ltr',
+    unicodeBlock: ['Tangut'],
+    sampleGlyphs: ['𗀀', '𗀁', '𗀂', '𗀃'],
+    characterRows:
+      '𗀀 𗀁 𗀂 𗀃 𗀄 𗀅 𗀆 𗀇 𗀈 𗀉 𗀊 𗀋 𗀌 𗀍 𗀎 𗀏'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A logographic script created for the Tangut language of the Western Xia. Its inventory is far too large for full display here.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tangut_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U17000.pdf' },
+    ],
+  },
+  {
+    id: 'nushu',
+    name: 'Nüshu',
+    nativeName: '女书',
+    type: 'syllabary',
+    status: 'living',
+    region: ['East Asia'],
+    startYear: 1200,
+    endYear: 'present',
+    direction: 'ttb',
+    unicodeBlock: ['Nushu'],
+    inventoryMode: 'representative',
+    sampleGlyphs: ['𛆁', '𛆂', '𛆃', '𛆄'],
+    characterRows:
+      '𛆁 𛆂 𛆃 𛆄 𛆅 𛆆 𛆇 𛆈 𛆉 𛆊 𛆋 𛆌 𛆍 𛆎 𛆏 𛆐'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A syllabic script historically used by women in Jiangyong, China. The encoded inventory is large, so the app shows representative signs.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/N%C3%BCshu' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1B170.pdf' },
+    ],
+  },
+  {
+    id: 'lisu',
+    name: 'Lisu',
+    nativeName: 'ꓡꓲ-ꓢꓴ',
+    type: 'alphabet',
+    status: 'living',
+    region: ['East Asia', 'Southeast Asia'],
+    startYear: 1915,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Lisu'],
+    sampleGlyphs: ['ꓐ', 'ꓑ', 'ꓒ', 'ꓓ'],
+    characterRows:
+      'ꓐ ꓑ ꓒ ꓓ ꓔ ꓕ ꓖ ꓗ ꓘ ꓙ ꓚ ꓛ ꓜ ꓝ ꓞ ꓟ ꓠ ꓡ ꓢ ꓣ ꓤ ꓥ ꓦ ꓧ ꓨ ꓩ ꓪ ꓫ ꓬ ꓭ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A modern alphabet for the Lisu language, also called the Fraser script. Its letter shapes are related to Latin capitals and rotated forms.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Fraser_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UA4D0.pdf' },
+    ],
+  },
+  {
+    id: 'glagolitic',
+    name: 'Glagolitic',
+    type: 'alphabet',
+    status: 'historical',
+    region: ['Europe'],
+    startYear: 862,
+    endYear: 1900,
+    direction: 'ltr',
+    unicodeBlock: ['Glagolitic'],
+    sampleGlyphs: ['Ⰰ', 'Ⰱ', 'Ⰲ', 'Ⰳ'],
+    characterRows:
+      'Ⰰ Ⰱ Ⰲ Ⰳ Ⰴ Ⰵ Ⰶ Ⰷ Ⰸ Ⰹ Ⰺ Ⰻ Ⰼ Ⰽ Ⰾ Ⰿ Ⱀ Ⱁ Ⱂ Ⱃ Ⱄ Ⱅ Ⱆ Ⱇ Ⱈ Ⱉ Ⱊ Ⱋ Ⱌ Ⱍ Ⱎ Ⱏ Ⱐ Ⱑ Ⱒ Ⱓ Ⱔ Ⱕ Ⱖ Ⱗ Ⱘ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'The oldest known Slavic alphabet, created in a Byzantine Christian context before Cyrillic became dominant in many Slavic traditions.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Glagolitic_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U2C00.pdf' },
+    ],
+  },
+  {
+    id: 'linear-b',
+    name: 'Linear B',
+    type: 'syllabary',
+    status: 'historical',
+    region: ['Europe'],
+    startYear: -1400,
+    endYear: -1200,
+    direction: 'ltr',
+    unicodeBlock: ['Linear B'],
+    sampleGlyphs: ['𐀀', '𐀁', '𐀂', '𐀃'],
+    inventoryMode: 'representative',
+    characterRows:
+      '𐀀 𐀁 𐀂 𐀃 𐀄 𐀅 𐀆 𐀇 𐀈 𐀉 𐀊 𐀋 𐀍 𐀎 𐀏 𐀐'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Bronze Age syllabary used for Mycenaean Greek. It is related to Aegean writing traditions rather than the later Greek alphabet.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Linear_B' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10000.pdf' },
+    ],
+  },
+  {
+    id: 'deseret',
+    name: 'Deseret',
+    type: 'alphabet',
+    status: 'historical',
+    region: ['North America'],
+    startYear: 1854,
+    endYear: 1877,
+    direction: 'ltr',
+    unicodeBlock: ['Deseret'],
+    sampleGlyphs: ['𐐀', '𐐁', '𐐂', '𐐃'],
+    characterRows:
+      '𐐀 𐐁 𐐂 𐐃 𐐄 𐐅 𐐆 𐐇 𐐈 𐐉 𐐊 𐐋 𐐌 𐐍 𐐎 𐐏 𐐐 𐐑 𐐒 𐐓 𐐔 𐐕 𐐖 𐐗 𐐘 𐐙 𐐚 𐐛 𐐜 𐐝 𐐞 𐐟 𐐠 𐐡 𐐢 𐐣 𐐤 𐐥'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A nineteenth-century phonemic alphabet developed for English in Utah. It is historically separate from inherited Latin writing.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Deseret_alphabet' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10400.pdf' },
+    ],
+  },
+  {
+    id: 'sinhala',
+    name: 'Sinhala',
+    nativeName: 'සිංහල',
+    type: 'abugida',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: -300,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Sinhala'],
+    sampleGlyphs: ['අ', 'ආ', 'ක', 'ග'],
+    characterRows:
+      'අ ආ ඇ ඈ ඉ ඊ උ ඌ ඍ ඎ එ ඒ ඓ ඔ ඕ ඖ ක ඛ ග ඝ ඞ ච ඡ ජ ඣ ඤ ට ඨ ඩ ඪ ණ ත ථ ද ධ න ප ඵ බ භ ම ය ර ල ව ශ ෂ ස හ ළ ෆ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic abugida used for Sinhala and Pali in Sri Lanka, with rounded letterforms shaped by manuscript traditions.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Sinhala_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0D80.pdf' },
+    ],
+  },
+  {
+    id: 'odia',
+    name: 'Odia',
+    nativeName: 'ଓଡ଼ିଆ',
+    type: 'abugida',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: 1100,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Oriya'],
+    sampleGlyphs: ['ଅ', 'ଆ', 'କ', 'ଗ'],
+    characterRows:
+      'ଅ ଆ ଇ ଈ ଉ ଊ ଋ ଌ ଏ ଐ ଓ ଔ କ ଖ ଗ ଘ ଙ ଚ ଛ ଜ ଝ ଞ ଟ ଠ ଡ ଢ ଣ ତ ଥ ଦ ଧ ନ ପ ଫ ବ ଭ ମ ଯ ର ଲ ଳ ଵ ଶ ଷ ସ ହ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic abugida used for Odia. It is closely related to eastern Indic scripts but has a distinctive rounded visual profile.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Odia_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0B00.pdf' },
+    ],
+  },
+  {
+    id: 'malayalam',
+    name: 'Malayalam',
+    nativeName: 'മലയാളം',
+    type: 'abugida',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: 830,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Malayalam'],
+    sampleGlyphs: ['അ', 'ആ', 'ക', 'ഗ'],
+    characterRows:
+      'അ ആ ഇ ഈ ഉ ഊ ഋ ൠ ഌ എ ഏ ഐ ഒ ഓ ഔ ക ഖ ഗ ഘ ങ ച ഛ ജ ഝ ഞ ട ഠ ഡ ഢ ണ ത ഥ ദ ധ ന പ ഫ ബ ഭ മ യ ര ല വ ശ ഷ സ ഹ ള ഴ റ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A southern Brahmic abugida used for Malayalam. Its modern form descends through southern Indian manuscript traditions.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Malayalam_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0D00.pdf' },
+    ],
+  },
+  {
+    id: 'meetei-mayek',
+    name: 'Meetei Mayek',
+    nativeName: 'ꯃꯤꯇꯩ ꯃꯌꯦꯛ',
+    type: 'abugida',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: 1100,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Meetei Mayek'],
+    sampleGlyphs: ['ꯀ', 'ꯁ', 'ꯂ', 'ꯃ'],
+    characterRows:
+      'ꯀ ꯁ ꯂ ꯃ ꯄ ꯅ ꯆ ꯇ ꯈ ꯉ ꯊ ꯋ ꯌ ꯍ ꯎ ꯏ ꯐ ꯑ ꯒ ꯓ ꯔ ꯕ ꯖ ꯗ ꯘ ꯙ ꯚ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A revived abugida for Meitei/Manipuri, used alongside Bengali-Assamese-derived writing in Manipur.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Meitei_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UABC0.pdf' },
+    ],
+  },
+  {
+    id: 'ol-chiki',
+    name: 'Ol Chiki',
+    nativeName: 'ᱚᱞ ᱪᱤᱠᱤ',
+    type: 'alphabet',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: 1925,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Ol Chiki'],
+    sampleGlyphs: ['ᱚ', 'ᱛ', 'ᱜ', 'ᱢ'],
+    characterRows:
+      'ᱚ ᱛ ᱜ ᱝ ᱞ ᱟ ᱠ ᱡ ᱢ ᱣ ᱤ ᱥ ᱦ ᱧ ᱨ ᱩ ᱪ ᱫ ᱬ ᱭ ᱮ ᱯ ᱰ ᱱ ᱲ ᱳ ᱴ ᱵ ᱶ ᱷ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A twentieth-century alphabet created for Santali. It is deliberately separate from neighboring Brahmic scripts.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Ol_Chiki_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1C50.pdf' },
+    ],
+  },
+  {
+    id: 'thaana',
+    name: 'Thaana',
+    nativeName: 'ތާނަ',
+    type: 'abugida',
+    status: 'living',
+    region: ['South Asia'],
+    startYear: 1700,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['Thaana'],
+    sampleGlyphs: ['ހ', 'ށ', 'ނ', 'ރ'],
+    characterRows:
+      'ހ ށ ނ ރ ބ ޅ ކ އ ވ މ ފ ދ ތ ލ ގ ޏ ސ ޑ ޒ ޓ ޔ ޕ ޖ ޗ ޘ ޙ ޚ ޛ ޜ ޝ ޞ ޟ ޠ ޡ ޢ ޣ ޤ ޥ ަ ާ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A right-to-left script used for Dhivehi in the Maldives. It combines consonant letters with vowel marks and has distinctive numeral-derived forms.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Thaana' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0780.pdf' },
+    ],
+  },
+  {
+    id: 'myanmar',
+    name: 'Myanmar',
+    nativeName: 'မြန်မာ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 1000,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Myanmar'],
+    sampleGlyphs: ['က', 'ခ', 'ဂ', 'ဃ'],
+    characterRows:
+      'က ခ ဂ ဃ င စ ဆ ဇ ဈ ဉ ည ဋ ဌ ဍ ဎ ဏ တ ထ ဒ ဓ န ပ ဖ ဗ ဘ မ ယ ရ လ ဝ သ ဟ ဠ အ ဣ ဤ ဥ ဦ ဧ ဩ ဪ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic abugida used for Burmese and other languages of Myanmar, with rounded forms from palm-leaf manuscript habits.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Burmese_alphabet' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1000.pdf' },
+    ],
+  },
+  {
+    id: 'lao',
+    name: 'Lao',
+    nativeName: 'ລາວ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 1350,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Lao'],
+    sampleGlyphs: ['ກ', 'ຂ', 'ຄ', 'ງ'],
+    characterRows:
+      'ກ ຂ ຄ ງ ຈ ສ ຊ ຍ ດ ຕ ຖ ທ ນ ບ ປ ຜ ຝ ພ ຟ ມ ຢ ຣ ລ ວ ຫ ອ ຮ ະ າ ຳ ິ ີ ຶ ື ຸ ູ ເ ແ ໂ ໃ ໄ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic-derived abugida used for Lao. It is historically related to Thai and earlier Tai writing traditions.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Lao_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0E80.pdf' },
+    ],
+  },
+  {
+    id: 'javanese',
+    name: 'Javanese',
+    nativeName: 'ꦲꦏ꧀ꦱꦫꦗꦮ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 900,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Javanese'],
+    sampleGlyphs: ['ꦲ', 'ꦤ', 'ꦕ', 'ꦫ'],
+    characterRows:
+      'ꦲ ꦤ ꦕ ꦫ ꦏ ꦢ ꦠ ꦱ ꦮ ꦭ ꦥ ꦝ ꦗ ꦪ ꦚ ꦩ ꦒ ꦧ ꦛ ꦔ ꦉ ꦊ ꦋ ꦌ ꦍ ꦎ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic-derived script used historically and ceremonially for Javanese and related languages.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Javanese_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UA980.pdf' },
+    ],
+  },
+  {
+    id: 'balinese',
+    name: 'Balinese',
+    nativeName: 'ᬅᬓ᭄ᬱᬭᬩᬮᬶ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 1000,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Balinese'],
+    sampleGlyphs: ['ᬅ', 'ᬓ', 'ᬕ', 'ᬫ'],
+    characterRows:
+      'ᬅ ᬆ ᬇ ᬈ ᬉ ᬊ ᬋ ᬌ ᬏ ᬐ ᬑ ᬒ ᬓ ᬔ ᬕ ᬖ ᬗ ᬘ ᬙ ᬚ ᬛ ᬜ ᬝ ᬞ ᬟ ᬠ ᬡ ᬢ ᬣ ᬤ ᬥ ᬦ ᬧ ᬨ ᬩ ᬪ ᬫ ᬬ ᬭ ᬮ ᬯ ᬰ ᬱ ᬲ ᬳ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic-derived script used for Balinese and liturgical texts, related to Javanese and Kawi traditions.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Balinese_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1B00.pdf' },
+    ],
+  },
+  {
+    id: 'sundanese',
+    name: 'Sundanese',
+    nativeName: 'ᮃᮊ᮪ᮞᮛ ᮞᮥᮔ᮪ᮓ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 1300,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Sundanese'],
+    sampleGlyphs: ['ᮃ', 'ᮊ', 'ᮌ', 'ᮙ'],
+    characterRows:
+      'ᮃ ᮄ ᮅ ᮆ ᮇ ᮈ ᮉ ᮊ ᮋ ᮌ ᮍ ᮎ ᮏ ᮐ ᮑ ᮒ ᮓ ᮔ ᮕ ᮖ ᮗ ᮘ ᮙ ᮚ ᮛ ᮜ ᮝ ᮞ ᮟ ᮠ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic-derived script for Sundanese. Its modern revival uses a standardized set of base letters and vowel marks.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Sundanese_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1B80.pdf' },
+    ],
+  },
+  {
+    id: 'cham',
+    name: 'Cham',
+    nativeName: 'ꨀꨇꩉ ꨌꩌ',
+    type: 'abugida',
+    status: 'living',
+    region: ['Southeast Asia'],
+    startYear: 400,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Cham'],
+    sampleGlyphs: ['ꨀ', 'ꨁ', 'ꨂ', 'ꨃ'],
+    characterRows:
+      'ꨀ ꨁ ꨂ ꨃ ꨄ ꨅ ꨆ ꨇ ꨈ ꨉ ꨊ ꨋ ꨌ ꨍ ꨎ ꨏ ꨐ ꨑ ꨒ ꨓ ꨔ ꨕ ꨖ ꨗ ꨘ ꨙ ꨚ ꨛ ꨜ ꨝ ꨞ ꨟ ꨠ ꨡ ꨢ ꨣ ꨤ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Brahmic-derived abugida used for Cham languages in mainland Southeast Asia.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Cham_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UAA00.pdf' },
+    ],
+  },
+  {
+    id: 'tagalog',
+    name: 'Tagalog / Baybayin',
+    nativeName: 'ᜊᜌ᜔ᜊᜌᜒᜈ᜔',
+    type: 'abugida',
+    status: 'historical',
+    region: ['Oceania', 'Southeast Asia'],
+    startYear: 1300,
+    endYear: 1800,
+    direction: 'ltr',
+    unicodeBlock: ['Tagalog'],
+    sampleGlyphs: ['ᜀ', 'ᜊ', 'ᜃ', 'ᜇ'],
+    characterRows:
+      'ᜀ ᜁ ᜂ ᜃ ᜄ ᜅ ᜆ ᜇ ᜈ ᜉ ᜊ ᜋ ᜌ ᜎ ᜏ ᜐ ᜑ ᜒ ᜓ ᜔'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Philippine Brahmic abugida historically used for Tagalog and related languages, often called Baybayin.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Baybayin' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1700.pdf' },
+    ],
+  },
+  {
+    id: 'tifinagh',
+    name: 'Tifinagh',
+    nativeName: 'ⵜⵉⴼⵉⵏⴰⵖ',
+    type: 'alphabet',
+    status: 'living',
+    region: ['North Africa'],
+    startYear: -300,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Tifinagh'],
+    sampleGlyphs: ['ⴰ', 'ⴱ', 'ⴳ', 'ⴷ'],
+    characterRows:
+      'ⴰ ⴱ ⴳ ⴷ ⴹ ⴻ ⴼ ⴽ ⵀ ⵃ ⵄ ⵅ ⵇ ⵉ ⵊ ⵍ ⵎ ⵏ ⵓ ⵔ ⵕ ⵖ ⵙ ⵚ ⵛ ⵜ ⵟ ⵡ ⵢ ⵣ ⵥ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Berber/Amazigh alphabet with ancient Libyco-Berber ancestry and modern standardized forms used in North Africa.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tifinagh' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U2D30.pdf' },
+    ],
+  },
+  {
+    id: 'nko',
+    name: 'N’Ko',
+    nativeName: 'ߒߞߏ',
+    type: 'alphabet',
+    status: 'living',
+    region: ['West Africa'],
+    startYear: 1949,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['NKo'],
+    sampleGlyphs: ['ߊ', 'ߋ', 'ߌ', 'ߍ'],
+    characterRows:
+      'ߊ ߋ ߌ ߍ ߎ ߏ ߐ ߓ ߔ ߕ ߖ ߗ ߘ ߙ ߚ ߛ ߜ ߝ ߞ ߟ ߠ ߡ ߢ ߣ ߤ ߥ ߦ ߧ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A right-to-left alphabet created for Manding languages of West Africa, with its own literary and educational tradition.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/N%27Ko_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U07C0.pdf' },
+    ],
+  },
+  {
+    id: 'adlam',
+    name: 'Adlam',
+    nativeName: '𞤀𞤣𞤤𞤢𞤥',
+    type: 'alphabet',
+    status: 'living',
+    region: ['West Africa'],
+    startYear: 1989,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['Adlam'],
+    sampleGlyphs: ['𞤀', '𞤁', '𞤂', '𞤃'],
+    characterRows: characterRows(
+      '𞤀 𞤁 𞤂 𞤃 𞤄 𞤅 𞤆 𞤇 𞤈 𞤉 𞤊 𞤋 𞤌 𞤍 𞤎 𞤏 𞤐 𞤑 𞤒 𞤓 𞤔 𞤕 𞤖 𞤗 𞤘 𞤙 𞤚 𞤛',
+      undefined,
+      '𞤢 𞤣 𞤤 𞤥 𞤦 𞤧 𞤨 𞤩 𞤪 𞤫 𞤬 𞤭 𞤮 𞤯 𞤰 𞤱 𞤲 𞤳 𞤴 𞤵 𞤶 𞤷 𞤸 𞤹 𞤺 𞤻 𞤼 𞤽',
+    ),
+    summary:
+      'A modern right-to-left alphabet for Fulani/Pular. It has case pairs and is actively used in publishing and education.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Adlam_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1E900.pdf' },
+    ],
+  },
+  {
+    id: 'vai',
+    name: 'Vai',
+    type: 'syllabary',
+    status: 'living',
+    region: ['West Africa'],
+    startYear: 1833,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Vai'],
+    inventoryMode: 'representative',
+    sampleGlyphs: ['ꔀ', 'ꔁ', 'ꔂ', 'ꔃ'],
+    characterRows:
+      'ꔀ ꔁ ꔂ ꔃ ꔄ ꔅ ꔆ ꔇ ꔈ ꔉ ꔊ ꔋ ꔌ ꔍ ꔎ ꔏ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A West African syllabary for the Vai language. Its large finite inventory is shown here with representative signs.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Vai_syllabary' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UA500.pdf' },
+    ],
+  },
+  {
+    id: 'old-turkic',
+    name: 'Old Turkic',
+    type: 'alphabet',
+    status: 'historical',
+    region: ['Central Asia'],
+    startYear: 700,
+    endYear: 1000,
+    direction: 'rtl',
+    unicodeBlock: ['Old Turkic'],
+    sampleGlyphs: ['𐰀', '𐰁', '𐰂', '𐰃'],
+    characterRows:
+      '𐰀 𐰁 𐰂 𐰃 𐰄 𐰅 𐰆 𐰇 𐰈 𐰉 𐰊 𐰋 𐰌 𐰍 𐰎 𐰏 𐰐 𐰑 𐰒 𐰓 𐰔 𐰕 𐰖 𐰗 𐰘 𐰙 𐰚 𐰛 𐰜 𐰝 𐰞 𐰟 𐰠 𐰡 𐰢 𐰣 𐰤 𐰥'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A runiform alphabet used for early Turkic inscriptions in Central Asia. It is not a descendant of Germanic runes despite superficial visual comparison.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Turkic_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10C00.pdf' },
+    ],
+  },
+  {
+    id: 'mongolian',
+    name: 'Mongolian',
+    nativeName: 'ᠮᠣᠩᠭᠣᠯ',
+    type: 'alphabet',
+    status: 'living',
+    region: ['Central Asia'],
+    startYear: 1204,
+    endYear: 'present',
+    direction: 'ttb',
+    unicodeBlock: ['Mongolian'],
+    sampleGlyphs: ['ᠠ', 'ᠡ', 'ᠢ', 'ᠣ'],
+    characterRows:
+      'ᠠ ᠡ ᠢ ᠣ ᠤ ᠥ ᠦ ᠧ ᠨ ᠩ ᠪ ᠫ ᠬ ᠭ ᠮ ᠯ ᠰ ᠱ ᠲ ᠳ ᠴ ᠵ ᠶ ᠷ ᠸ ᠹ ᠺ ᠻ ᠼ ᠽ ᠾ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A vertical alphabet used for Mongolian and related languages. Its lineage runs through Old Uyghur and ultimately the Aramaic-derived Central Asian branch.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Mongolian_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1800.pdf' },
+    ],
+  },
+  {
+    id: 'ugaritic',
+    name: 'Ugaritic',
+    type: 'abjad',
+    status: 'historical',
+    region: ['Middle East'],
+    startYear: -1400,
+    endYear: -1200,
+    direction: 'ltr',
+    unicodeBlock: ['Ugaritic'],
+    sampleGlyphs: ['𐎀', '𐎁', '𐎂', '𐎃'],
+    characterRows:
+      '𐎀 𐎁 𐎂 𐎃 𐎄 𐎅 𐎆 𐎇 𐎈 𐎉 𐎊 𐎋 𐎌 𐎍 𐎎 𐎏 𐎐 𐎑 𐎒 𐎓 𐎔 𐎕 𐎖 𐎗 𐎘 𐎙 𐎚 𐎛 𐎜 𐎝'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A cuneiform abjad used for Ugaritic. It is alphabetic in structure but graphically belongs to the cuneiform writing environment.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Ugaritic_alphabet' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10380.pdf' },
+    ],
+  },
+  {
+    id: 'samaritan',
+    name: 'Samaritan',
+    nativeName: 'ࠔࠌࠓࠉࠌ',
+    type: 'abjad',
+    status: 'living',
+    region: ['Middle East'],
+    startYear: -600,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['Samaritan'],
+    sampleGlyphs: ['ࠀ', 'ࠁ', 'ࠂ', 'ࠃ'],
+    characterRows:
+      'ࠀ ࠁ ࠂ ࠃ ࠄ ࠅ ࠆ ࠇ ࠈ ࠉ ࠊ ࠋ ࠌ ࠍ ࠎ ࠏ ࠐ ࠑ ࠒ ࠓ ࠔ ࠕ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A Northwest Semitic abjad used by the Samaritan community. It preserves a branch related to Paleo-Hebrew forms.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Samaritan_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0800.pdf' },
+    ],
+  },
+  {
+    id: 'mandaic',
+    name: 'Mandaic',
+    nativeName: 'ࡌࡀࡍࡃࡀࡉࡀ',
+    type: 'abjad',
+    status: 'living',
+    region: ['Middle East'],
+    startYear: 200,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['Mandaic'],
+    sampleGlyphs: ['ࡀ', 'ࡁ', 'ࡂ', 'ࡃ'],
+    characterRows:
+      'ࡀ ࡁ ࡂ ࡃ ࡄ ࡅ ࡆ ࡇ ࡈ ࡉ ࡊ ࡋ ࡌ ࡍ ࡎ ࡏ ࡐ ࡑ ࡒ ࡓ ࡔ ࡕ'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'An Aramaic-derived abjad used by Mandaean communities. It remains a living liturgical and community script.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Mandaic_alphabet' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0840.pdf' },
+    ],
+  },
+  {
+    id: 'old-persian',
+    name: 'Old Persian Cuneiform',
+    type: 'syllabary',
+    status: 'historical',
+    region: ['Middle East'],
+    startYear: -525,
+    endYear: -330,
+    direction: 'ltr',
+    unicodeBlock: ['Old Persian'],
+    sampleGlyphs: ['𐎠', '𐎡', '𐎢', '𐎣'],
+    characterRows:
+      '𐎠 𐎡 𐎢 𐎣 𐎤 𐎥 𐎦 𐎧 𐎨 𐎩 𐎪 𐎫 𐎬 𐎭 𐎮 𐎯 𐎰 𐎱 𐎲 𐎳 𐎴 𐎵 𐎶 𐎷 𐎸 𐎹 𐎺 𐎻 𐎼 𐎽 𐎾 𐎿 𐏀 𐏁 𐏂 𐏃 𐏈 𐏉 𐏊 𐏋'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A cuneiform syllabary and logographic system created for royal Old Persian inscriptions. It should not be connected as a descendant of Phoenician letters.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Persian_cuneiform' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U103A0.pdf' },
+    ],
+  },
+  {
+    id: 'osage',
+    name: 'Osage',
+    nativeName: '𐓏𐓘𐓻𐓘𐓻𐓟',
+    type: 'alphabet',
+    status: 'living',
+    region: ['North America'],
+    startYear: 2006,
+    endYear: 'present',
+    direction: 'ltr',
+    unicodeBlock: ['Osage'],
+    sampleGlyphs: ['𐒰', '𐒱', '𐒲', '𐒳'],
+    characterRows: characterRows(
+      '𐒰 𐒱 𐒲 𐒳 𐒴 𐒵 𐒶 𐒷 𐒸 𐒹 𐒺 𐒻 𐒼 𐒽 𐒾 𐒿 𐓀 𐓁 𐓂 𐓃 𐓄 𐓅 𐓆 𐓇 𐓈 𐓉 𐓊',
+      undefined,
+      '𐓘 𐓙 𐓚 𐓛 𐓜 𐓝 𐓞 𐓟 𐓠 𐓡 𐓢 𐓣 𐓤 𐓥 𐓦 𐓧 𐓨 𐓩 𐓪 𐓫 𐓬 𐓭 𐓮 𐓯 𐓰 𐓱 𐓲',
+    ),
+    summary:
+      'A modern alphabet for the Osage language, with uppercase and lowercase forms encoded in Unicode.',
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Osage_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U104B0.pdf' },
     ],
   },
 ]
@@ -980,6 +1795,26 @@ export const edges: ScriptEdge[] = [
   { from: 'old-italic', to: 'runic', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Runes'] },
   { from: 'latin', to: 'ogham', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Ogham'] },
   { from: 'oracle-bone', to: 'chinese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Chinese_characters'] },
+  { from: 'chinese', to: 'hiragana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hiragana'] },
+  { from: 'chinese', to: 'katakana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Katakana'] },
+  { from: 'chinese', to: 'bopomofo', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Bopomofo'] },
+  { from: 'greek', to: 'glagolitic', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Glagolitic_script'] },
+  { from: 'brahmi', to: 'sinhala', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sinhala_script'] },
+  { from: 'brahmi', to: 'odia', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Odia_script'] },
+  { from: 'brahmi', to: 'malayalam', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Malayalam_script'] },
+  { from: 'brahmi', to: 'meetei-mayek', relationship: 'descended', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Meitei_script'] },
+  { from: 'brahmi', to: 'myanmar', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Burmese_alphabet'] },
+  { from: 'brahmi', to: 'cham', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Cham_script'] },
+  { from: 'brahmi', to: 'javanese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Javanese_script'] },
+  { from: 'brahmi', to: 'balinese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Balinese_script'] },
+  { from: 'brahmi', to: 'sundanese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sundanese_script'] },
+  { from: 'brahmi', to: 'tagalog', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Baybayin'] },
+  { from: 'thai', to: 'lao', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Lao_script'] },
+  { from: 'aramaic', to: 'samaritan', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Samaritan_script'] },
+  { from: 'aramaic', to: 'mandaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Mandaic_alphabet'] },
+  { from: 'aramaic', to: 'mongolian', relationship: 'descended', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Mongolian_script'] },
+  { from: 'latin', to: 'deseret', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Deseret_alphabet'] },
+  { from: 'latin', to: 'osage', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Osage_script'] },
 ]
 
 export const guidedTraces = [

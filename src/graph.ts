@@ -119,10 +119,16 @@ function getAzPosition(script: ScriptNode, index: number) {
   return { x: column * 260, y: row * 150 }
 }
 
+function getLineageFallbackPosition(index: number) {
+  const column = index % 4
+  const row = Math.floor(index / 4)
+  return { x: 1700 + column * 240, y: -40 + row * 145 }
+}
+
 function getPosition(script: ScriptNode, viewMode: ViewMode, index: number) {
   if (viewMode === 'timeline') return timelinePositions[script.id]
   if (viewMode === 'az') return getAzPosition(script, index)
-  return lineagePositions[script.id] ?? { x: index * 240, y: 0 }
+  return lineagePositions[script.id] ?? getLineageFallbackPosition(index)
 }
 
 export function getRelatedIds(selectedId: string | null) {

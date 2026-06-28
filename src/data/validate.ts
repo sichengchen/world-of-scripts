@@ -1,6 +1,7 @@
 import { edges, guidedTraces, scripts, scriptTypes } from './scripts'
 
 const letterBasedTypes = ['alphabet', 'abjad', 'abugida', 'featural']
+const finiteInventoryTypes = [...letterBasedTypes, 'syllabary']
 const representativeExampleLimit = 16
 
 export function validateContent() {
@@ -16,11 +17,12 @@ export function validateContent() {
     if (!script.sampleGlyphs.length) errors.push(`${script.id} is missing sample glyphs`)
     if (!script.sources.length) errors.push(`${script.id} is missing sources`)
     if (!scriptTypes.includes(script.type)) errors.push(`${script.id} has an unknown type`)
-    if (letterBasedTypes.includes(script.type) && (!script.characterRows || script.characterRows.length < 20)) {
-      errors.push(`${script.id} is letter-based and must list its full core letter inventory in characterRows`)
+    const inventoryMode = script.inventoryMode ?? (finiteInventoryTypes.includes(script.type) ? 'full' : 'representative')
+    if (inventoryMode === 'full' && !script.characterRows?.length) {
+      errors.push(`${script.id} has a finite inventory and must list it in characterRows`)
     }
-    if (!letterBasedTypes.includes(script.type) && (!script.characterRows || script.characterRows.length < representativeExampleLimit)) {
-      errors.push(`${script.id} is non-letter-based and must list at least ${representativeExampleLimit} representative examples`)
+    if (inventoryMode === 'representative' && (!script.characterRows || script.characterRows.length < representativeExampleLimit)) {
+      errors.push(`${script.id} must list at least ${representativeExampleLimit} representative examples`)
     }
     for (const visualGlyph of script.visualGlyphs ?? []) {
       if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)

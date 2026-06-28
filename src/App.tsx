@@ -55,6 +55,7 @@ validateContent()
 const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode }
 const letterBasedTypes: ScriptNode['type'][] = ['alphabet', 'abjad', 'abugida', 'featural']
 const representativeExampleLimit = 16
+const finiteInventoryTypes: ScriptNode['type'][] = [...letterBasedTypes, 'syllabary']
 
 type Filters = {
   type: 'all' | ScriptNode['type']
@@ -477,13 +478,14 @@ function Inspector({
     )
   }
 
-  const isLetterBased = letterBasedTypes.includes(script.type)
+  const inventoryMode = script.inventoryMode ?? (finiteInventoryTypes.includes(script.type) ? 'full' : 'representative')
+  const isFiniteInventory = inventoryMode === 'full'
   const fallbackCharacterRows: NonNullable<ScriptNode['characterRows']> = script.sampleGlyphs.map((glyph) => ({
     glyph,
   }))
   const characterRows = (script.characterRows ?? fallbackCharacterRows).slice(
     0,
-    isLetterBased ? undefined : representativeExampleLimit,
+    isFiniteInventory ? undefined : representativeExampleLimit,
   )
 
   return (
@@ -522,7 +524,7 @@ function Inspector({
       <section>
         <div className="mb-2.5 flex items-center gap-2">
           <BookOpen className="size-4 shrink-0" />
-          <h2 className="text-sm font-semibold">{isLetterBased ? 'Letters' : 'Representative signs'}</h2>
+          <h2 className="text-sm font-semibold">{isFiniteInventory ? 'Characters' : 'Representative signs'}</h2>
         </div>
         {script.visualGlyphs ? (
           <div className="grid grid-cols-2 gap-2">
