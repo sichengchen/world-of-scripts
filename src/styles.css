@@ -5,6 +5,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "Noto Serif Tangut";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("@fontsource/noto-serif-tangut/files/noto-serif-tangut-tangut-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans Nushu";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("@fontsource/noto-sans-nushu/files/noto-sans-nushu-nushu-400-normal.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light;
   font-family: "Geist Variable", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -113,9 +129,10 @@ body,
 }
 
 .node-glyphs,
-.script-glyph {
+.script-glyph,
+.script-native {
   color: var(--foreground);
-  font-family: "Noto Sans", "Noto Sans Symbols 2", "Noto Sans Brahmi", "Noto Sans CJK SC", serif;
+  font-family: var(--script-font, "Noto Sans", "Noto Sans Symbols 2", "Noto Sans CJK SC", serif);
   letter-spacing: 0;
 }
 

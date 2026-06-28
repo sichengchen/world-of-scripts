@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",
+    "@fontsource/noto-sans-nushu": "^5.2.6",
+    "@fontsource/noto-serif-tangut": "^5.2.7",
     "@tailwindcss/vite": "^4.3.1",
     "@vitejs/plugin-react": "^5.0.0",
     "@xyflow/react": "^12.8.5",

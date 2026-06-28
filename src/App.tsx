@@ -56,6 +56,114 @@ const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode 
 const letterBasedTypes: ScriptNode['type'][] = ['alphabet', 'abjad', 'abugida', 'featural']
 const representativeExampleLimit = 16
 const finiteInventoryTypes: ScriptNode['type'][] = [...letterBasedTypes, 'syllabary']
+const fallbackScriptFont = '"Noto Sans", "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", serif'
+const scriptFontStacks: Record<string, string> = {
+  'egyptian-hieroglyphs': `"Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", ${fallbackScriptFont}`,
+  'proto-sinaitic': `"Noto Sans Proto-Sinaitic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  phoenician: `"Noto Sans Phoenician", "Segoe UI Historic", ${fallbackScriptFont}`,
+  greek: `"Noto Serif Greek", "Noto Serif", "Times New Roman", ${fallbackScriptFont}`,
+  'old-italic': `"Noto Sans Old Italic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  latin: `"Noto Serif", Georgia, "Times New Roman", ${fallbackScriptFont}`,
+  coptic: `"Noto Sans Coptic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  gothic: `"Noto Sans Gothic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  cyrillic: `"Noto Serif", Georgia, "Times New Roman", ${fallbackScriptFont}`,
+  aramaic: `"Noto Sans Imperial Aramaic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  hebrew: `"Noto Sans Hebrew", "Arial Hebrew", "SBL Hebrew", ${fallbackScriptFont}`,
+  syriac: `"Noto Sans Syriac", "Estrangelo Edessa", ${fallbackScriptFont}`,
+  nabataean: `"Noto Sans Nabataean", "Segoe UI Historic", ${fallbackScriptFont}`,
+  arabic: `"Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Segoe UI", ${fallbackScriptFont}`,
+  brahmi: `"Noto Sans Brahmi", "Segoe UI Historic", ${fallbackScriptFont}`,
+  devanagari: `"Noto Sans Devanagari", "Kohinoor Devanagari", Mangal, ${fallbackScriptFont}`,
+  'bengali-assamese': `"Noto Sans Bengali", "Kohinoor Bangla", "Bangla MN", Vrinda, ${fallbackScriptFont}`,
+  gujarati: `"Noto Sans Gujarati", "Gujarati Sangam MN", Shruti, ${fallbackScriptFont}`,
+  gurmukhi: `"Noto Sans Gurmukhi", "Gurmukhi MN", Raavi, ${fallbackScriptFont}`,
+  tamil: `"Noto Sans Tamil", "Tamil Sangam MN", Latha, ${fallbackScriptFont}`,
+  kannada: `"Noto Sans Kannada", "Kannada Sangam MN", Tunga, ${fallbackScriptFont}`,
+  telugu: `"Noto Sans Telugu", "Telugu Sangam MN", Gautami, ${fallbackScriptFont}`,
+  khmer: `"Noto Sans Khmer", "Khmer MN", "Leelawadee UI", ${fallbackScriptFont}`,
+  thai: `"Noto Sans Thai", "Thonburi", "Leelawadee UI", Tahoma, ${fallbackScriptFont}`,
+  tibetan: `"Noto Sans Tibetan", "Kailasa", "Microsoft Himalaya", ${fallbackScriptFont}`,
+  geez: `"Noto Sans Ethiopic", "Kefa", "Nyala", ${fallbackScriptFont}`,
+  armenian: `"Noto Sans Armenian", "Mshtakan", "Sylfaen", ${fallbackScriptFont}`,
+  georgian: `"Noto Sans Georgian", "Noto Serif Georgian", "Sylfaen", ${fallbackScriptFont}`,
+  runic: `"Noto Sans Runic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  ogham: `"Noto Sans Ogham", "Segoe UI Historic", ${fallbackScriptFont}`,
+  hangul: `"Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", "Noto Sans KR", ${fallbackScriptFont}`,
+  'oracle-bone': `"Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", "SimSun", ${fallbackScriptFont}`,
+  chinese: `"PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", ${fallbackScriptFont}`,
+  cuneiform: `"Noto Sans Cuneiform", "Segoe UI Historic", ${fallbackScriptFont}`,
+  maya: `"Noto Sans Mayan Numerals", ${fallbackScriptFont}`,
+  cherokee: `"Noto Sans Cherokee", "Plantagenet Cherokee", ${fallbackScriptFont}`,
+  'canadian-aboriginal': `"Noto Sans Canadian Aboriginal", "Euphemia UCAS", ${fallbackScriptFont}`,
+  hiragana: `"Hiragino Sans", "Yu Gothic", Meiryo, "Noto Sans CJK JP", "Noto Sans JP", ${fallbackScriptFont}`,
+  katakana: `"Hiragino Sans", "Yu Gothic", Meiryo, "Noto Sans CJK JP", "Noto Sans JP", ${fallbackScriptFont}`,
+  bopomofo: `"PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", "Source Han Sans TC", ${fallbackScriptFont}`,
+  yi: `"Noto Sans Yi", "Nuosu SIL", ${fallbackScriptFont}`,
+  tangut: `"Noto Serif Tangut", "Tangut Yinchuan", ${fallbackScriptFont}`,
+  nushu: `"Noto Sans Nushu", "Noto Traditional Nushu", ${fallbackScriptFont}`,
+  lisu: `"Noto Sans Lisu", ${fallbackScriptFont}`,
+  glagolitic: `"Noto Sans Glagolitic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  'linear-b': `"Noto Sans Linear B", "Aegean", "Segoe UI Historic", ${fallbackScriptFont}`,
+  deseret: `"Noto Sans Deseret", "Segoe UI Historic", ${fallbackScriptFont}`,
+  sinhala: `"Noto Sans Sinhala", "Sinhala Sangam MN", Iskoola Pota, ${fallbackScriptFont}`,
+  odia: `"Noto Sans Oriya", "Noto Sans Odia", "Oriya Sangam MN", Kalinga, ${fallbackScriptFont}`,
+  malayalam: `"Noto Sans Malayalam", "Malayalam Sangam MN", Kartika, ${fallbackScriptFont}`,
+  'meetei-mayek': `"Noto Sans Meetei Mayek", ${fallbackScriptFont}`,
+  'ol-chiki': `"Noto Sans Ol Chiki", ${fallbackScriptFont}`,
+  thaana: `"Noto Sans Thaana", "MV Boli", ${fallbackScriptFont}`,
+  myanmar: `"Noto Sans Myanmar", "Myanmar MN", "Myanmar Text", ${fallbackScriptFont}`,
+  lao: `"Noto Sans Lao", "Lao MN", "Leelawadee UI", ${fallbackScriptFont}`,
+  javanese: `"Noto Sans Javanese", "Tuladha Jejeg", ${fallbackScriptFont}`,
+  balinese: `"Noto Sans Balinese", "Aksara Bali", ${fallbackScriptFont}`,
+  sundanese: `"Noto Sans Sundanese", ${fallbackScriptFont}`,
+  cham: `"Noto Sans Cham", ${fallbackScriptFont}`,
+  tagalog: `"Noto Sans Tagalog", "Segoe UI Historic", ${fallbackScriptFont}`,
+  tifinagh: `"Noto Sans Tifinagh", "Ebrima", ${fallbackScriptFont}`,
+  nko: `"Noto Sans NKo", "Ebrima", ${fallbackScriptFont}`,
+  adlam: `"Noto Sans Adlam", "Ebrima", ${fallbackScriptFont}`,
+  vai: `"Noto Sans Vai", ${fallbackScriptFont}`,
+  'old-turkic': `"Noto Sans Old Turkic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  mongolian: `"Noto Sans Mongolian", "Mongolian Baiti", ${fallbackScriptFont}`,
+  ugaritic: `"Noto Sans Ugaritic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  samaritan: `"Noto Sans Samaritan", ${fallbackScriptFont}`,
+  mandaic: `"Noto Sans Mandaic", ${fallbackScriptFont}`,
+  'old-persian': `"Noto Sans Old Persian", "Segoe UI Historic", ${fallbackScriptFont}`,
+  osage: `"Noto Sans Osage", ${fallbackScriptFont}`,
+}
+const scriptLanguageTags: Record<string, string> = {
+  arabic: 'ar',
+  armenian: 'hy',
+  'bengali-assamese': 'bn',
+  bopomofo: 'zh-TW',
+  chinese: 'zh-Hans',
+  cyrillic: 'ru',
+  devanagari: 'hi',
+  geez: 'gez',
+  georgian: 'ka',
+  greek: 'el',
+  gujarati: 'gu',
+  gurmukhi: 'pa',
+  hangul: 'ko',
+  hebrew: 'he',
+  hiragana: 'ja',
+  kannada: 'kn',
+  katakana: 'ja',
+  khmer: 'km',
+  lao: 'lo',
+  malayalam: 'ml',
+  myanmar: 'my',
+  nushu: 'zh-Nshu',
+  'oracle-bone': 'zh-Hant',
+  odia: 'or',
+  sinhala: 'si',
+  syriac: 'syr',
+  tamil: 'ta',
+  tangut: 'txg-Tang',
+  telugu: 'te',
+  thai: 'th',
+  tibetan: 'bo',
+  yi: 'ii',
+}
 
 type Filters = {
   type: 'all' | ScriptNode['type']
@@ -412,6 +520,7 @@ function FilterSelect({
 function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
   const { script, dimmed, isRelated, isSelected, isTraced } = data
   const color = getTypeColor(script.type)
+  const scriptText = getScriptTextAttributes(script)
 
   return (
     <article
@@ -422,7 +531,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         isTraced && 'is-traced',
         dimmed && 'is-dimmed',
       )}
-      style={{ '--node-accent': color } as CSSProperties}
+      style={{ '--node-accent': color, '--script-font': scriptText.fontFamily } as CSSProperties}
       tabIndex={0}
       aria-label={`${script.name}, ${script.type}, ${formatDate(script)}`}
     >
@@ -436,7 +545,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         <span>{formatDate(script)}</span>
         <DirectionIcon direction={script.direction} />
       </div>
-      <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
+      <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'} lang={scriptText.lang}>
         {script.visualGlyphs ? (
           <SvgGlyphStrip glyphs={script.visualGlyphs.slice(0, 4)} />
         ) : (
@@ -488,11 +597,13 @@ function Inspector({
     0,
     isFiniteInventory ? undefined : representativeExampleLimit,
   )
+  const scriptText = getScriptTextAttributes(script)
 
   return (
     <aside
       className="min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:max-h-[48%] max-[820px]:rounded-t-xl max-[820px]:border-t"
       aria-label={`${script.name} details`}
+      style={{ '--script-font': scriptText.fontFamily } as CSSProperties}
     >
       <ScrollArea className="h-full">
       <div className="flex flex-col gap-4 p-4">
@@ -500,7 +611,7 @@ function Inspector({
         <div>
           <Badge variant="outline" className="mb-2 uppercase">{script.status}</Badge>
           <h1 className="text-3xl font-semibold leading-none">{script.name}</h1>
-          {script.nativeName && <p className="mt-2 text-lg text-muted-foreground">{script.nativeName}</p>}
+          {script.nativeName && <p className="script-native mt-2 text-lg text-muted-foreground" lang={scriptText.lang}>{script.nativeName}</p>}
         </div>
         <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label="Close inspector" onClick={onClose}>
           <X data-icon="inline-start" />
@@ -541,6 +652,7 @@ function Inspector({
           <div
             className={cn('grid grid-cols-4 gap-2 max-[820px]:grid-cols-5', script.visualGlyphs && 'mt-2')}
             dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}
+            lang={scriptText.lang}
           >
             {characterRows.map((row, index) => (
               <div
@@ -679,6 +791,13 @@ function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
       <Icon className="size-4 shrink-0" />
     </span>
   )
+}
+
+function getScriptTextAttributes(script: ScriptNode) {
+  return {
+    fontFamily: scriptFontStacks[script.id] ?? fallbackScriptFont,
+    lang: scriptLanguageTags[script.id],
+  }
 }
 
 function RelationGroup({
