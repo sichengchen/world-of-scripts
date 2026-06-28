@@ -953,7 +953,7 @@ function Inspector({
   return (
     <aside
       className={cn(
-        'min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:flex max-[820px]:flex-col max-[820px]:rounded-t-xl max-[820px]:border-t max-[820px]:shadow-2xl max-[820px]:transition-[height,max-height] max-[820px]:duration-200 max-[820px]:ease-out',
+        'min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-2 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:flex max-[820px]:flex-col max-[820px]:rounded-t-xl max-[820px]:border-t max-[820px]:shadow-2xl max-[820px]:transition-[height,max-height] max-[820px]:duration-200 max-[820px]:ease-out',
         expanded
           ? 'max-[820px]:h-[calc(100dvh-64px)] max-[820px]:max-h-[calc(100dvh-64px)]'
           : 'max-[820px]:h-[48dvh] max-[820px]:max-h-[48dvh]',
