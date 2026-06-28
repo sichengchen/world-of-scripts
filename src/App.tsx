@@ -22,7 +22,6 @@ import {
   Filter,
   Github,
   GitBranch,
-  GripHorizontal,
   Info,
   MessageSquare,
   Minus,
@@ -1183,13 +1182,13 @@ function Inspector({
         onPointerDown={handleSheetPointerDown}
         onPointerUp={handleSheetPointerUp}
       >
-        <GripHorizontal className="size-5" aria-hidden="true" />
+        <span className="h-1 w-10 rounded-full bg-muted-foreground/40" aria-hidden="true" />
       </button>
       <ScrollArea className="h-full min-h-0">
       <div className="flex flex-col gap-4 p-4 max-[820px]:pb-8 max-[820px]:pt-2">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-3 max-[820px]:justify-start max-[820px]:gap-2">
             <h2 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h2>
             <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
           </div>
