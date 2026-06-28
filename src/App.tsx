@@ -625,9 +625,11 @@ function Inspector({
       <ScrollArea className="h-full">
       <div className="flex flex-col gap-4 p-4">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <Badge variant="outline" className="mb-2 uppercase">{script.status}</Badge>
-          <h1 className="text-3xl font-semibold leading-none">{script.name}</h1>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h1>
+            <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
+          </div>
           {script.nativeName && <p className="script-native mt-2 text-lg text-muted-foreground" lang={scriptText.lang}>{script.nativeName}</p>}
         </div>
         <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label="Close inspector" onClick={onClose}>
