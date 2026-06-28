@@ -4,56 +4,31 @@
 
 # World of Scripts
 
-World of Scripts is an interactive web app for exploring writing systems, their histories, and their documented relationships.
+World of Scripts visualizes the connections, lineages, and histories between different writing systems.
+
+Some connections are familiar: Greek, Latin and Cyrillic have the same ancestor, or Chinese characters shaping the worlds of kana, and some other East Asian scripts. Others are easier to miss, such as Aramaic feeding into Hebrew, Syriac, Nabataean, and later Arabic, or Brahmi becoming the origin of many scripts across South and Southeast Asia.
+
+This project turns those histories into a map.
+
+Select a script to inspect its glyphs, dates, regions, writing direction, notes, sources, and direct lineage links. Switch between lineage, timeline, and A-Z views to read the same history in different ways.
 
 Live site: [scripts.imean.fyi](https://scripts.imean.fyi)
 
-The main view is a zoomable family-tree style diagram. Select a script node to see its characters or representative signs, date range, region, writing direction, historical notes, and direct lineage links.
+## Feedback
 
-## Features
-
-- Interactive lineage diagram for major writing systems.
-- Search, filters, and guided traces for important script families.
-- Inspector panel with character grids, examples, metadata, notes, and sources.
-- Direction icons for left-to-right, right-to-left, vertical, bottom-to-top, and mixed writing behavior.
-- Curated relationship edges: lines are only shown where the relationship is sourced.
-- SVG glyph samples for scripts where plain Unicode text is incomplete or misleading.
-
-## References
-
-This project draws on public references including:
-
-- [Wikipedia: Alphabet](https://en.wikipedia.org/wiki/Alphabet)
-- [World Writing Systems](https://www.worldswritingsystems.org/)
-
-Relationship data is curated conservatively. A missing line does not mean two scripts are unrelated; it means the app is not currently showing a sourced direct relationship.
+This project **is not** a professional source. It may contain mistakes. Corrections, missing scripts, source issues, and UI problems are welcome in [Issues](https://github.com/sichengchen/world-of-scripts/issues).
 
 ## Development
 
-Install dependencies:
-
 ```sh
 npm install
-```
-
-Run the development server:
-
-```sh
 npm run dev
-```
-
-Build for production:
-
-```sh
 npm run build
-```
-
-Validate the script dataset:
-
-```sh
 npm run validate:content
 ```
 
-## Feedback
+## References
 
-Report corrections, missing scripts, source issues, or UI problems in [GitHub Issues](https://github.com/sichengchen/world-of-scripts/issues).
+- [Wikipedia: Alphabet](https://en.wikipedia.org/wiki/Alphabet)
+- [World Writing Systems](https://www.worldswritingsystems.org/)
+- Unicode code charts and core specification chapters where relevant.
