@@ -50,7 +50,16 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
-import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
+import {
+  SCRIPT_NODE_HEIGHT,
+  SCRIPT_NODE_WIDTH,
+  createGraph,
+  getRelatedIds,
+  getTypeColor,
+  type ScriptNodeData,
+  type TimelineTickData,
+  type ViewMode,
+} from './graph'
 
 validateContent()
 
@@ -189,7 +198,7 @@ function AlphabetWorld() {
   const [viewMode, setViewMode] = useState<ViewMode>('lineage')
   const [activeTrace, setActiveTrace] = useState<string | null>('latin-path')
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const { fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
+  const { fitBounds, fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
 
   const activeTraceIds = useMemo<Set<string>>(
     () => new Set(guidedTraces.find((trace) => trace.id === activeTrace)?.nodeIds ?? []),
@@ -211,6 +220,17 @@ function AlphabetWorld() {
     () => createGraph({ activeTraceIds, relatedIds, selectedId, visibleIds, viewMode }),
     [activeTraceIds, relatedIds, selectedId, visibleIds, viewMode],
   )
+  const activeTraceBounds = useMemo(() => {
+    const traceNodes = nodes.filter((node) => node.type === 'scriptNode' && activeTraceIds.has(node.id))
+    if (!traceNodes.length) return null
+
+    const left = Math.min(...traceNodes.map((node) => node.position.x))
+    const top = Math.min(...traceNodes.map((node) => node.position.y))
+    const right = Math.max(...traceNodes.map((node) => node.position.x + SCRIPT_NODE_WIDTH))
+    const bottom = Math.max(...traceNodes.map((node) => node.position.y + SCRIPT_NODE_HEIGHT))
+
+    return { x: left, y: top, width: right - left, height: bottom - top }
+  }, [activeTraceIds, nodes])
 
   const matchingScripts = useMemo(() => {
     const normalized = query.trim().toLowerCase()
@@ -235,9 +255,21 @@ function AlphabetWorld() {
   }, [query])
 
   useEffect(() => {
+    if (activeTrace) return undefined
     const handle = window.setTimeout(() => fitView({ padding: 0.18, duration: 600 }), 80)
     return () => window.clearTimeout(handle)
-  }, [fitView, viewMode, filters])
+  }, [activeTrace, fitView, viewMode, filters])
+
+  useEffect(() => {
+    if (!activeTrace || !activeTraceBounds) return undefined
+    const handle = window.setTimeout(() => {
+      fitBounds(activeTraceBounds, {
+        padding: 0.24,
+        duration: 650,
+      })
+    }, 80)
+    return () => window.clearTimeout(handle)
+  }, [activeTrace, activeTraceBounds, fitBounds, viewMode])
 
   function selectScript(id: string) {
     const node = nodes.find((item) => item.id === id)
