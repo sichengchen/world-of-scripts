@@ -269,13 +269,14 @@ function createEdge(
     targetHandle: 'target',
     type: 'default',
     animated: isTrace,
+    className: isTrace ? 'guide-edge' : undefined,
     zIndex: isTrace ? 2 : isRelated ? 1 : 0,
     label: edge.relationship === 'disputed' ? 'disputed' : undefined,
     style: {
       stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
       strokeWidth: isTrace ? 2 : isRelated ? 1.5 : 1,
       strokeDasharray:
-        edge.relationship === 'influenced_by' || edge.relationship === 'disputed' ? '7 6' : undefined,
+        !isTrace && (edge.relationship === 'influenced_by' || edge.relationship === 'disputed') ? '7 6' : undefined,
       opacity: selectedId || activeTraceIds.size ? (isTrace || isRelated ? 0.95 : 0.18) : 0.74,
     },
   }
