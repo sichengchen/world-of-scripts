@@ -15,6 +15,7 @@ import {
   ArrowUp,
   BookOpen,
   Bug,
+  CircleHelp,
   Compass,
   Filter,
   GitBranch,
@@ -898,20 +899,45 @@ function RelationGroup({
 function Legend() {
   return (
     <div
-      className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-3 rounded-lg border bg-card px-3 py-2 text-xs font-medium text-muted-foreground shadow-sm max-[820px]:bottom-48 max-[820px]:left-3 max-[820px]:right-3 max-[820px]:justify-between max-[820px]:gap-2"
+      className="group absolute bottom-4 left-4 z-10 inline-flex items-center rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground shadow-sm transition-all focus-within:px-3 hover:px-3 max-[820px]:bottom-48 max-[820px]:left-3"
       aria-label="Relationship legend"
+      tabIndex={0}
     >
-      <span>
-        <i className="inline-block w-7 border-t border-muted-foreground" /> descended/adapted
-      </span>
-      <span>
-        <i className="inline-block w-7 border-t border-dashed border-muted-foreground" /> influenced/disputed
-      </span>
-      <span className="inline-flex items-center gap-1.5">
-        <i className="inline-block w-7 border-t-2 border-foreground" />
-        selected path
-      </span>
+      <CircleHelp className="size-4 shrink-0" aria-hidden="true" />
+      <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[520px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[520px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:grid-cols-1 max-[820px]:items-start">
+        <LegendItem label="descended/adapted" />
+        <LegendItem dashed label="influenced/disputed" />
+        <LegendItem strong label="selected path" />
+      </div>
     </div>
+  )
+}
+
+function LegendItem({
+  dashed = false,
+  label,
+  strong = false,
+}: {
+  dashed?: boolean
+  label: string
+  strong?: boolean
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+      <svg className="h-3.5 w-8 shrink-0" aria-hidden="true" viewBox="0 0 32 14">
+        <line
+          x1="2"
+          x2="30"
+          y1="7"
+          y2="7"
+          stroke="currentColor"
+          strokeDasharray={dashed ? '5 4' : undefined}
+          strokeLinecap="round"
+          strokeWidth={strong ? 2 : 1.4}
+        />
+      </svg>
+      <span className={strong ? 'text-foreground' : undefined}>{label}</span>
+    </span>
   )
 }
 
