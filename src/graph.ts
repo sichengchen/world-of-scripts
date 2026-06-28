@@ -20,6 +20,7 @@ export type GraphNodeData = ScriptNodeData | TimelineTickData
 
 export const SCRIPT_NODE_WIDTH = 188
 export const SCRIPT_NODE_HEIGHT = 106
+export const EDGE_HANDLE_SLOT_COUNT = 5
 export const TIMELINE_NODE_WIDTH = SCRIPT_NODE_WIDTH
 const TIMELINE_START_YEAR = -3400
 const TIMELINE_END_YEAR = new Date().getFullYear()
@@ -123,6 +124,7 @@ const lineagePositions: Record<string, { x: number; y: number }> = {
 }
 
 const timelinePositions = buildTimelinePositions()
+const centerHandleSlot = Math.floor(EDGE_HANDLE_SLOT_COUNT / 2)
 
 function buildTimelinePositions() {
   const sorted = [...scripts].sort((a, b) => (a.startYear ?? 0) - (b.startYear ?? 0))
@@ -236,12 +238,14 @@ export function createGraph({
         }))
       : []
 
-  const graphEdges =
+  const visibleLineageEdges =
     viewMode === 'lineage'
-      ? edges
-          .filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to))
-          .map((edge) => createEdge(edge, activeTraceIds, relatedIds, selectedId))
+      ? edges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to))
       : []
+  const edgeRouting = buildEdgeRouting(visibleLineageEdges)
+  const graphEdges = visibleLineageEdges.map((edge) =>
+    createEdge(edge, activeTraceIds, relatedIds, selectedId, edgeRouting.get(edgeKey(edge))),
+  )
 
   return { nodes: [...tickNodes, ...scriptNodes], graphEdges }
 }
@@ -251,10 +255,11 @@ function createEdge(
   activeTraceIds: Set<string>,
   relatedIds: Set<string>,
   selectedId: string | null,
+  routing: { sourceSlot: number; targetSlot: number } = { sourceSlot: centerHandleSlot, targetSlot: centerHandleSlot },
 ): Edge {
   const relationshipColor =
     edge.relationship === 'descended' || edge.relationship === 'adapted_from'
-      ? '#262626'
+      ? '#737373'
       : edge.relationship === 'disputed'
         ? '#737373'
         : '#525252'
@@ -265,8 +270,11 @@ function createEdge(
     id: `${edge.from}-${edge.to}`,
     source: edge.from,
     target: edge.to,
-    type: 'smoothstep',
+    sourceHandle: `source-${routing.sourceSlot}`,
+    targetHandle: `target-${routing.targetSlot}`,
+    type: 'default',
     animated: isTrace,
+    zIndex: isTrace ? 20 : isRelated ? 12 : 0,
     label: edge.relationship === 'disputed' ? 'disputed' : undefined,
     style: {
       stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
@@ -280,6 +288,48 @@ function createEdge(
       color: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
     },
   }
+}
+
+function buildEdgeRouting(visibleEdges: ScriptEdge[]) {
+  const outgoing = groupEdges(visibleEdges, 'from')
+  const incoming = groupEdges(visibleEdges, 'to')
+  const routing = new Map<string, { sourceSlot: number; targetSlot: number }>()
+
+  for (const edge of visibleEdges) {
+    routing.set(edgeKey(edge), {
+      sourceSlot: slotForEdge(edge, outgoing.get(edge.from) ?? []),
+      targetSlot: slotForEdge(edge, incoming.get(edge.to) ?? []),
+    })
+  }
+
+  return routing
+}
+
+function groupEdges(visibleEdges: ScriptEdge[], key: 'from' | 'to') {
+  const groups = new Map<string, ScriptEdge[]>()
+
+  for (const edge of visibleEdges) {
+    const group = groups.get(edge[key]) ?? []
+    group.push(edge)
+    groups.set(edge[key], group)
+  }
+
+  return groups
+}
+
+function slotForEdge(edge: ScriptEdge, siblings: ScriptEdge[]) {
+  if (siblings.length <= 1) return centerHandleSlot
+
+  const index = siblings.findIndex((sibling) => edgeKey(sibling) === edgeKey(edge))
+  if (siblings.length === 2) return index === 0 ? 1 : 3
+  if (siblings.length === 3) return index + 1
+  if (siblings.length === 4) return [0, 1, 3, 4][index] ?? centerHandleSlot
+
+  return Math.round((Math.max(index, 0) / (siblings.length - 1)) * (EDGE_HANDLE_SLOT_COUNT - 1))
+}
+
+function edgeKey(edge: ScriptEdge) {
+  return `${edge.from}->${edge.to}`
 }
 
 export function getTypeColor(type: ScriptNode['type']) {

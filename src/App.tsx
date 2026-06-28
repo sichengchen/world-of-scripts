@@ -48,7 +48,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
-import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
+import { EDGE_HANDLE_SLOT_COUNT, createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
 
 validateContent()
 
@@ -535,8 +535,26 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       tabIndex={0}
       aria-label={`${script.name}, ${script.type}, ${formatDate(script)}`}
     >
-      <Handle className="node-handle" type="target" position={Position.Left} />
-      <Handle className="node-handle" type="source" position={Position.Right} />
+      {Array.from({ length: EDGE_HANDLE_SLOT_COUNT }, (_, slot) => (
+        <Handle
+          className="node-handle"
+          id={`target-${slot}`}
+          key={`target-${slot}`}
+          position={Position.Left}
+          style={{ top: `${getHandleTop(slot)}%` }}
+          type="target"
+        />
+      ))}
+      {Array.from({ length: EDGE_HANDLE_SLOT_COUNT }, (_, slot) => (
+        <Handle
+          className="node-handle"
+          id={`source-${slot}`}
+          key={`source-${slot}`}
+          position={Position.Right}
+          style={{ top: `${getHandleTop(slot)}%` }}
+          type="source"
+        />
+      ))}
       <div className="flex items-start justify-between gap-2">
         <strong>{script.name}</strong>
         <Badge variant="secondary">{script.type}</Badge>
@@ -795,6 +813,11 @@ function getScriptTextAttributes(script: ScriptNode) {
   }
 }
 
+function getHandleTop(slot: number) {
+  if (EDGE_HANDLE_SLOT_COUNT <= 1) return 50
+  return 18 + (slot / (EDGE_HANDLE_SLOT_COUNT - 1)) * 64
+}
+
 function RelationGroup({
   label,
   onSelect,
@@ -829,13 +852,13 @@ function Legend() {
       aria-label="Relationship legend"
     >
       <span>
-        <i className="inline-block w-7 border-t-2 border-foreground" /> descended/adapted
+        <i className="inline-block w-7 border-t-2 border-muted-foreground" /> descended/adapted
       </span>
       <span>
         <i className="inline-block w-7 border-t-2 border-dashed border-muted-foreground" /> influenced/disputed
       </span>
       <span className="inline-flex items-center gap-1.5">
-        <i className="relative inline-block h-2 w-7 before:absolute before:left-0 before:right-0 before:top-1/2 before:border-t-[3px] before:border-foreground after:absolute after:left-1/2 after:top-1/2 after:size-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-foreground" />
+        <i className="inline-block w-7 border-t-[3px] border-foreground" />
         selected path
       </span>
     </div>
