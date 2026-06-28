@@ -55,6 +55,7 @@ This project values conservative content curation, readable interaction design, 
 - Relationship edges must be sourced and should stay conservative. Do not add low-confidence relationships just to make the graph look complete.
 - Keep source labels and URLs close to the data they justify.
 - If adding a script that appears in the lineage view, update `lineagePositions` in `src/graph.ts` when a deliberate placement is needed.
+- After adding, removing, or changing relationship edges, do a layout optimization pass over the affected lineage nodes in `src/graph.ts`; check for crossings, awkward routing, and misleading vertical order, not only validator errors.
 - If adding or moving lineage nodes, run `npm run validate:content` to catch overlaps and edge intersections.
 - Preserve Unicode glyphs intentionally. Do not replace script samples with ASCII approximations.
 
