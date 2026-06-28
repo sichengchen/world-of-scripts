@@ -575,7 +575,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
 
 function TimelineTickNode({ data }: { data: TimelineTickData }) {
   return (
-    <div className="pointer-events-none flex w-[104px] flex-col items-center gap-2 text-xs font-medium uppercase text-muted-foreground">
+    <div className="pointer-events-none flex w-[104px] flex-col items-center gap-2 text-xs font-medium text-muted-foreground">
       <span>{data.label}</span>
       <span className="h-8 border-l" aria-hidden="true" />
     </div>
@@ -597,7 +597,7 @@ function Inspector({
     return (
       <aside className="inspector empty-inspector" aria-label="Script details">
         <div className="p-4">
-          <Badge variant="outline" className="mb-2 uppercase">No selection</Badge>
+          <Badge variant="outline" className="mb-2">No selection</Badge>
           <h1>Select a script</h1>
         </div>
         <p className="px-4 text-sm leading-6">Click a node in the diagram to inspect its characters, lineage, and sources.</p>
@@ -642,7 +642,7 @@ function Inspector({
         <MetadataItem label="Region" value={script.region.join(', ')} />
         <MetadataItem label="Era" value={formatDate(script)} />
         <div className="rounded-lg border bg-background p-2.5">
-          <dt className="text-xs font-medium uppercase text-muted-foreground">Direction</dt>
+          <dt className="text-xs font-medium text-muted-foreground">Direction</dt>
           <dd className="mt-1 flex items-center gap-2 text-sm font-medium text-foreground">
             <DirectionIcon direction={script.direction} />
             {directionLabel(script.direction)}
@@ -781,7 +781,7 @@ function SvgGlyph({
 function MetadataItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border bg-background p-2.5">
-      <dt className="text-xs font-medium uppercase text-muted-foreground">{label}</dt>
+      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
       <dd className="mt-1 text-sm font-medium text-foreground">{value}</dd>
     </div>
   )
@@ -825,7 +825,7 @@ function RelationGroup({
 }) {
   return (
     <div className="mt-2 grid gap-2">
-      <p className="text-xs font-medium uppercase text-muted-foreground">{label}</p>
+      <p className="text-xs font-medium text-muted-foreground">{label}</p>
       {relationScripts.length ? (
         <div className="flex flex-wrap gap-2">
           {relationScripts.map((script) => (

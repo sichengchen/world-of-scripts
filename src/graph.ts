@@ -34,7 +34,7 @@ const timelineTicks: TimelineTickData[] = [
   { year: -1000, label: '1000 BCE' },
   { year: 0, label: '0' },
   { year: 1000, label: '1000 CE' },
-  { year: TIMELINE_END_YEAR, label: 'TODAY' },
+  { year: TIMELINE_END_YEAR, label: 'Today' },
 ]
 
 const typeColors: Record<ScriptNode['type'], string> = {
