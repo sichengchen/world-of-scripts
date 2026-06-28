@@ -31,6 +31,7 @@ export type ScriptNode = {
   }>
   characterRows?: Array<{
     glyph: string
+    alternateGlyph?: string
     label?: string
     transliteration?: string
   }>
@@ -56,6 +57,17 @@ export type ScriptEdge = {
   sources: string[]
 }
 
+function characterRows(glyphs: string, labels?: string, alternateGlyphs?: string): NonNullable<ScriptNode['characterRows']> {
+  const labelList = labels?.split('|')
+  const alternateGlyphList = alternateGlyphs?.split(' ')
+
+  return glyphs.split(' ').map((glyph, index) => ({
+    glyph,
+    alternateGlyph: alternateGlyphList?.[index],
+    label: labelList?.[index],
+  }))
+}
+
 export const scripts: ScriptNode[] = [
   {
     id: 'egyptian-hieroglyphs',
@@ -67,12 +79,10 @@ export const scripts: ScriptNode[] = [
     endYear: 400,
     direction: 'mixed',
     sampleGlyphs: ['𓀀', '𓃀', '𓇋', '𓊖'],
-    characterRows: [
-      { glyph: '𓃀', label: 'foot', transliteration: 'b' },
-      { glyph: '𓇋', label: 'reed', transliteration: 'i' },
-      { glyph: '𓈖', label: 'water', transliteration: 'n' },
-      { glyph: '𓂋', label: 'mouth', transliteration: 'r' },
-    ],
+    characterRows: characterRows(
+      '𓀀 𓁐 𓃀 𓇋 𓈖 𓂋 𓉐 𓊖 𓆑 𓅱 𓃭 𓇳 𓏏 𓂝 𓄿 𓈎',
+      'man|woman|foot|reed|water|mouth|house|town|viper|quail|lion|sun|loaf|arm|vulture|slope',
+    ),
     summary:
       'A monumental and manuscript writing tradition that combined logographic, syllabic, and alphabetic signs. It is an important background source for early alphabetic experiments in the Sinai and Levant.',
     notes: ['Mixed systems should not be described as alphabets.'],
@@ -91,9 +101,10 @@ export const scripts: ScriptNode[] = [
     endYear: -1500,
     direction: 'rtl',
     sampleGlyphs: ['𐤀', '𐤁', '𐤌', '𐤍'],
-    characterRows: '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕',
+      'aleph|beth|gimel|daleth|he|waw|zayin|heth|teth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|tsade|qoph|resh|shin|taw',
+    ),
     summary:
       'An early consonantal writing system often associated with the emergence of alphabetic writing. Its exact relationship to later Canaanite and Phoenician forms is partly reconstructed and debated.',
     notes: ['Glyphs shown use later Northwest Semitic forms as readable representatives.'],
@@ -113,9 +124,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Phoenician'],
     sampleGlyphs: ['𐤀', '𐤁', '𐤂', '𐤃', '𐤄'],
-    characterRows: '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕',
+      'aleph|beth|gimel|daleth|he|waw|zayin|heth|teth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|tsade|qoph|resh|shin|taw',
+    ),
     summary:
       'A compact consonantal script that became one of the most influential ancestors of later Mediterranean and Near Eastern writing systems.',
     sources: [
@@ -135,9 +147,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Greek and Coptic'],
     sampleGlyphs: ['Α', 'Β', 'Γ', 'Δ', 'Ω'],
-    characterRows: 'Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω',
+      'alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega',
+      'α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω',
+    ),
     summary:
       'Adapted from Phoenician, Greek added systematic vowel letters and became a key ancestor of several European alphabets.',
     sources: [
@@ -177,7 +191,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Basic Latin', 'Latin Extended'],
     sampleGlyphs: ['A', 'B', 'C', 'D', 'E', 'F'],
-    characterRows: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').join(' '),
+      'a|bee|cee|dee|e|ef|gee|aitch|i|jay|kay|el|em|en|o|pee|cue|ar|ess|tee|u|vee|double u|ex|wye|zed / zee',
+      'abcdefghijklmnopqrstuvwxyz'.split('').join(' '),
+    ),
     summary:
       'A Greek-derived alphabet transmitted through Old Italic and Roman use. It is now the most widely used alphabetic script family in the world.',
     sources: [
@@ -197,9 +215,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Coptic'],
     sampleGlyphs: ['Ⲁ', 'Ⲃ', 'Ⲅ', 'Ⲇ'],
-    characterRows: 'Ⲁ Ⲃ Ⲅ Ⲇ Ⲉ Ⲋ Ⲍ Ⲏ Ⲑ Ⲓ Ⲕ Ⲗ Ⲙ Ⲛ Ⲝ Ⲟ Ⲡ Ⲣ Ⲥ Ⲧ Ⲩ Ⲫ Ⲭ Ⲯ Ⲱ Ϣ Ϥ Ϧ Ϩ Ϫ Ϭ Ϯ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'Ⲁ Ⲃ Ⲅ Ⲇ Ⲉ Ⲋ Ⲍ Ⲏ Ⲑ Ⲓ Ⲕ Ⲗ Ⲙ Ⲛ Ⲝ Ⲟ Ⲡ Ⲣ Ⲥ Ⲧ Ⲩ Ⲫ Ⲭ Ⲯ Ⲱ Ϣ Ϥ Ϧ Ϩ Ϫ Ϭ Ϯ',
+      'alpha|vida|gamma|dalda|ei|so|zata|eta|theta|iota|kappa|laula|mi|ni|ksi|o|pi|ro|sima|tau|ua|fi|khi|psi|oou|shai|fai|khai|hori|djanja|shima|ti',
+      'ⲁ ⲃ ⲅ ⲇ ⲉ ⲋ ⲍ ⲏ ⲑ ⲓ ⲕ ⲗ ⲙ ⲛ ⲝ ⲟ ⲡ ⲣ ⲥ ⲧ ⲩ ⲫ ⲭ ⲯ ⲱ ϣ ϥ ϧ ϩ ϫ ϭ ϯ',
+    ),
     summary:
       'An Egyptian Christian script based largely on Greek letters with additional signs from Demotic for Egyptian sounds.',
     sources: [
@@ -240,9 +260,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Cyrillic'],
     sampleGlyphs: ['А', 'Б', 'В', 'Г', 'Д'],
-    characterRows: 'А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я',
+      'a|be|ve|ge|de|ye|yo|zhe|ze|i|short i|ka|el|em|en|o|pe|er|es|te|u|ef|ha|tse|che|sha|shcha|hard sign|yery|soft sign|e|yu|ya',
+      'а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я',
+    ),
     summary:
       'A Slavic alphabet developed in the orbit of Greek Christian literacy. It is used for Russian, Bulgarian, Serbian, Ukrainian, and many other languages.',
     sources: [
@@ -261,9 +283,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Imperial Aramaic'],
     sampleGlyphs: ['𐡀', '𐡁', '𐡂', '𐡃'],
-    characterRows: '𐡀 𐡁 𐡂 𐡃 𐡄 𐡅 𐡆 𐡇 𐡈 𐡉 𐡊 𐡋 𐡌 𐡍 𐡎 𐡏 𐡐 𐡑 𐡒 𐡓 𐡔 𐡕'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      '𐡀 𐡁 𐡂 𐡃 𐡄 𐡅 𐡆 𐡇 𐡈 𐡉 𐡊 𐡋 𐡌 𐡍 𐡎 𐡏 𐡐 𐡑 𐡒 𐡓 𐡔 𐡕',
+      'alaph|beth|gamal|dalath|he|waw|zain|heth|teth|yodh|kaph|lamadh|mem|nun|semkath|ayin|pe|sadhe|qoph|resh|shin|taw',
+    ),
     summary:
       'A major administrative and cultural script of the ancient Near East. Several later abjads and abugidas are linked to Aramaic branches.',
     sources: [
@@ -283,7 +306,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Hebrew'],
     sampleGlyphs: ['א', 'ב', 'ג', 'ד', 'ה'],
-    characterRows: 'א ב ג ד ה ו ז ח ט י כ ל מ נ ס ע פ צ ק ר ש ת'.split(' ').map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'א ב ג ד ה ו ז ח ט י כ ל מ נ ס ע פ צ ק ר ש ת',
+      'aleph|bet|gimel|dalet|he|vav|zayin|het|tet|yod|kaf|lamed|mem|nun|samekh|ayin|pe|tsadi|qof|resh|shin|tav',
+    ),
     summary:
       'A Northwest Semitic abjad used for Hebrew and Jewish languages. Its square script form is historically connected to Aramaic writing.',
     sources: [
@@ -303,9 +329,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Syriac'],
     sampleGlyphs: ['ܐ', 'ܒ', 'ܓ', 'ܕ'],
-    characterRows: 'ܐ ܒ ܓ ܕ ܗ ܘ ܙ ܚ ܛ ܝ ܟ ܠ ܡ ܢ ܣ ܥ ܦ ܨ ܩ ܪ ܫ ܬ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ܐ ܒ ܓ ܕ ܗ ܘ ܙ ܚ ܛ ܝ ܟ ܠ ܡ ܢ ܣ ܥ ܦ ܨ ܩ ܪ ܫ ܬ',
+      'alaph|beth|gamal|dalath|he|waw|zain|heth|teth|yodh|kaph|lamadh|mim|nun|semkath|e|pe|sadhe|qoph|rish|shin|taw',
+    ),
     summary:
       'An Aramaic-derived script used for Syriac and several Christian communities of the Near East, with multiple calligraphic styles.',
     sources: [
@@ -324,9 +351,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Nabataean'],
     sampleGlyphs: ['𐢀', '𐢁', '𐢂', '𐢃'],
-    characterRows: '𐢀 𐢁 𐢂 𐢃 𐢄 𐢅 𐢆 𐢇 𐢈 𐢉 𐢊 𐢋 𐢌 𐢍 𐢎 𐢏 𐢐 𐢑 𐢒 𐢓 𐢔 𐢕'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      '𐢀 𐢁 𐢂 𐢃 𐢄 𐢅 𐢆 𐢇 𐢈 𐢉 𐢊 𐢋 𐢌 𐢍 𐢎 𐢏 𐢐 𐢑 𐢒 𐢓 𐢔 𐢕',
+      'alaph|beth|gamal|dalath|he|waw|zain|heth|teth|yodh|kaph|lamadh|mem|nun|semkath|ayin|pe|sadhe|qoph|resh|shin|taw',
+    ),
     summary:
       'An Aramaic-derived script used by the Nabataeans. Its cursive development is closely associated with the emergence of Arabic script.',
     sources: [
@@ -346,9 +374,10 @@ export const scripts: ScriptNode[] = [
     direction: 'rtl',
     unicodeBlock: ['Arabic'],
     sampleGlyphs: ['ا', 'ب', 'ت', 'ث', 'ج'],
-    characterRows: 'ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي',
+      'alif|ba|ta|tha|jim|ha|kha|dal|dhal|ra|zay|sin|shin|sad|dad|ta emphatic|za emphatic|ayn|ghayn|fa|qaf|kaf|lam|mim|nun|ha|waw|ya',
+    ),
     summary:
       'A cursive abjad used for Arabic and many other languages. It descends from Nabataean forms and spread widely with Islamic literary culture.',
     sources: [
@@ -632,9 +661,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Armenian'],
     sampleGlyphs: ['Ա', 'Բ', 'Գ', 'Դ'],
-    characterRows: 'Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ և'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ և',
+      'ayb|ben|gim|da|ech|za|eh|et|to|zhe|ini|liwn|xeh|ca|ken|ho|ja|ghad|cheh|men|yi|now|sha|vo|cha|peh|jheh|ra|seh|vew|tiwn|re|co|yiwn|piwr|keh|oh|feh|ew',
+      'ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ և',
+    ),
     summary:
       'A Christian-era alphabet created for Armenian. It reflects regional influences while remaining a distinct script family.',
     sources: [
@@ -654,9 +685,11 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Georgian'],
     sampleGlyphs: ['ა', 'ბ', 'გ', 'დ'],
-    characterRows: 'ა ბ გ დ ე ვ ზ თ ი კ ლ მ ნ ო პ ჟ რ ს ტ უ ფ ქ ღ ყ შ ჩ ც ძ წ ჭ ხ ჯ ჰ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'Ა Ბ Გ Დ Ე Ვ Ზ Თ Ი Კ Ლ Მ Ნ Ო Პ Ჟ Რ Ს Ტ Უ Ფ Ქ Ღ Ყ Შ Ჩ Ც Ძ Წ Ჭ Ხ Ჯ Ჰ',
+      'an|ban|gan|don|en|vin|zen|tan|in|kan|las|man|nar|on|par|zhar|rae|san|tar|un|phar|khar|ghan|qar|shin|chin|tsan|dzil|tsil|char|khan|jhan|hae',
+      'ა ბ გ დ ე ვ ზ თ ი კ ლ მ ნ ო პ ჟ რ ს ტ უ ფ ქ ღ ყ შ ჩ ც ძ წ ჭ ხ ჯ ჰ',
+    ),
     summary:
       'A distinctive Caucasian alphabet used for Georgian and related languages, with historical forms including Asomtavruli, Nuskhuri, and Mkhedruli.',
     sources: [
@@ -675,9 +708,10 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['Runic'],
     sampleGlyphs: ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ'],
-    characterRows: 'ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ',
+      'fehu|uruz|thurisaz|ansuz|raido|kaunan|gebo|wunjo|hagalaz|naudiz|isaz|jera|eihwaz|pertho|algiz|sowilo|tiwaz|berkanan|ehwaz|mannaz|laguz|ingwaz|dagaz|othala',
+    ),
     summary:
       'A family of Germanic alphabets with debated letterform influences from Italic, Latin, and other Mediterranean scripts.',
     sources: [
@@ -696,9 +730,10 @@ export const scripts: ScriptNode[] = [
     direction: 'btt',
     unicodeBlock: ['Ogham'],
     sampleGlyphs: ['ᚁ', 'ᚂ', 'ᚃ', 'ᚄ'],
-    characterRows: 'ᚁ ᚂ ᚃ ᚄ ᚅ ᚆ ᚇ ᚈ ᚉ ᚊ ᚋ ᚌ ᚍ ᚎ ᚏ ᚐ ᚑ ᚒ ᚓ ᚔ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ᚁ ᚂ ᚃ ᚄ ᚅ ᚆ ᚇ ᚈ ᚉ ᚊ ᚋ ᚌ ᚍ ᚎ ᚏ ᚐ ᚑ ᚒ ᚓ ᚔ',
+      'beith|luis|fearn|saille|nion|uath|dair|tinne|coll|ceirt|muin|gort|ngetal|straif|ruis|ailm|onn|ur|edad|idad',
+    ),
     summary:
       'An early medieval alphabet used mainly for Primitive Irish inscriptions. It is graphically unlike Latin but historically belongs near literate contact with Roman Britain.',
     sources: [
@@ -718,9 +753,10 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['Hangul'],
     sampleGlyphs: ['ㄱ', 'ㄴ', 'ㄷ', 'ㅏ'],
-    characterRows: 'ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ'
-      .split(' ')
-      .map((glyph) => ({ glyph })),
+    characterRows: characterRows(
+      'ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ',
+      'giyeok|nieun|digeut|rieul|mieum|bieup|siot|ieung|jieut|chieut|kieuk|tieut|pieup|hieut|a|ya|eo|yeo|o|yo|u|yu|eu|i',
+    ),
     summary:
       'A deliberately designed featural script for Korean, with letters grouped into syllable blocks. It is contextual rather than descended from the Phoenician alphabetic line.',
     sources: [
@@ -738,6 +774,10 @@ export const scripts: ScriptNode[] = [
     endYear: -1050,
     direction: 'ttb',
     sampleGlyphs: ['日', '月', '山', '水'],
+    characterRows: characterRows(
+      '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
+      'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
+    ),
     visualGlyphs: [
       {
         label: 'sun / day',
@@ -787,6 +827,10 @@ export const scripts: ScriptNode[] = [
     direction: 'mixed',
     unicodeBlock: ['CJK Unified Ideographs'],
     sampleGlyphs: ['漢', '字', '文', '書'],
+    characterRows: characterRows(
+      '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
+      'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
+    ),
     summary:
       'A logographic writing system used historically across East Asia and still used for Chinese and Japanese writing. It is not alphabetic.',
     sources: [
@@ -805,6 +849,10 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Cuneiform'],
     sampleGlyphs: ['𒀀', '𒁀', '𒂗', '𒆠'],
+    characterRows: characterRows(
+      '𒀀 𒁀 𒂗 𒆠 𒄑 𒇻 𒈠 𒉌 𒊒 𒋾 𒌓 𒌋 𒍣 𒀭 𒂍 𒅗',
+      'a|ba|en|ki|gesh|lu|ma|ni|ru|ti|ud|u|zi|dingir|e|ka',
+    ),
     summary:
       'A wedge-shaped writing technology used for Sumerian, Akkadian, and other languages. It is shown as a separate ancient writing lineage.',
     sources: [
@@ -822,6 +870,10 @@ export const scripts: ScriptNode[] = [
     endYear: 1700,
     direction: 'mixed',
     sampleGlyphs: ['AJ', 'KʼIN', 'BALAM'],
+    characterRows: characterRows(
+      "AJ K'IN BALAM CHAN KAB HA' WITZ IK' K'AN SAK CHAK K'UH TUN WINIK IX AJAW",
+      "aj|k'in|balam|chan|kab|ha'|witz|ik'|k'an|sak|chak|k'uh|tun|winik|ix|ajaw",
+    ),
     visualGlyphs: [
       {
         label: 'ajaw-style sign',
@@ -864,6 +916,10 @@ export const scripts: ScriptNode[] = [
     direction: 'ltr',
     unicodeBlock: ['Cherokee'],
     sampleGlyphs: ['Ꭰ', 'Ꭱ', 'Ꭲ', 'Ꭳ'],
+    characterRows: characterRows(
+      'Ꭰ Ꭱ Ꭲ Ꭳ Ꭴ Ꭵ Ꭶ Ꭷ Ꭸ Ꭹ Ꭺ Ꭻ Ꭼ Ꭽ Ꭾ Ꭿ',
+      'a|e|i|o|u|v|ga|ka|ge|gi|go|gu|gv|ha|he|hi',
+    ),
     summary:
       'A syllabary created by Sequoyah for the Cherokee language. Some glyphs resemble Latin letters, but the system assigns syllabic values.',
     sources: [

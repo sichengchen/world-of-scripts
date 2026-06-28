@@ -1,6 +1,7 @@
 import { edges, guidedTraces, scripts, scriptTypes } from './scripts'
 
 const letterBasedTypes = ['alphabet', 'abjad', 'abugida', 'featural']
+const representativeExampleLimit = 16
 
 export function validateContent() {
   const ids = new Set<string>()
@@ -17,6 +18,9 @@ export function validateContent() {
     if (!scriptTypes.includes(script.type)) errors.push(`${script.id} has an unknown type`)
     if (letterBasedTypes.includes(script.type) && (!script.characterRows || script.characterRows.length < 20)) {
       errors.push(`${script.id} is letter-based and must list its full core letter inventory in characterRows`)
+    }
+    if (!letterBasedTypes.includes(script.type) && (!script.characterRows || script.characterRows.length < representativeExampleLimit)) {
+      errors.push(`${script.id} is non-letter-based and must list at least ${representativeExampleLimit} representative examples`)
     }
     for (const visualGlyph of script.visualGlyphs ?? []) {
       if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)

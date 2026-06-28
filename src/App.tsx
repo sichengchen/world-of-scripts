@@ -52,6 +52,8 @@ import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type Tim
 validateContent()
 
 const nodeTypes = { scriptNode: ScriptGraphNode, timelineTick: TimelineTickNode }
+const letterBasedTypes: ScriptNode['type'][] = ['alphabet', 'abjad', 'abugida', 'featural']
+const representativeExampleLimit = 16
 
 type Filters = {
   type: 'all' | ScriptNode['type']
@@ -468,11 +470,14 @@ function Inspector({
     )
   }
 
-  const characterRows: NonNullable<ScriptNode['characterRows']> =
-    script.characterRows ??
-    script.sampleGlyphs.map((glyph) => ({
-      glyph,
-    }))
+  const isLetterBased = letterBasedTypes.includes(script.type)
+  const fallbackCharacterRows: NonNullable<ScriptNode['characterRows']> = script.sampleGlyphs.map((glyph) => ({
+    glyph,
+  }))
+  const characterRows = (script.characterRows ?? fallbackCharacterRows).slice(
+    0,
+    isLetterBased ? undefined : representativeExampleLimit,
+  )
 
   return (
     <aside
@@ -510,7 +515,7 @@ function Inspector({
       <section>
         <div className="mb-2.5 flex items-center gap-2">
           <BookOpen className="size-4 shrink-0" />
-          <h2 className="text-sm font-semibold">{script.type === 'alphabet' || script.type === 'abjad' ? 'Alphabet' : 'Representative signs'}</h2>
+          <h2 className="text-sm font-semibold">{isLetterBased ? 'Letters' : 'Representative signs'}</h2>
         </div>
         {script.visualGlyphs ? (
           <div className="grid grid-cols-2 gap-2">
@@ -521,16 +526,25 @@ function Inspector({
               </div>
             ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-4 gap-2 max-[820px]:grid-cols-5" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}>
+        ) : null}
+        {characterRows.length > 0 && (
+          <div
+            className={cn('grid grid-cols-4 gap-2 max-[820px]:grid-cols-5', script.visualGlyphs && 'mt-2')}
+            dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}
+          >
             {characterRows.map((row, index) => (
               <div
-                className="grid min-h-16 place-items-center gap-1 rounded-lg border bg-background px-1 py-2 text-center"
+                className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border bg-background px-1.5 py-2 text-center"
                 key={`${row.glyph}-${index}`}
               >
-                <span className="script-glyph text-3xl leading-none">{row.glyph}</span>
+                <span className="flex items-baseline justify-center gap-1.5">
+                  <span className="script-glyph text-3xl leading-none">{row.glyph}</span>
+                  {row.alternateGlyph && (
+                    <span className="script-glyph text-2xl leading-none text-muted-foreground">{row.alternateGlyph}</span>
+                  )}
+                </span>
                 {(row.label || row.transliteration) && (
-                  <small className="text-xs font-medium text-muted-foreground">
+                  <small className="max-w-full text-xs font-medium leading-tight text-muted-foreground">
                     {[row.label, row.transliteration].filter(Boolean).join(' · ')}
                   </small>
                 )}
