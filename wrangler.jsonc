@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "world-of-scripts",
+  "compatibility_date": "2026-06-28",
+  "workers_dev": false,
+  "build": {
+    "command": "npm run build",
+    "watch_dir": "src"
+  },
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    {
+      "pattern": "scripts.imean.fyi",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
