@@ -648,9 +648,9 @@ function Inspector({
             ))}
           </div>
         ) : null}
-        {characterRows.length > 0 && (
+        {!script.visualGlyphs && characterRows.length > 0 && (
           <div
-            className={cn('grid grid-cols-4 gap-2 max-[820px]:grid-cols-5', script.visualGlyphs && 'mt-2')}
+            className="grid grid-cols-4 gap-2 max-[820px]:grid-cols-5"
             dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}
             lang={scriptText.lang}
           >
@@ -673,11 +673,6 @@ function Inspector({
               </div>
             ))}
           </div>
-        )}
-        {script.visualGlyphs && (
-          <p className="mt-2 text-xs text-muted-foreground">
-            SVG glyph assets are shown for this script because plain Unicode/text samples are incomplete or misleading.
-          </p>
         )}
       </section>
 
