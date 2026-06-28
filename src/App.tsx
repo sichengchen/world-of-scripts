@@ -95,7 +95,7 @@ const referenceLinks = [
   { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
 ]
 const appSummary =
-  'Explore an interactive map of world writing systems, with script histories, glyph samples, dates, regions, reading directions, and sourced lineage relationships.'
+  'Explore the histories and lineages of writing systems across the world.'
 const fallbackScriptFont = '"Noto Sans", "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", serif'
 const scriptFontStacks: Record<string, string> = {
   'egyptian-hieroglyphs': `"Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -1113,7 +1113,7 @@ function Inspector({
       <aside className="inspector empty-inspector" aria-label="Script details">
         <div className="p-4">
           <Badge variant="outline" className="mb-2">No selection</Badge>
-          <h1>Select a script</h1>
+          <h2>Select a script</h2>
         </div>
         <p className="px-4 text-sm leading-6">Click a node in the diagram to inspect its characters, lineage, and sources.</p>
       </aside>
@@ -1190,7 +1190,7 @@ function Inspector({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
-            <h1 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h1>
+            <h2 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h2>
             <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
           </div>
           {script.nativeName && (
