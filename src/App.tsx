@@ -27,7 +27,7 @@ import {
   Waypoints,
   X,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -199,6 +199,7 @@ function AlphabetWorld() {
   const [viewMode, setViewMode] = useState<ViewMode>('lineage')
   const [activeTrace, setActiveTrace] = useState<string | null>('latin-path')
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const { fitBounds, fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
 
   const activeTraceIds = useMemo<Set<string>>(
@@ -282,7 +283,7 @@ function AlphabetWorld() {
   }
 
   function searchSelect(script: ScriptNode) {
-    setQuery(script.name)
+    setQuery('')
     setFilters({ type: 'all', region: 'all', status: 'all' })
     selectScript(script.id)
   }
@@ -299,10 +300,12 @@ function AlphabetWorld() {
         filtersOpen={filtersOpen}
         matchingScripts={matchingScripts}
         query={query}
+        searchOpen={searchOpen}
         setActiveTrace={setActiveTrace}
         setFilters={setFilters}
         setFiltersOpen={setFiltersOpen}
         setQuery={setQuery}
+        setSearchOpen={setSearchOpen}
         setViewMode={setViewMode}
         viewMode={viewMode}
         onSearchSelect={searchSelect}
@@ -354,10 +357,12 @@ function Toolbar({
   filtersOpen,
   matchingScripts,
   query,
+  searchOpen,
   setActiveTrace,
   setFilters,
   setFiltersOpen,
   setQuery,
+  setSearchOpen,
   setViewMode,
   viewMode,
   onSearchSelect,
@@ -367,14 +372,29 @@ function Toolbar({
   filtersOpen: boolean
   matchingScripts: ScriptNode[]
   query: string
+  searchOpen: boolean
   setActiveTrace: (id: string | null) => void
   setFilters: (filters: Filters) => void
   setFiltersOpen: (open: boolean) => void
   setQuery: (query: string) => void
+  setSearchOpen: (open: boolean) => void
   setViewMode: (mode: ViewMode) => void
   viewMode: ViewMode
   onSearchSelect: (script: ScriptNode) => void
 }) {
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!searchOpen) return
+    const handle = window.setTimeout(() => searchInputRef.current?.focus(), 80)
+    return () => window.clearTimeout(handle)
+  }, [searchOpen])
+
+  function closeSearch() {
+    setQuery('')
+    setSearchOpen(false)
+  }
+
   return (
     <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:gap-2 max-[820px]:p-2">
       <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -423,40 +443,48 @@ function Toolbar({
       </div>
 
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
-        <div className="relative flex h-9 w-[300px] max-w-[32vw] items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-3 max-[820px]:basis-full max-[820px]:max-w-none">
-          <Search aria-hidden="true" className="size-4 shrink-0" />
-          <Input
-            className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
-            aria-label="Search scripts"
-            placeholder="Search scripts"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          {query && (
-            <Button variant="ghost" size="icon-xs" aria-label="Clear search" onClick={() => setQuery('')}>
+        {searchOpen ? (
+          <div className="relative flex h-9 w-[300px] max-w-[32vw] items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground max-[820px]:order-3 max-[820px]:basis-full max-[820px]:max-w-none">
+            <Search aria-hidden="true" className="size-4 shrink-0" />
+            <Input
+              ref={searchInputRef}
+              className="h-7 border-0 px-0 shadow-none focus-visible:ring-0"
+              aria-label="Search scripts"
+              placeholder="Search scripts"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <Button variant="ghost" size="icon-xs" aria-label="Close search" onClick={closeSearch}>
               <X data-icon="inline-start" />
             </Button>
-          )}
-          {matchingScripts.length > 0 && (
-            <div
-              className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
-              role="listbox"
-              aria-label="Search results"
-            >
-              {matchingScripts.map((script) => (
-                <Button
-                  key={script.id}
-                  className="w-full justify-between rounded-none"
-                  variant="ghost"
-                  onClick={() => onSearchSelect(script)}
-                >
-                  <span>{script.name}</span>
-                  <Badge variant="secondary">{script.type}</Badge>
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
+            {matchingScripts.length > 0 && (
+              <div
+                className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
+                role="listbox"
+                aria-label="Search results"
+              >
+                {matchingScripts.map((script) => (
+                  <Button
+                    key={script.id}
+                    className="w-full justify-between rounded-none"
+                    variant="ghost"
+                    onClick={() => {
+                      onSearchSelect(script)
+                      setSearchOpen(false)
+                    }}
+                  >
+                    <span>{script.name}</span>
+                    <Badge variant="secondary">{script.type}</Badge>
+                  </Button>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <Button variant="outline" size="icon" aria-label="Search scripts" onClick={() => setSearchOpen(true)}>
+            <Search data-icon="inline-start" />
+          </Button>
+        )}
 
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
