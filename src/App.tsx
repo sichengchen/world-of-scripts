@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   ArrowLeftRight,
   BookOpen,
+  Bug,
   Compass,
   Filter,
   GitBranch,
@@ -354,6 +355,12 @@ function Toolbar({
       </div>
 
       <div className="inline-flex items-center gap-1 max-[820px]:hidden" aria-label="Canvas controls">
+        <Button variant="outline" asChild>
+          <a href="https://github.com/sichengchen/alphabet-world/issues" target="_blank" rel="noreferrer">
+            <Bug data-icon="inline-start" />
+            Report Issues
+          </a>
+        </Button>
         <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
           -
         </Button>
