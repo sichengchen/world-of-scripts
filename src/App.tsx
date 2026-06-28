@@ -516,7 +516,9 @@ function Toolbar({
 }) {
   const desktopSearchInputRef = useRef<HTMLInputElement>(null)
   const mobileSearchInputRef = useRef<HTMLInputElement>(null)
-  const [guideOpen, setGuideOpen] = useState(false)
+  const [mobileGuideOpen, setMobileGuideOpen] = useState(false)
+  const [desktopGuideOpen, setDesktopGuideOpen] = useState(false)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [viewOpen, setViewOpen] = useState(false)
 
   useEffect(() => {
@@ -654,9 +656,9 @@ function Toolbar({
           className="hidden max-[820px]:pointer-events-auto max-[820px]:col-start-2 max-[820px]:row-start-1 max-[820px]:inline-flex max-[820px]:justify-self-end"
           aria-label="Script tools"
         >
-          <Popover open={guideOpen} onOpenChange={setGuideOpen}>
+          <Popover open={mobileGuideOpen} onOpenChange={setMobileGuideOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={guideOpen}>
+              <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={mobileGuideOpen}>
                 <Compass data-icon="inline-start" />
               </Button>
             </PopoverTrigger>
@@ -667,7 +669,7 @@ function Toolbar({
                   variant={activeTrace === null ? 'secondary' : 'ghost'}
                   onClick={() => {
                     setActiveTrace(null)
-                    setGuideOpen(false)
+                    setMobileGuideOpen(false)
                   }}
                 >
                   No guided trace
@@ -680,7 +682,7 @@ function Toolbar({
                     variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
                     onClick={() => {
                       setActiveTrace(trace.id)
-                      setGuideOpen(false)
+                      setMobileGuideOpen(false)
                     }}
                   >
                     {trace.label}
@@ -691,9 +693,9 @@ function Toolbar({
             </PopoverContent>
           </Popover>
 
-          <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+          <Popover open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
+              <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={mobileFiltersOpen}>
                 <Filter data-icon="inline-start" />
               </Button>
             </PopoverTrigger>
@@ -824,9 +826,9 @@ function Toolbar({
           )}
         </div>
 
-        <Popover open={guideOpen} onOpenChange={setGuideOpen}>
+        <Popover open={desktopGuideOpen} onOpenChange={setDesktopGuideOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Guided trace" aria-expanded={guideOpen}>
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Guided trace" aria-expanded={desktopGuideOpen}>
               <Compass data-icon="inline-start" />
             </Button>
           </PopoverTrigger>
@@ -837,7 +839,7 @@ function Toolbar({
                 variant={activeTrace === null ? 'secondary' : 'ghost'}
                 onClick={() => {
                   setActiveTrace(null)
-                  setGuideOpen(false)
+                  setDesktopGuideOpen(false)
                 }}
               >
                 No guided trace
@@ -850,7 +852,7 @@ function Toolbar({
                   variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
                   onClick={() => {
                     setActiveTrace(trace.id)
-                    setGuideOpen(false)
+                    setDesktopGuideOpen(false)
                   }}
                 >
                   {trace.label}
