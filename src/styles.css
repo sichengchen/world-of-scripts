@@ -153,6 +153,17 @@ body,
   word-spacing: 4px;
 }
 
+.script-glyph.is-vertical,
+.script-native.is-vertical {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+}
+
+.node-vertical-glyph {
+  display: inline-block;
+  max-height: 34px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

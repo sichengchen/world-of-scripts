@@ -153,6 +153,7 @@ const scriptLanguageTags: Record<string, string> = {
   khmer: 'km',
   lao: 'lo',
   malayalam: 'ml',
+  mongolian: 'mn-Mong',
   myanmar: 'my',
   nushu: 'zh-Nshu',
   'oracle-bone': 'zh-Hant',
@@ -538,6 +539,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
   const { script, dimmed, isRelated, isSelected, isTraced } = data
   const color = getTypeColor(script.type)
   const scriptText = getScriptTextAttributes(script)
+  const isVertical = isVerticalDirection(script.direction)
 
   return (
     <article
@@ -565,6 +567,14 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'} lang={scriptText.lang}>
         {script.visualGlyphs ? (
           <SvgGlyphStrip glyphs={script.visualGlyphs.slice(0, 4)} />
+        ) : isVertical ? (
+          <span className="inline-flex items-start gap-2">
+            {script.sampleGlyphs.slice(0, 4).map((glyph) => (
+              <span className="script-glyph is-vertical node-vertical-glyph" key={glyph}>
+                {glyph}
+              </span>
+            ))}
+          </span>
         ) : (
           script.sampleGlyphs.slice(0, 6).join(' ')
         )}
@@ -615,6 +625,7 @@ function Inspector({
     isFiniteInventory ? undefined : representativeExampleLimit,
   )
   const scriptText = getScriptTextAttributes(script)
+  const isVertical = isVerticalDirection(script.direction)
 
   return (
     <aside
@@ -630,7 +641,14 @@ function Inspector({
             <h1 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h1>
             <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
           </div>
-          {script.nativeName && <p className="script-native mt-2 text-lg text-muted-foreground" lang={scriptText.lang}>{script.nativeName}</p>}
+          {script.nativeName && (
+            <p
+              className={cn('script-native mt-2 text-lg text-muted-foreground', isVertical && 'is-vertical')}
+              lang={scriptText.lang}
+            >
+              {script.nativeName}
+            </p>
+          )}
         </div>
         <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label="Close inspector" onClick={onClose}>
           <X data-icon="inline-start" />
@@ -679,9 +697,13 @@ function Inspector({
                 key={`${row.glyph}-${index}`}
               >
                 <span className="flex items-baseline justify-center gap-1.5">
-                  <span className="script-glyph text-3xl leading-none">{row.glyph}</span>
+                  <span className={cn('script-glyph text-3xl leading-none', isVertical && 'is-vertical')}>
+                    {row.glyph}
+                  </span>
                   {row.alternateGlyph && (
-                    <span className="script-glyph text-2xl leading-none text-muted-foreground">{row.alternateGlyph}</span>
+                    <span className={cn('script-glyph text-2xl leading-none text-muted-foreground', isVertical && 'is-vertical')}>
+                      {row.alternateGlyph}
+                    </span>
                   )}
                 </span>
                 {(row.label || row.transliteration) && (
@@ -894,6 +916,10 @@ function directionLabel(direction?: ScriptNode['direction']) {
     mixed: 'mixed',
   }
   return labels[direction]
+}
+
+function isVerticalDirection(direction?: ScriptNode['direction']) {
+  return direction === 'ttb' || direction === 'btt'
 }
 
 function capitalize(value: string) {
