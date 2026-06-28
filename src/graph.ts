@@ -270,7 +270,7 @@ function createEdge(
     label: edge.relationship === 'disputed' ? 'disputed' : undefined,
     style: {
       stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
-      strokeWidth: isTrace || isRelated ? 2.4 : 1.3,
+      strokeWidth: isTrace ? 3.4 : isRelated ? 2.4 : 1.3,
       strokeDasharray:
         edge.relationship === 'influenced_by' || edge.relationship === 'disputed' ? '7 6' : undefined,
       opacity: selectedId || activeTraceIds.size ? (isTrace || isRelated ? 0.95 : 0.18) : 0.74,

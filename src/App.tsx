@@ -720,8 +720,9 @@ function Legend() {
       <span>
         <i className="inline-block w-7 border-t-2 border-dashed border-muted-foreground" /> influenced/disputed
       </span>
-      <span>
-        <i className="inline-block w-7 border-t-2 border-foreground" /> selected path
+      <span className="inline-flex items-center gap-1.5">
+        <i className="relative inline-block h-2 w-7 before:absolute before:left-0 before:right-0 before:top-1/2 before:border-t-[3px] before:border-foreground after:absolute after:left-1/2 after:top-1/2 after:size-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-foreground" />
+        selected path
       </span>
     </div>
   )
