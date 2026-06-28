@@ -960,7 +960,7 @@ export const scripts: ScriptNode[] = [
     region: ['East Asia'],
     startYear: 800,
     endYear: 'present',
-    direction: 'ltr',
+    direction: 'mixed',
     unicodeBlock: ['Hiragana'],
     sampleGlyphs: ['あ', 'い', 'う', 'え'],
     characterRows: characterRows(
@@ -984,7 +984,7 @@ export const scripts: ScriptNode[] = [
     region: ['East Asia'],
     startYear: 800,
     endYear: 'present',
-    direction: 'ltr',
+    direction: 'mixed',
     unicodeBlock: ['Katakana'],
     sampleGlyphs: ['ア', 'イ', 'ウ', 'エ'],
     characterRows: characterRows(
@@ -1008,7 +1008,7 @@ export const scripts: ScriptNode[] = [
     region: ['East Asia'],
     startYear: 1913,
     endYear: 'present',
-    direction: 'ltr',
+    direction: 'mixed',
     unicodeBlock: ['Bopomofo'],
     sampleGlyphs: ['ㄅ', 'ㄆ', 'ㄇ', 'ㄈ'],
     characterRows: characterRows(
@@ -1032,7 +1032,7 @@ export const scripts: ScriptNode[] = [
     region: ['East Asia'],
     startYear: 1400,
     endYear: 'present',
-    direction: 'ltr',
+    direction: 'mixed',
     unicodeBlock: ['Yi Syllables'],
     inventoryMode: 'representative',
     sampleGlyphs: ['ꀀ', 'ꀁ', 'ꀂ', 'ꀃ'],
@@ -1056,7 +1056,7 @@ export const scripts: ScriptNode[] = [
     region: ['East Asia'],
     startYear: 1036,
     endYear: 1500,
-    direction: 'ltr',
+    direction: 'mixed',
     unicodeBlock: ['Tangut'],
     sampleGlyphs: ['𗀀', '𗀁', '𗀂', '𗀃'],
     characterRows:
