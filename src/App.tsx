@@ -20,7 +20,7 @@ import {
   Filter,
   GitBranch,
   Info,
-  LocateFixed,
+  RotateCcw,
   Search,
   X,
 } from 'lucide-react'
@@ -365,8 +365,8 @@ function Toolbar({
         <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
           -
         </Button>
-        <Button variant="outline" size="icon" aria-label="Fit to view" onClick={onFit}>
-          <LocateFixed data-icon="inline-start" />
+        <Button variant="outline" size="icon" aria-label="Reset view" onClick={onFit}>
+          <RotateCcw data-icon="inline-start" />
         </Button>
         <Button variant="outline" size="icon" aria-label="Zoom in" onClick={onZoomIn}>
           +
