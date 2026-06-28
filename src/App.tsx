@@ -36,6 +36,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Dialog,
   DialogContent,
@@ -93,6 +94,8 @@ const referenceLinks = [
   { label: 'The ABCD Family Tree', url: 'https://starkeycomics.com/2018/12/11/the-abcd-family-tree/' },
   { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
 ]
+const appSummary =
+  'Explore an interactive map of world writing systems, with script histories, glyph samples, dates, regions, reading directions, and sourced lineage relationships.'
 const fallbackScriptFont = '"Noto Sans", "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", serif'
 const scriptFontStacks: Record<string, string> = {
   'egyptian-hieroglyphs': `"Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -413,7 +416,10 @@ function AlphabetWorld() {
   }
 
   return (
-    <main className="grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[auto_1fr]">
+    <main
+      className="relative grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[1fr]"
+      aria-describedby="app-summary"
+    >
       <Toolbar
         activeTrace={activeTrace}
         filters={filters}
@@ -509,12 +515,19 @@ function Toolbar({
   viewMode: ViewMode
   onSearchSelect: (script: ScriptNode) => void
 }) {
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const desktopSearchInputRef = useRef<HTMLInputElement>(null)
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null)
   const [guideOpen, setGuideOpen] = useState(false)
+  const [viewOpen, setViewOpen] = useState(false)
 
   useEffect(() => {
     if (!searchOpen) return
-    const handle = window.setTimeout(() => searchInputRef.current?.focus(), 80)
+    const handle = window.setTimeout(() => {
+      const target = window.matchMedia(`(max-width: ${mobileBreakpoint}px)`).matches
+        ? mobileSearchInputRef.current
+        : desktopSearchInputRef.current
+      target?.focus()
+    }, 80)
     return () => window.clearTimeout(handle)
   }, [searchOpen])
 
@@ -524,11 +537,10 @@ function Toolbar({
   }
 
   return (
-    <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:gap-2 max-[820px]:p-2">
-      <div className="flex min-w-0 items-center gap-2.5">
-        <div className="min-w-max font-semibold text-foreground">
-          <span>World of Scripts</span>
-        </div>
+    <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:pointer-events-none max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:top-0 max-[820px]:z-40 max-[820px]:grid max-[820px]:min-h-0 max-[820px]:grid-cols-[minmax(0,1fr)_auto] max-[820px]:items-start max-[820px]:gap-x-2 max-[820px]:gap-y-2 max-[820px]:border-0 max-[820px]:bg-transparent max-[820px]:p-2">
+      <div className="flex min-w-0 items-center gap-2.5 max-[820px]:contents">
+        <h1 className="min-w-max text-base font-semibold leading-none text-foreground max-[820px]:sr-only">World of Scripts</h1>
+        <p id="app-summary" className="sr-only">{appSummary}</p>
 
         <ToggleGroup
           type="single"
@@ -549,11 +561,206 @@ function Toolbar({
       </div>
 
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
+        <ButtonGroup
+          className="hidden max-[820px]:pointer-events-auto max-[820px]:col-start-1 max-[820px]:row-start-1 max-[820px]:inline-flex max-[820px]:justify-self-start"
+          aria-label="Navigation tools"
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Search scripts"
+            aria-expanded={searchOpen}
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search data-icon="inline-start" />
+          </Button>
+          <Popover open={viewOpen} onOpenChange={setViewOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="View mode" aria-expanded={viewOpen}>
+                <Waypoints data-icon="inline-start" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-44 p-1 min-[821px]:hidden">
+              <div className="flex flex-col gap-1">
+                {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
+                  <Button
+                    key={mode}
+                    className="w-full justify-between"
+                    variant={viewMode === mode ? 'secondary' : 'ghost'}
+                    onClick={() => {
+                      setViewMode(mode)
+                      setViewOpen(false)
+                    }}
+                  >
+                    {mode === 'az' ? 'A-Z' : capitalize(mode)}
+                    {viewMode === mode && <Check data-icon="inline-end" />}
+                  </Button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </ButtonGroup>
+
         <div
           className={cn(
-            'relative h-8 shrink-0 transition-[width,max-width,flex-basis] duration-200 ease-out',
+            'absolute left-2 right-2 top-[calc(100%+0.5rem)] z-40 items-center gap-2 rounded-lg border border-input bg-background px-2 text-muted-foreground shadow-md transition-opacity duration-150 max-[820px]:pointer-events-auto max-[820px]:backdrop-blur',
+            searchOpen ? 'hidden max-[820px]:flex' : 'hidden',
+          )}
+          aria-hidden={!searchOpen}
+        >
+          <Search aria-hidden="true" className="size-4 shrink-0" />
+          <Input
+            ref={mobileSearchInputRef}
+            className="h-8 border-0 px-0 shadow-none focus-visible:ring-0"
+            aria-label="Search scripts"
+            placeholder="Search scripts"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            tabIndex={searchOpen ? undefined : -1}
+          />
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label="Close search"
+            onClick={closeSearch}
+            tabIndex={searchOpen ? undefined : -1}
+          >
+            <X data-icon="inline-start" />
+          </Button>
+          {searchOpen && matchingScripts.length > 0 && (
+            <div
+              className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
+              role="listbox"
+              aria-label="Search results"
+            >
+              {matchingScripts.map((script) => (
+                <Button
+                  key={script.id}
+                  className="w-full justify-between rounded-none"
+                  variant="ghost"
+                  onClick={() => {
+                    onSearchSelect(script)
+                    setSearchOpen(false)
+                  }}
+                >
+                  <span>{script.name}</span>
+                  <Badge variant="secondary">{script.type}</Badge>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <ButtonGroup
+          className="hidden max-[820px]:pointer-events-auto max-[820px]:col-start-2 max-[820px]:row-start-1 max-[820px]:inline-flex max-[820px]:justify-self-end"
+          aria-label="Script tools"
+        >
+          <Popover open={guideOpen} onOpenChange={setGuideOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={guideOpen}>
+                <Compass data-icon="inline-start" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-64 p-1 min-[821px]:hidden">
+              <div className="flex flex-col gap-1">
+                <Button
+                  className="w-full justify-between"
+                  variant={activeTrace === null ? 'secondary' : 'ghost'}
+                  onClick={() => {
+                    setActiveTrace(null)
+                    setGuideOpen(false)
+                  }}
+                >
+                  No guided trace
+                  {activeTrace === null && <Check data-icon="inline-end" />}
+                </Button>
+                {guidedTraces.map((trace) => (
+                  <Button
+                    key={trace.id}
+                    className="w-full justify-between"
+                    variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
+                    onClick={() => {
+                      setActiveTrace(trace.id)
+                      setGuideOpen(false)
+                    }}
+                  >
+                    {trace.label}
+                    {activeTrace === trace.id && <Check data-icon="inline-end" />}
+                  </Button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
+                <Filter data-icon="inline-start" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="filter-popover min-[821px]:hidden">
+              <FilterSelect
+                label="Type"
+                value={filters.type}
+                onValueChange={(type) => setFilters({ ...filters, type: type as Filters['type'] })}
+                options={[
+                  { value: 'all', label: 'All types' },
+                  ...scriptTypes.map((type) => ({ value: type, label: capitalize(type) })),
+                ]}
+              />
+              <FilterSelect
+                label="Region"
+                value={filters.region}
+                onValueChange={(region) => setFilters({ ...filters, region })}
+                options={[
+                  { value: 'all', label: 'All regions' },
+                  ...regions.map((region) => ({ value: region, label: region })),
+                ]}
+              />
+              <FilterSelect
+                label="Status"
+                value={filters.status}
+                onValueChange={(status) => setFilters({ ...filters, status: status as Filters['status'] })}
+                options={[
+                  { value: 'all', label: 'All statuses' },
+                  { value: 'living', label: 'Living' },
+                  { value: 'historical', label: 'Historical' },
+                  { value: 'revived', label: 'Revived' },
+                  { value: 'constructed', label: 'Constructed' },
+                ]}
+              />
+            </PopoverContent>
+          </Popover>
+
+          <Button variant="outline" size="icon" asChild>
+            <a href={feedbackUrl} target="_blank" rel="noreferrer" aria-label="Feedback">
+              <MessageSquare data-icon="inline-start" />
+            </a>
+          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="About World of Scripts">
+                <Info data-icon="inline-start" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle>World of Scripts</DialogTitle>
+                <DialogDescription>
+                  An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.
+                </DialogDescription>
+              </DialogHeader>
+              <AboutContent />
+            </DialogContent>
+          </Dialog>
+        </ButtonGroup>
+
+        <div
+          className={cn(
+            'relative h-8 shrink-0 transition-[width,max-width,flex-basis] duration-200 ease-out max-[820px]:hidden',
             searchOpen
-              ? 'w-[300px] max-w-[32vw] max-[820px]:order-3 max-[820px]:w-full max-[820px]:basis-full max-[820px]:max-w-none'
+              ? 'w-[300px] max-w-[32vw]'
               : 'w-8',
           )}
         >
@@ -576,7 +783,7 @@ function Toolbar({
           >
             <Search aria-hidden="true" className="size-4 shrink-0" />
             <Input
-              ref={searchInputRef}
+              ref={desktopSearchInputRef}
               className="h-6 border-0 px-0 shadow-none focus-visible:ring-0"
               aria-label="Search scripts"
               placeholder="Search scripts"
@@ -620,11 +827,11 @@ function Toolbar({
 
         <Popover open={guideOpen} onOpenChange={setGuideOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={guideOpen}>
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Guided trace" aria-expanded={guideOpen}>
               <Compass data-icon="inline-start" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-64 p-1">
+          <PopoverContent align="end" className="w-64 p-1 max-[820px]:hidden">
             <div className="flex flex-col gap-1">
               <Button
                 className="w-full justify-between"
@@ -657,11 +864,11 @@ function Toolbar({
 
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={filtersOpen}>
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Filters" aria-expanded={filtersOpen}>
               <Filter data-icon="inline-start" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="filter-popover">
+          <PopoverContent align="end" className="filter-popover max-[820px]:hidden">
             <FilterSelect
               label="Type"
               value={filters.type}
@@ -704,7 +911,7 @@ function Toolbar({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" size="icon" aria-label="About World of Scripts">
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="About World of Scripts">
               <Info data-icon="inline-start" />
             </Button>
           </DialogTrigger>
@@ -715,41 +922,47 @@ function Toolbar({
                 An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 text-sm">
-              <section className="grid gap-2">
-                <h2 className="font-medium">Project</h2>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <a href={repositoryUrl} target="_blank" rel="noreferrer">
-                      <Github data-icon="inline-start" />
-                      sichengchen/world-of-scripts
-                    </a>
-                  </Button>
-                </div>
-              </section>
-              <section className="grid gap-2">
-                <h2 className="font-medium">References</h2>
-                <div className="flex flex-wrap gap-2">
-                  {referenceLinks.map((link) => (
-                    <Button key={link.url} variant="outline" size="sm" asChild>
-                      <a href={link.url} target="_blank" rel="noreferrer">
-                        {link.label}
-                        <ArrowRight data-icon="inline-end" />
-                      </a>
-                    </Button>
-                  ))}
-                </div>
-              </section>
-              <Separator />
-              <p className="text-sm leading-6 text-muted-foreground">
-                This project is for reference only and is not a professional source. It may contain mistakes. If you find an
-                error or have suggestions for additional content, use the Feedback button in the header.
-              </p>
-            </div>
+            <AboutContent />
           </DialogContent>
         </Dialog>
       </div>
     </header>
+  )
+}
+
+function AboutContent() {
+  return (
+    <div className="grid gap-4 text-sm">
+      <section className="grid gap-2">
+        <h2 className="font-medium">Project</h2>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={repositoryUrl} target="_blank" rel="noreferrer">
+              <Github data-icon="inline-start" />
+              sichengchen/world-of-scripts
+            </a>
+          </Button>
+        </div>
+      </section>
+      <section className="grid gap-2">
+        <h2 className="font-medium">References</h2>
+        <div className="flex flex-wrap gap-2">
+          {referenceLinks.map((link) => (
+            <Button key={link.url} variant="outline" size="sm" asChild>
+              <a href={link.url} target="_blank" rel="noreferrer">
+                {link.label}
+                <ArrowRight data-icon="inline-end" />
+              </a>
+            </Button>
+          ))}
+        </div>
+      </section>
+      <Separator />
+      <p className="text-sm leading-6 text-muted-foreground">
+        This project is for reference only and is not a professional source. It may contain mistakes. If you find an
+        error or have suggestions for additional content, use the Feedback button in the header.
+      </p>
+    </div>
   )
 }
 
@@ -767,9 +980,9 @@ function CanvasControls({
   onZoomOut: () => void
 }) {
   return (
-    <div
+    <ButtonGroup
       className={cn(
-        'absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 max-[820px]:right-3',
+        'absolute bottom-4 right-4 z-10 max-[820px]:right-3',
         inspectorExpanded && 'max-[820px]:hidden',
         inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
@@ -784,7 +997,7 @@ function CanvasControls({
       <Button variant="outline" size="icon" aria-label="Zoom in" onClick={onZoomIn}>
         <Plus data-icon="inline-start" />
       </Button>
-    </div>
+    </ButtonGroup>
   )
 }
 
@@ -955,7 +1168,7 @@ function Inspector({
       className={cn(
         'min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-2 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:flex max-[820px]:flex-col max-[820px]:rounded-t-xl max-[820px]:border-t max-[820px]:shadow-2xl max-[820px]:transition-[height,max-height] max-[820px]:duration-200 max-[820px]:ease-out',
         expanded
-          ? 'max-[820px]:h-[calc(100dvh-64px)] max-[820px]:max-h-[calc(100dvh-64px)]'
+          ? 'max-[820px]:h-full max-[820px]:max-h-full'
           : 'max-[820px]:h-[48dvh] max-[820px]:max-h-[48dvh]',
       )}
       aria-label={`${script.name} details`}
