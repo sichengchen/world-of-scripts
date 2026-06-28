@@ -20,6 +20,7 @@ import {
   Filter,
   Github,
   GitBranch,
+  GripHorizontal,
   Info,
   MessageSquare,
   Minus,
@@ -30,7 +31,7 @@ import {
   X,
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, PointerEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -217,6 +218,7 @@ function AlphabetWorld() {
   const [activeTrace, setActiveTrace] = useState<string | null>('latin-path')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [inspectorExpanded, setInspectorExpanded] = useState(false)
   const { fitBounds, fitView, setCenter, zoomIn, zoomOut } = useReactFlow()
 
   const activeTraceIds = useMemo<Set<string>>(
@@ -290,6 +292,10 @@ function AlphabetWorld() {
     return () => window.clearTimeout(handle)
   }, [activeTrace, activeTraceBounds, fitBounds, viewMode])
 
+  useEffect(() => {
+    setInspectorExpanded(false)
+  }, [selectedId])
+
   function selectScript(id: string) {
     const node = nodes.find((item) => item.id === id)
     setSelectedId(id)
@@ -349,8 +355,9 @@ function AlphabetWorld() {
           >
             <Background color="var(--border)" gap={28} size={1} variant={BackgroundVariant.Dots} />
           </ReactFlow>
-          <Legend />
+          <Legend inspectorExpanded={Boolean(selectedScript && inspectorExpanded)} />
           <CanvasControls
+            inspectorExpanded={Boolean(selectedScript && inspectorExpanded)}
             onFit={() => fitView({ padding: 0.18, duration: 600 })}
             onZoomIn={() => zoomIn({ duration: 250 })}
             onZoomOut={() => zoomOut({ duration: 250 })}
@@ -359,8 +366,10 @@ function AlphabetWorld() {
 
         <Inspector
           script={selectedScript}
+          expanded={inspectorExpanded}
           relatedScripts={selectedScript ? getImmediateRelations(selectedScript.id) : null}
           onClose={() => setSelectedId(null)}
+          onExpandedChange={setInspectorExpanded}
           onSelect={selectScript}
         />
       </section>
@@ -644,17 +653,22 @@ function Toolbar({
 }
 
 function CanvasControls({
+  inspectorExpanded,
   onFit,
   onZoomIn,
   onZoomOut,
 }: {
+  inspectorExpanded: boolean
   onFit: () => void
   onZoomIn: () => void
   onZoomOut: () => void
 }) {
   return (
     <div
-      className="absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 max-[820px]:bottom-[calc(48%+1rem)] max-[820px]:right-3"
+      className={cn(
+        'absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 max-[820px]:right-3',
+        inspectorExpanded ? 'max-[820px]:hidden' : 'max-[820px]:bottom-[calc(48dvh+1rem)]',
+      )}
       aria-label="Canvas controls"
     >
       <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
@@ -760,16 +774,23 @@ function TimelineTickNode({ data }: { data: TimelineTickData }) {
 }
 
 function Inspector({
+  expanded,
   onClose,
+  onExpandedChange,
   onSelect,
   relatedScripts,
   script,
 }: {
+  expanded: boolean
   onClose: () => void
+  onExpandedChange: (expanded: boolean) => void
   onSelect: (id: string) => void
   relatedScripts: { ancestors: ScriptNode[]; children: ScriptNode[] } | null
   script: ScriptNode | null
 }) {
+  const dragStartY = useRef<number | null>(null)
+  const dragHandled = useRef(false)
+
   if (!script || !relatedScripts) {
     return (
       <aside className="inspector empty-inspector" aria-label="Script details">
@@ -794,14 +815,61 @@ function Inspector({
   const scriptText = getScriptTextAttributes(script)
   const isVertical = isVerticalDirection(script.direction)
 
+  function handleSheetPointerDown(event: PointerEvent<HTMLButtonElement>) {
+    dragStartY.current = event.clientY
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  function handleSheetPointerUp(event: PointerEvent<HTMLButtonElement>) {
+    if (dragStartY.current === null) return
+
+    const deltaY = event.clientY - dragStartY.current
+    dragStartY.current = null
+    dragHandled.current = Math.abs(deltaY) > 28
+
+    if (deltaY < -28) {
+      onExpandedChange(true)
+      return
+    }
+
+    if (deltaY > 28) {
+      onExpandedChange(false)
+    }
+  }
+
+  function handleSheetClick() {
+    if (dragHandled.current) {
+      dragHandled.current = false
+      return
+    }
+
+    onExpandedChange(!expanded)
+  }
+
   return (
     <aside
-      className="min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:max-h-[48%] max-[820px]:rounded-t-xl max-[820px]:border-t"
+      className={cn(
+        'min-h-0 min-w-0 overflow-hidden border-l bg-card max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:bottom-0 max-[820px]:z-20 max-[820px]:flex max-[820px]:flex-col max-[820px]:rounded-t-xl max-[820px]:border-t max-[820px]:shadow-2xl max-[820px]:transition-[height,max-height] max-[820px]:duration-200 max-[820px]:ease-out',
+        expanded
+          ? 'max-[820px]:h-[calc(100dvh-64px)] max-[820px]:max-h-[calc(100dvh-64px)]'
+          : 'max-[820px]:h-[48dvh] max-[820px]:max-h-[48dvh]',
+      )}
       aria-label={`${script.name} details`}
       style={{ '--script-font': scriptText.fontFamily } as CSSProperties}
     >
-      <ScrollArea className="h-full">
-      <div className="flex flex-col gap-4 p-4">
+      <button
+        className="hidden h-8 shrink-0 touch-none items-center justify-center text-muted-foreground max-[820px]:flex"
+        type="button"
+        aria-label={expanded ? 'Collapse details sheet' : 'Expand details sheet'}
+        aria-expanded={expanded}
+        onClick={handleSheetClick}
+        onPointerDown={handleSheetPointerDown}
+        onPointerUp={handleSheetPointerUp}
+      >
+        <GripHorizontal className="size-5" aria-hidden="true" />
+      </button>
+      <ScrollArea className="h-full min-h-0">
+      <div className="flex flex-col gap-4 p-4 max-[820px]:pb-8 max-[820px]:pt-2">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
@@ -1030,15 +1098,18 @@ function RelationGroup({
   )
 }
 
-function Legend() {
+function Legend({ inspectorExpanded }: { inspectorExpanded: boolean }) {
   return (
     <div
-      className="group absolute bottom-4 left-4 z-10 inline-flex items-center rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground shadow-sm transition-all focus-within:px-3 hover:px-3 max-[820px]:bottom-48 max-[820px]:left-3"
+      className={cn(
+        'group absolute bottom-4 left-4 z-10 inline-flex items-center whitespace-nowrap rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground shadow-sm transition-all focus-within:px-3 hover:px-3 max-[820px]:left-3',
+        inspectorExpanded ? 'max-[820px]:hidden' : 'max-[820px]:bottom-[calc(48dvh+1rem)]',
+      )}
       aria-label="Relationship legend"
       tabIndex={0}
     >
       <CircleHelp className="size-4 shrink-0" aria-hidden="true" />
-      <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[520px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[520px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:grid-cols-1 max-[820px]:items-start">
+      <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[520px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[520px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:hidden max-[820px]:grid-cols-1 max-[820px]:items-start max-[820px]:group-focus-within:grid max-[820px]:group-hover:grid">
         <LegendItem label="descended/adapted" />
         <LegendItem dashed label="influenced/disputed" />
         <LegendItem strong label="selected path" />
