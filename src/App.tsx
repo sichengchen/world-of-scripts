@@ -13,7 +13,6 @@ import {
   ArrowDown,
   ArrowDownUp,
   ArrowLeft,
-  ArrowLeftRight,
   BookOpen,
   Bug,
   Compass,
@@ -22,6 +21,7 @@ import {
   Info,
   RotateCcw,
   Search,
+  Waypoints,
   X,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -671,7 +671,7 @@ function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
         : direction === 'btt'
           ? ArrowDownUp
           : direction === 'mixed'
-            ? ArrowLeftRight
+            ? Waypoints
             : ArrowRight
 
   return (
