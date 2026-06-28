@@ -1,7 +1,7 @@
 import { edges, guidedTraces, scripts, scriptTypes } from './scripts'
 
 const letterBasedTypes = ['alphabet', 'abjad', 'abugida', 'featural']
-const finiteInventoryTypes = [...letterBasedTypes, 'syllabary']
+const finiteInventoryTypes = [...letterBasedTypes, 'syllabary', 'semisyllabary']
 const representativeExampleLimit = 16
 
 export function validateContent() {

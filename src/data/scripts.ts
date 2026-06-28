@@ -3,6 +3,7 @@ export type ScriptType =
   | 'abjad'
   | 'abugida'
   | 'syllabary'
+  | 'semisyllabary'
   | 'featural'
   | 'logographic'
   | 'mixed'
@@ -13,6 +14,7 @@ export type ScriptStatus = 'living' | 'historical' | 'revived' | 'constructed'
 export type ScriptNode = {
   id: string
   name: string
+  // Display label in the script or community language; not always a formal script autonym.
   nativeName?: string
   type: ScriptType
   status: ScriptStatus
@@ -22,6 +24,7 @@ export type ScriptNode = {
   direction?: 'ltr' | 'rtl' | 'ttb' | 'btt' | 'mixed'
   unicodeBlock?: string[]
   inventoryMode?: 'full' | 'representative'
+  // For scripts without practical Unicode glyphs, these may be modern descendants or labels.
   sampleGlyphs: string[]
   visualGlyphs?: Array<{
     label: string
@@ -161,6 +164,29 @@ export const scripts: ScriptNode[] = [
     ],
   },
   {
+    id: 'paleo-hebrew',
+    name: 'Paleo-Hebrew',
+    type: 'abjad',
+    status: 'historical',
+    region: ['Levant'],
+    startYear: -1000,
+    endYear: -135,
+    direction: 'rtl',
+    unicodeBlock: ['Phoenician'],
+    sampleGlyphs: ['𐤀', '𐤁', '𐤌', '𐤔'],
+    characterRows: characterRows(
+      '𐤀 𐤁 𐤂 𐤃 𐤄 𐤅 𐤆 𐤇 𐤈 𐤉 𐤊 𐤋 𐤌 𐤍 𐤎 𐤏 𐤐 𐤑 𐤒 𐤓 𐤔 𐤕',
+      'aleph|beth|gimel|daleth|he|waw|zayin|heth|teth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|tsade|qoph|resh|shin|taw',
+    ),
+    summary:
+      'An ancient Hebrew-script branch used in the southern Levant before square Hebrew became dominant. Samaritan writing preserves a related continuation of this branch.',
+    notes: ['Glyphs shown use encoded Phoenician forms as readable representatives for closely related Paleo-Hebrew letterforms.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Paleo-Hebrew_alphabet' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10900.pdf' },
+    ],
+  },
+  {
     id: 'old-italic',
     name: 'Old Italic',
     type: 'alphabet',
@@ -222,7 +248,8 @@ export const scripts: ScriptNode[] = [
       'ⲁ ⲃ ⲅ ⲇ ⲉ ⲋ ⲍ ⲏ ⲑ ⲓ ⲕ ⲗ ⲙ ⲛ ⲝ ⲟ ⲡ ⲣ ⲥ ⲧ ⲩ ⲫ ⲭ ⲯ ⲱ ϣ ϥ ϧ ϩ ϫ ϭ ϯ',
     ),
     summary:
-      'An Egyptian Christian script based largely on Greek letters with additional signs from Demotic for Egyptian sounds.',
+      'An Egyptian Christian script based largely on Greek letters with additional signs from Demotic for Egyptian sounds. It remains in liturgical use today.',
+    notes: ['Historical here means no longer a broad vernacular script, not extinct from use.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Coptic_alphabet' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U2C80.pdf' },
@@ -782,28 +809,28 @@ export const scripts: ScriptNode[] = [
     visualGlyphs: [
       {
         label: 'sun / day',
-        sourceLabel: 'Oracle bone script reference',
+        sourceLabel: 'Schematic oracle-bone-style drawing',
         sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
         viewBox: '0 0 64 64',
         paths: ['M20 10 L45 15 L42 52 L18 48 Z', 'M25 29 L39 31'],
       },
       {
         label: 'moon',
-        sourceLabel: 'Oracle bone script reference',
+        sourceLabel: 'Schematic oracle-bone-style drawing',
         sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
         viewBox: '0 0 64 64',
         paths: ['M40 9 C24 15 18 30 24 46 C28 55 39 58 47 50 C36 49 29 40 30 29 C31 20 35 14 40 9 Z'],
       },
       {
         label: 'mountain',
-        sourceLabel: 'Oracle bone script reference',
+        sourceLabel: 'Schematic oracle-bone-style drawing',
         sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
         viewBox: '0 0 64 64',
         paths: ['M13 48 L24 18 L33 47 L42 14 L53 48', 'M10 49 L56 49'],
       },
       {
         label: 'water',
-        sourceLabel: 'Oracle bone script reference',
+        sourceLabel: 'Schematic oracle-bone-style drawing',
         sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
         viewBox: '0 0 64 64',
         paths: ['M33 8 C24 20 43 28 30 39 C24 44 25 52 35 57', 'M18 18 C22 25 22 34 15 42', 'M49 18 C44 27 44 35 52 44'],
@@ -811,6 +838,7 @@ export const scripts: ScriptNode[] = [
     ],
     summary:
       'The earliest widely attested stage of Chinese writing, ancestral to later Chinese characters. It belongs to a separate logographic lineage.',
+    notes: ['Modern Chinese descendant characters and schematic drawings are shown because oracle bone script is not represented as ordinary text glyphs here.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Oracle_bone_script' },
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
@@ -900,6 +928,7 @@ export const scripts: ScriptNode[] = [
     ],
     summary:
       'A logosyllabic Mesoamerican writing system. It is included as a separate world writing tradition rather than an alphabetic descendant.',
+    notes: ['Latin strings are transliterations or labels; the visual signs are schematic examples.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Maya_script' },
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
@@ -1003,7 +1032,7 @@ export const scripts: ScriptNode[] = [
     id: 'bopomofo',
     name: 'Bopomofo',
     nativeName: '注音符號',
-    type: 'alphabet',
+    type: 'semisyllabary',
     status: 'living',
     region: ['East Asia'],
     startYear: 1913,
@@ -1016,7 +1045,7 @@ export const scripts: ScriptNode[] = [
       'b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|a|o|e|eh|ai|ei|ao|ou|an|en|ang|eng|er|i|u|yu',
     ),
     summary:
-      'A phonetic script for Mandarin, used especially in Taiwan. Its forms are drawn from older Chinese character shapes and strokes.',
+      'A Mandarin phonetic semisyllabary used especially in Taiwan, with symbols for initials, medials, finals, and tones. Its forms are drawn from older Chinese character shapes and strokes.',
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Bopomofo' },
@@ -1076,7 +1105,7 @@ export const scripts: ScriptNode[] = [
     name: 'Nüshu',
     nativeName: '女书',
     type: 'syllabary',
-    status: 'living',
+    status: 'revived',
     region: ['East Asia'],
     startYear: 1200,
     endYear: 'present',
@@ -1089,7 +1118,8 @@ export const scripts: ScriptNode[] = [
         .split(' ')
         .map((glyph) => ({ glyph })),
     summary:
-      'A syllabic script historically used by women in Jiangyong, China. The encoded inventory is large, so the app shows representative signs.',
+      'A syllabic script historically used by women in Jiangyong, China, now preserved through cultural transmission and revival work. The encoded inventory is large, so the app shows representative signs.',
+    notes: ['The early date is approximate; Nüshu origins are uncertain.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/N%C3%BCshu' },
@@ -1777,6 +1807,7 @@ export const edges: ScriptEdge[] = [
   { from: 'greek', to: 'gothic', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Gothic_alphabet'] },
   { from: 'greek', to: 'cyrillic', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Cyrillic_script'] },
   { from: 'phoenician', to: 'aramaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Aramaic_alphabet'] },
+  { from: 'phoenician', to: 'paleo-hebrew', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Paleo-Hebrew_alphabet'] },
   { from: 'aramaic', to: 'hebrew', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hebrew_alphabet'] },
   { from: 'aramaic', to: 'syriac', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Syriac_alphabet'] },
   { from: 'aramaic', to: 'nabataean', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Nabataean_script'] },
@@ -1811,9 +1842,9 @@ export const edges: ScriptEdge[] = [
   { from: 'brahmi', to: 'sundanese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sundanese_script'] },
   { from: 'brahmi', to: 'tagalog', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Baybayin'] },
   { from: 'thai', to: 'lao', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Lao_script'] },
-  { from: 'aramaic', to: 'samaritan', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Samaritan_script'] },
+  { from: 'paleo-hebrew', to: 'samaritan', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Samaritan_script', 'https://en.wikipedia.org/wiki/Paleo-Hebrew_alphabet'] },
   { from: 'aramaic', to: 'mandaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Mandaic_alphabet'] },
-  { from: 'aramaic', to: 'mongolian', relationship: 'descended', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Mongolian_script'] },
+  { from: 'aramaic', to: 'mongolian', relationship: 'descended', confidence: 'medium', note: 'Shortcut for the Central Asian branch via Sogdian and Old Uyghur, which are not represented as separate nodes.', sources: ['https://en.wikipedia.org/wiki/Mongolian_script'] },
   { from: 'latin', to: 'deseret', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Deseret_alphabet'] },
   { from: 'latin', to: 'osage', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Osage_script'] },
 ]
@@ -1846,6 +1877,7 @@ export const scriptTypes: ScriptType[] = [
   'abjad',
   'abugida',
   'syllabary',
+  'semisyllabary',
   'featural',
   'logographic',
   'mixed',
