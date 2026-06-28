@@ -48,7 +48,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
-import { EDGE_HANDLE_SLOT_COUNT, createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
+import { createGraph, getRelatedIds, getTypeColor, type ScriptNodeData, type TimelineTickData, type ViewMode } from './graph'
 
 validateContent()
 
@@ -535,26 +535,8 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       tabIndex={0}
       aria-label={`${script.name}, ${script.type}, ${formatDate(script)}`}
     >
-      {Array.from({ length: EDGE_HANDLE_SLOT_COUNT }, (_, slot) => (
-        <Handle
-          className="node-handle"
-          id={`target-${slot}`}
-          key={`target-${slot}`}
-          position={Position.Left}
-          style={{ top: `${getHandleTop(slot)}%` }}
-          type="target"
-        />
-      ))}
-      {Array.from({ length: EDGE_HANDLE_SLOT_COUNT }, (_, slot) => (
-        <Handle
-          className="node-handle"
-          id={`source-${slot}`}
-          key={`source-${slot}`}
-          position={Position.Right}
-          style={{ top: `${getHandleTop(slot)}%` }}
-          type="source"
-        />
-      ))}
+      <Handle className="node-handle" id="target" position={Position.Left} type="target" />
+      <Handle className="node-handle" id="source" position={Position.Right} type="source" />
       <div className="flex items-start justify-between gap-2">
         <strong>{script.name}</strong>
         <Badge variant="secondary">{script.type}</Badge>
@@ -811,11 +793,6 @@ function getScriptTextAttributes(script: ScriptNode) {
     fontFamily: scriptFontStacks[script.id] ?? fallbackScriptFont,
     lang: scriptLanguageTags[script.id],
   }
-}
-
-function getHandleTop(slot: number) {
-  if (EDGE_HANDLE_SLOT_COUNT <= 1) return 50
-  return 18 + (slot / (EDGE_HANDLE_SLOT_COUNT - 1)) * 64
 }
 
 function RelationGroup({
