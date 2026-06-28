@@ -608,18 +608,20 @@ function Toolbar({
             <div className="grid gap-4 text-sm">
               <section className="grid gap-2">
                 <h2 className="font-medium">Project</h2>
-                <Button variant="outline" asChild>
-                  <a href={repositoryUrl} target="_blank" rel="noreferrer">
-                    <Github data-icon="inline-start" />
-                    sichengchen/world-of-scripts
-                  </a>
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={repositoryUrl} target="_blank" rel="noreferrer">
+                      <Github data-icon="inline-start" />
+                      sichengchen/world-of-scripts
+                    </a>
+                  </Button>
+                </div>
               </section>
               <section className="grid gap-2">
                 <h2 className="font-medium">References</h2>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {referenceLinks.map((link) => (
-                    <Button key={link.url} variant="ghost" className="justify-start" asChild>
+                    <Button key={link.url} variant="outline" size="sm" asChild>
                       <a href={link.url} target="_blank" rel="noreferrer">
                         {link.label}
                         <ArrowRight data-icon="inline-end" />
