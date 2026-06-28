@@ -1426,7 +1426,7 @@ function Legend({
   return (
     <div
       className={cn(
-        'group absolute bottom-4 left-4 z-10 inline-flex items-center whitespace-nowrap rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground shadow-sm transition-all focus-within:px-3 hover:px-3 max-[820px]:left-3',
+        'group absolute bottom-4 left-4 z-10 inline-flex items-center whitespace-nowrap rounded-lg border bg-card px-2 py-2 text-xs font-medium text-muted-foreground transition-all focus-within:px-3 hover:px-3 max-[820px]:left-3',
         inspectorExpanded && 'max-[820px]:hidden',
         inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
