@@ -14,6 +14,14 @@
 }
 
 @font-face {
+  font-family: "Noto Serif Khitan Small Script";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("@fontsource/noto-serif-khitan-small-script/files/noto-serif-khitan-small-script-khitan-small-script-400-normal.woff2") format("woff2");
+}
+
+@font-face {
   font-family: "Noto Sans Nushu";
   font-style: normal;
   font-weight: 400;
@@ -152,11 +160,20 @@ body,
 .node-glyphs {
   display: flex;
   align-items: center;
+  max-width: 100%;
   min-height: 34px;
   margin-top: 8px;
   font-size: 25px;
   line-height: 1;
   word-spacing: 4px;
+}
+
+.node-vertical-glyphs {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  font-size: 22px;
 }
 
 .script-glyph.is-vertical,
@@ -167,7 +184,7 @@ body,
 
 .node-vertical-glyph {
   display: inline-block;
-  max-height: 34px;
+  line-height: 1;
 }
 
 @keyframes guide-path-pulse {

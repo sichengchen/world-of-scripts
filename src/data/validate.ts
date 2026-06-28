@@ -29,8 +29,8 @@ export function validateContent() {
       if (!visualGlyph.sourceLabel.trim() || !visualGlyph.sourceUrl.trim()) {
         errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing source attribution`)
       }
-      if (!visualGlyph.viewBox.trim() || !visualGlyph.paths.length) {
-        errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing SVG geometry`)
+      if (!visualGlyph.imageUrl && (!visualGlyph.viewBox?.trim() || !visualGlyph.paths?.length)) {
+        errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing an image URL or SVG geometry`)
       }
     }
   }

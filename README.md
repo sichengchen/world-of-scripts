@@ -1,8 +1,18 @@
+<p align="center">
+  <img src="public/world-of-scripts-icon.svg" alt="World of Scripts Phoenician alef icon" width="96" height="96" />
+</p>
+
 # World of Scripts
 
 World of Scripts is an interactive web app for exploring writing systems, their histories, and their documented relationships.
 
 The main view is a zoomable family-tree style diagram. Select a script node to see its characters or representative signs, date range, region, writing direction, historical notes, and direct lineage links.
+
+## Screenshots
+
+![World of Scripts lineage view](public/screenshots/lineage-view.jpg)
+
+![Oracle Bone Script inspector with sourced glyph examples](public/screenshots/script-inspector.jpg)
 
 ## Features
 

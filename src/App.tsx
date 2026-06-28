@@ -135,9 +135,11 @@ const scriptFontStacks: Record<string, string> = {
   'canadian-aboriginal': `"Noto Sans Canadian Aboriginal", "Euphemia UCAS", ${fallbackScriptFont}`,
   hiragana: `"Hiragino Sans", "Yu Gothic", Meiryo, "Noto Sans CJK JP", "Noto Sans JP", ${fallbackScriptFont}`,
   katakana: `"Hiragino Sans", "Yu Gothic", Meiryo, "Noto Sans CJK JP", "Noto Sans JP", ${fallbackScriptFont}`,
+  manyogana: `"Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", "Noto Serif JP", ${fallbackScriptFont}`,
   bopomofo: `"PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", "Source Han Sans TC", ${fallbackScriptFont}`,
   yi: `"Noto Sans Yi", "Nuosu SIL", ${fallbackScriptFont}`,
   tangut: `"Noto Serif Tangut", "Tangut Yinchuan", ${fallbackScriptFont}`,
+  'khitan-small-script': `"Noto Serif Khitan Small Script", ${fallbackScriptFont}`,
   nushu: `"Noto Sans Nushu", "Noto Traditional Nushu", ${fallbackScriptFont}`,
   lisu: `"Noto Sans Lisu", ${fallbackScriptFont}`,
   glagolitic: `"Noto Sans Glagolitic", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -186,9 +188,11 @@ const scriptLanguageTags: Record<string, string> = {
   hiragana: 'ja',
   kannada: 'kn',
   katakana: 'ja',
+  'khitan-small-script': 'zkt-Kits',
   khmer: 'km',
   lao: 'lo',
   malayalam: 'ml',
+  manyogana: 'ja',
   mongolian: 'mn-Mong',
   myanmar: 'my',
   nushu: 'zh-Nshu',
@@ -1066,9 +1070,9 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         {script.visualGlyphs ? (
           <SvgGlyphStrip glyphs={script.visualGlyphs.slice(0, 4)} />
         ) : isVertical ? (
-          <span className="inline-flex items-start gap-2">
+          <span className="node-vertical-glyphs">
             {script.sampleGlyphs.slice(0, 4).map((glyph) => (
-              <span className="script-glyph is-vertical node-vertical-glyph" key={glyph}>
+              <span className="script-glyph node-vertical-glyph" key={glyph}>
                 {glyph}
               </span>
             ))}
@@ -1193,7 +1197,7 @@ function Inspector({
             <h2 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h2>
             <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
           </div>
-          {script.nativeName && (
+          {script.nativeName && !script.visualGlyphs && (
             <p
               className={cn('script-native mt-2 text-lg text-muted-foreground', isVertical && 'is-vertical')}
               lang={scriptText.lang}
@@ -1333,6 +1337,16 @@ function SvgGlyph({
   className?: string
   glyph: NonNullable<ScriptNode['visualGlyphs']>[number]
 }) {
+  if (glyph.imageUrl) {
+    return (
+      <img
+        alt={`${glyph.label}; source: ${glyph.sourceLabel}`}
+        className={cn(className, 'object-contain')}
+        src={glyph.imageUrl}
+      />
+    )
+  }
+
   return (
     <svg
       aria-label={`${glyph.label}; source: ${glyph.sourceLabel}`}
@@ -1345,7 +1359,7 @@ function SvgGlyph({
       strokeWidth="3.5"
       viewBox={glyph.viewBox}
     >
-      {glyph.paths.map((path) => (
+      {glyph.paths?.map((path) => (
         <path d={path} key={path} />
       ))}
     </svg>

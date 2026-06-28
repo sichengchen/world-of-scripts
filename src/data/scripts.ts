@@ -30,8 +30,9 @@ export type ScriptNode = {
     label: string
     sourceLabel: string
     sourceUrl: string
-    viewBox: string
-    paths: string[]
+    imageUrl?: string
+    viewBox?: string
+    paths?: string[]
   }>
   characterRows?: Array<{
     glyph: string
@@ -458,6 +459,29 @@ export const scripts: ScriptNode[] = [
     ],
   },
   {
+    id: 'kharoshthi',
+    name: 'Kharoshthi',
+    type: 'abugida',
+    status: 'historical',
+    region: ['South Asia', 'Central Asia'],
+    startYear: -300,
+    endYear: 300,
+    direction: 'rtl',
+    unicodeBlock: ['Kharoshthi'],
+    sampleGlyphs: ['𐨀', '𐨐', '𐨨', '𐨪'],
+    characterRows:
+      '𐨀 𐨐 𐨑 𐨒 𐨓 𐨕 𐨖 𐨗 𐨙 𐨚 𐨛 𐨜 𐨝 𐨞 𐨟 𐨠 𐨡 𐨢 𐨣 𐨤 𐨥 𐨦 𐨧 𐨨 𐨩 𐨪 𐨫 𐨬 𐨭 𐨮 𐨯'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'An ancient right-to-left Indic abugida used in Gandhara and along Central Asian trade routes. It is historically tied to Aramaic influence and sits beside Brahmi in early South Asian writing history rather than descending from Brahmi.',
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Kharosthi' },
+      { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10A00.pdf' },
+    ],
+  },
+  {
     id: 'bengali-assamese',
     name: 'Bengali-Assamese',
     nativeName: 'বাংলা',
@@ -656,6 +680,29 @@ export const scripts: ScriptNode[] = [
     ],
   },
   {
+    id: 'old-south-arabian',
+    name: 'Old South Arabian',
+    type: 'abjad',
+    status: 'historical',
+    region: ['Arabia', 'Horn of Africa'],
+    startYear: -900,
+    endYear: 600,
+    direction: 'rtl',
+    unicodeBlock: ['Old South Arabian'],
+    sampleGlyphs: ['𐩠', '𐩡', '𐩢', '𐩣'],
+    characterRows: characterRows(
+      '𐩠 𐩡 𐩢 𐩣 𐩤 𐩥 𐩦 𐩧 𐩨 𐩩 𐩪 𐩫 𐩬 𐩭 𐩮 𐩯 𐩰 𐩱 𐩲 𐩳 𐩴 𐩵 𐩶 𐩷 𐩸 𐩹 𐩺 𐩻 𐩼',
+      'he|lamedh|heth|mem|qoph|waw|shin|resh|beth|taw|sat|kaph|nun|kheth|sadhe|samekh|fe|aleph|ayn|dadhe|gimel|daleth|ghayn|tet|zayn|dhaleth|yodh|thaw|theth',
+    ),
+    summary:
+      'A family of ancient South Arabian abjads used in inscriptions in southern Arabia and nearby regions. It provides the clearest lineage context for Ethiopic/Geʽez writing.',
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Ancient_South_Arabian_script' },
+      { label: 'Unicode Core Spec: Africa', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10A60.pdf' },
+    ],
+  },
+  {
     id: 'geez',
     name: 'Geʽez / Ethiopic',
     nativeName: 'ግዕዝ',
@@ -674,6 +721,7 @@ export const scripts: ScriptNode[] = [
       'A South Semitic script that developed into a vocalized abugida. It is used for Amharic, Tigrinya, liturgical Geʽez, and related languages.',
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Ge%CA%BDez_script' },
+      { label: 'Unicode Core Spec: Africa', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1200.pdf' },
     ],
   },
@@ -809,39 +857,199 @@ export const scripts: ScriptNode[] = [
     visualGlyphs: [
       {
         label: 'sun / day',
-        sourceLabel: 'Schematic oracle-bone-style drawing',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
-        viewBox: '0 0 64 64',
-        paths: ['M20 10 L45 15 L42 52 L18 48 Z', 'M25 29 L39 31'],
+        sourceLabel: 'Wikimedia Commons: 日-oracle.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-oracle.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/44/%E6%97%A5-oracle.svg',
       },
       {
         label: 'moon',
-        sourceLabel: 'Schematic oracle-bone-style drawing',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
-        viewBox: '0 0 64 64',
-        paths: ['M40 9 C24 15 18 30 24 46 C28 55 39 58 47 50 C36 49 29 40 30 29 C31 20 35 14 40 9 Z'],
+        sourceLabel: 'Wikimedia Commons: 月-oracle.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-oracle.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/94/%E6%9C%88-oracle.svg',
       },
       {
         label: 'mountain',
-        sourceLabel: 'Schematic oracle-bone-style drawing',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
-        viewBox: '0 0 64 64',
-        paths: ['M13 48 L24 18 L33 47 L42 14 L53 48', 'M10 49 L56 49'],
+        sourceLabel: 'Wikimedia Commons: 山-oracle.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-oracle.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/%E5%B1%B1-oracle.svg',
       },
       {
         label: 'water',
-        sourceLabel: 'Schematic oracle-bone-style drawing',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Oracle_bone_script',
-        viewBox: '0 0 64 64',
-        paths: ['M33 8 C24 20 43 28 30 39 C24 44 25 52 35 57', 'M18 18 C22 25 22 34 15 42', 'M49 18 C44 27 44 35 52 44'],
+        sourceLabel: 'Wikimedia Commons: 水-oracle.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-oracle.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/75/%E6%B0%B4-oracle.svg',
       },
     ],
     summary:
       'The earliest widely attested stage of Chinese writing, ancestral to later Chinese characters. It belongs to a separate logographic lineage.',
-    notes: ['Modern Chinese descendant characters and schematic drawings are shown because oracle bone script is not represented as ordinary text glyphs here.'],
+    notes: ['Shown with sourced image examples because oracle-bone forms are not encoded as ordinary text.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Oracle_bone_script' },
-      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
+      { label: 'Wikimedia Commons: 日-oracle.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-oracle.svg' },
+      { label: 'Wikimedia Commons: 月-oracle.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-oracle.svg' },
+      { label: 'Wikimedia Commons: 山-oracle.svg', url: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-oracle.svg' },
+      { label: 'Wikimedia Commons: 水-oracle.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-oracle.svg' },
+    ],
+  },
+  {
+    id: 'bronze-script',
+    name: 'Bronze Script',
+    nativeName: '金文',
+    type: 'logographic',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: -1100,
+    endYear: -300,
+    direction: 'ttb',
+    sampleGlyphs: ['日', '月', '山', '水'],
+    characterRows: characterRows(
+      '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
+      'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
+    ),
+    visualGlyphs: [
+      {
+        label: 'sun / day',
+        sourceLabel: 'Wikimedia Commons: 日-bronze.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-bronze.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/45/%E6%97%A5-bronze.svg',
+      },
+      {
+        label: 'moon',
+        sourceLabel: 'Wikimedia Commons: 月-bronze.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-bronze.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/%E6%9C%88-bronze.svg',
+      },
+      {
+        label: 'mountain',
+        sourceLabel: 'Wikimedia Commons: 山-bronze.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-bronze.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/03/%E5%B1%B1-bronze.svg',
+      },
+      {
+        label: 'water',
+        sourceLabel: 'Wikimedia Commons: 水-bronze.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-bronze.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/%E6%B0%B4-bronze.svg',
+      },
+    ],
+    summary:
+      'A Chinese inscriptional style used especially on ritual bronzes from the Shang and Zhou periods. It continues the early Chinese logographic tradition between oracle-bone writing and later standardizing forms.',
+    notes: ['Shown with sourced image examples because bronze inscription forms are not encoded as ordinary text.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Bronze_script' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
+      { label: 'Wikimedia Commons: 日-bronze.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-bronze.svg' },
+      { label: 'Wikimedia Commons: 月-bronze.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-bronze.svg' },
+      { label: 'Wikimedia Commons: 山-bronze.svg', url: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-bronze.svg' },
+      { label: 'Wikimedia Commons: 水-bronze.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-bronze.svg' },
+    ],
+  },
+  {
+    id: 'seal-script',
+    name: 'Seal Script',
+    nativeName: '篆書',
+    type: 'logographic',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: -700,
+    endYear: 200,
+    direction: 'ttb',
+    sampleGlyphs: ['日', '月', '山', '水'],
+    characterRows: characterRows(
+      '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
+      'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
+    ),
+    visualGlyphs: [
+      {
+        label: 'sun / day',
+        sourceLabel: 'Wikimedia Commons: 日-seal.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-seal.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/30/%E6%97%A5-seal.svg',
+      },
+      {
+        label: 'moon',
+        sourceLabel: 'Wikimedia Commons: 月-seal.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-seal.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d2/%E6%9C%88-seal.svg',
+      },
+      {
+        label: 'mountain',
+        sourceLabel: 'Wikimedia Commons: 山-seal.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-seal.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/49/%E5%B1%B1-seal.svg',
+      },
+      {
+        label: 'water',
+        sourceLabel: 'Wikimedia Commons: 水-seal.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-seal.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/%E6%B0%B4-seal.svg',
+      },
+    ],
+    summary:
+      'A family of ancient Chinese character forms that includes the Qin standard Small Seal Script. It is a key standardizing stage between earlier inscriptional writing and later clerical forms.',
+    notes: ['Shown with sourced image examples while Seal Script font support remains limited.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Seal_script' },
+      { label: 'Unicode Seal Script Documents', url: 'https://www.unicode.org/L2/topical/seal/' },
+      { label: 'Unicode Pipeline', url: 'https://www.unicode.org/alloc/Pipeline.html' },
+      { label: 'Wikimedia Commons: 日-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%97%A5-seal.svg' },
+      { label: 'Wikimedia Commons: 月-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-seal.svg' },
+      { label: 'Wikimedia Commons: 山-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-seal.svg' },
+      { label: 'Wikimedia Commons: 水-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-seal.svg' },
+    ],
+  },
+  {
+    id: 'clerical-script',
+    name: 'Clerical Script',
+    nativeName: '隸書',
+    type: 'logographic',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: -300,
+    endYear: 300,
+    direction: 'ttb',
+    sampleGlyphs: ['日', '月', '山', '水'],
+    characterRows: characterRows(
+      '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
+      'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
+    ),
+    visualGlyphs: [
+      {
+        label: 'sun / day',
+        sourceLabel: 'Wikimedia Commons: Character Ri4 Cler.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Character_Ri4_Cler.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Character_Ri4_Cler.svg',
+      },
+      {
+        label: 'moon',
+        sourceLabel: 'Wikimedia Commons: Character Yue4 Cler.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Character_Yue4_Cler.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Character_Yue4_Cler.svg',
+      },
+      {
+        label: 'mountain',
+        sourceLabel: 'Wikimedia Commons: Character Shan1 Cler.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Character_Shan1_Cler.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Character_Shan1_Cler.svg',
+      },
+      {
+        label: 'water',
+        sourceLabel: 'Wikimedia Commons: Character Shui3 Cler.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Character_Shui3_Cler.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Character_Shui3_Cler.svg',
+      },
+    ],
+    summary:
+      'A Chinese script style associated with the Qin and Han administrative world. Its flattened, brush-shaped forms mark the major transition from ancient seal forms toward the later standard character tradition.',
+    notes: ['Shown as a historical shape stage in the Han-character lineage, not as a separate writing system for a different language.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Clerical_script' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
+      { label: 'Wikimedia Commons: Character Ri4 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Ri4_Cler.svg' },
+      { label: 'Wikimedia Commons: Character Yue4 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Yue4_Cler.svg' },
+      { label: 'Wikimedia Commons: Character Shan1 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Shan1_Cler.svg' },
+      { label: 'Wikimedia Commons: Character Shui3 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Shui3_Cler.svg' },
     ],
   },
   {
@@ -851,20 +1059,20 @@ export const scripts: ScriptNode[] = [
     type: 'logographic',
     status: 'living',
     region: ['East Asia'],
-    startYear: -1200,
+    startYear: 200,
     endYear: 'present',
     direction: 'mixed',
     unicodeBlock: ['CJK Unified Ideographs'],
-    sampleGlyphs: ['漢', '字', '文', '書'],
+    sampleGlyphs: ['日', '月', '山', '水'],
     characterRows: characterRows(
       '日 月 山 水 木 火 土 金 人 口 心 手 馬 鳥 魚 門',
       'sun / day|moon|mountain|water|wood|fire|earth|metal|person|mouth|heart|hand|horse|bird|fish|gate',
     ),
     summary:
-      'A logographic writing system used historically across East Asia and still used for Chinese and Japanese writing. It is not alphabetic.',
+      'The living Han-character tradition that developed out of earlier Chinese inscriptional, seal, and clerical forms. It is used for Chinese and Japanese writing and is not alphabetic.',
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Chinese_characters' },
-      { label: 'Unicode', url: 'https://www.unicode.org/charts/' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
     ],
   },
   {
@@ -905,33 +1113,40 @@ export const scripts: ScriptNode[] = [
     ),
     visualGlyphs: [
       {
-        label: 'ajaw-style sign',
-        sourceLabel: 'Maya script reference',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
-        viewBox: '0 0 64 64',
-        paths: ['M16 11 H48 Q55 11 55 18 V46 Q55 53 48 53 H16 Q9 53 9 46 V18 Q9 11 16 11 Z', 'M22 24 Q32 15 42 24', 'M23 38 Q32 45 41 38', 'M23 31 H41'],
+        label: 'Ajaw day glyph',
+        sourceLabel: 'Wikimedia Commons: MAYA-g-log-cal-D20-Ajaw.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/MAYA-g-log-cal-D20-Ajaw.svg',
       },
       {
-        label: 'kʼin sun sign',
-        sourceLabel: 'Maya script reference',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
-        viewBox: '0 0 64 64',
-        paths: ['M32 14 L37 26 L50 26 L40 34 L44 48 L32 40 L20 48 L24 34 L14 26 L27 26 Z', 'M32 24 V40', 'M24 32 H40'],
+        label: 'Ikʼ day glyph',
+        sourceLabel: 'Wikimedia Commons: MAYA-g-log-cal-D02-Ik.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D02-Ik.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/MAYA-g-log-cal-D02-Ik.svg',
       },
       {
-        label: 'balam-style sign',
-        sourceLabel: 'Maya script reference',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Maya_script',
-        viewBox: '0 0 64 64',
-        paths: ['M14 19 Q27 6 43 14 Q55 20 51 35 Q48 50 33 54 Q19 52 13 39 Q8 28 14 19 Z', 'M23 28 H42', 'M24 37 Q33 43 42 36', 'M22 20 L30 26 L38 19'],
+        label: 'Kʼan day glyph',
+        sourceLabel: 'Wikimedia Commons: MAYA-g-log-cal-D04-Kan.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D04-Kan.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/MAYA-g-log-cal-D04-Kan.svg',
+      },
+      {
+        label: 'Ix day glyph',
+        sourceLabel: 'Wikimedia Commons: MAYA-g-log-cal-D14-Ix.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D14-Ix.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/39/MAYA-g-log-cal-D14-Ix.svg',
       },
     ],
     summary:
       'A logosyllabic Mesoamerican writing system. It is included as a separate world writing tradition rather than an alphabetic descendant.',
-    notes: ['Latin strings are transliterations or labels; the visual signs are schematic examples.'],
+    notes: ['Latin strings are transliterations or labels; representative signs use sourced Maya day-glyph images.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Maya_script' },
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikimedia Commons: Ajaw glyph', url: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw.svg' },
+      { label: 'Wikimedia Commons: Ikʼ glyph', url: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D02-Ik.svg' },
+      { label: 'Wikimedia Commons: Kʼan glyph', url: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D04-Kan.svg' },
+      { label: 'Wikimedia Commons: Ix glyph', url: 'https://commons.wikimedia.org/wiki/File:MAYA-g-log-cal-D14-Ix.svg' },
     ],
   },
   {
@@ -981,6 +1196,31 @@ export const scripts: ScriptNode[] = [
     ],
   },
   {
+    id: 'manyogana',
+    name: 'Man’yōgana',
+    nativeName: '万葉仮名',
+    type: 'syllabary',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: 500,
+    endYear: 900,
+    direction: 'mixed',
+    unicodeBlock: ['CJK Unified Ideographs'],
+    inventoryMode: 'representative',
+    sampleGlyphs: ['安', '以', '宇', '衣'],
+    characterRows: characterRows(
+      '安 以 宇 衣 於 加 幾 久 計 己 左 之 寸 世 曽 太 知 川 天 止 奈 仁 奴 禰 乃 波 比 不 部 保',
+      'a|i|u|e|o|ka|ki|ku|ke|ko|sa|shi|su|se|so|ta|chi|tsu|te|to|na|ni|nu|ne|no|ha|hi|fu|he|ho',
+    ),
+    summary:
+      'A historical Japanese phonographic use of Chinese characters for their sounds. Its cursive forms led toward hiragana, while abbreviated character parts led toward katakana.',
+    notes: ['Shown with representative phonograms; Man’yōgana used many Chinese characters rather than a small standardized kana inventory.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Man%27y%C5%8Dgana' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
+    ],
+  },
+  {
     id: 'hiragana',
     name: 'Hiragana',
     nativeName: 'ひらがな',
@@ -997,7 +1237,7 @@ export const scripts: ScriptNode[] = [
       'a|i|u|e|o|ka|ki|ku|ke|ko|sa|shi|su|se|so|ta|chi|tsu|te|to|na|ni|nu|ne|no|ha|hi|fu|he|ho|ma|mi|mu|me|mo|ya|yu|yo|ra|ri|ru|re|ro|wa|wo|n',
     ),
     summary:
-      'A Japanese syllabary used with katakana and kanji. Hiragana developed from cursive forms of Chinese characters used phonetically.',
+      'A Japanese syllabary used with katakana and kanji. Hiragana developed from cursive forms of Man’yōgana, Chinese characters used phonetically for Japanese sounds.',
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Hiragana' },
@@ -1021,7 +1261,7 @@ export const scripts: ScriptNode[] = [
       'a|i|u|e|o|ka|ki|ku|ke|ko|sa|shi|su|se|so|ta|chi|tsu|te|to|na|ni|nu|ne|no|ha|hi|fu|he|ho|ma|mi|mu|me|mo|ya|yu|yo|ra|ri|ru|re|ro|wa|wo|n',
     ),
     summary:
-      'A Japanese syllabary used for loanwords, emphasis, transcription, and technical terms. Katakana developed from parts of Chinese characters used phonetically.',
+      'A Japanese syllabary used for loanwords, emphasis, transcription, and technical terms. Katakana developed from abbreviated parts of Man’yōgana, Chinese characters used phonetically for Japanese sounds.',
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Katakana' },
@@ -1045,10 +1285,12 @@ export const scripts: ScriptNode[] = [
       'b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|a|o|e|eh|ai|ei|ao|ou|an|en|ang|eng|er|i|u|yu',
     ),
     summary:
-      'A Mandarin phonetic semisyllabary used especially in Taiwan, with symbols for initials, medials, finals, and tones. Its forms are drawn from older Chinese character shapes and strokes.',
+      'A Mandarin phonetic semisyllabary that served as the standard pronunciation system before Hanyu Pinyin and is now used mainly in Taiwan. Its forms are drawn from older Chinese character shapes and strokes.',
+    notes: ['Bopomofo is phonetic annotation for Chinese pronunciation, not the ordinary script for writing Chinese text.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Bopomofo' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U3100.pdf' },
     ],
   },
@@ -1074,6 +1316,7 @@ export const scripts: ScriptNode[] = [
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Yi_script' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/UA000.pdf' },
     ],
   },
@@ -1094,10 +1337,36 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A logographic script created for the Tangut language of the Western Xia. Its inventory is far too large for full display here.',
+    notes: ['Tangut is siniform and Chinese-influenced, but it is not a descendant branch of Chinese characters.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tangut_script' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U17000.pdf' },
+    ],
+  },
+  {
+    id: 'khitan-small-script',
+    name: 'Khitan Small Script',
+    type: 'mixed',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: 925,
+    endYear: 1200,
+    direction: 'ttb',
+    unicodeBlock: ['Khitan Small Script'],
+    inventoryMode: 'representative',
+    sampleGlyphs: ['𘬀', '𘬁', '𘬂', '𘬃'],
+    characterRows:
+      '𘬀 𘬁 𘬂 𘬃 𘬄 𘬅 𘬆 𘬇 𘬈 𘬉 𘬊 𘬋 𘬌 𘬍 𘬎 𘬏'
+        .split(' ')
+        .map((glyph) => ({ glyph })),
+    summary:
+      'A partly deciphered script created for the Khitan language of the Liao dynasty. It combines logographic and phonographic behavior and was written vertically in the broader Chinese-script cultural sphere.',
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Khitan_small_script' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U18B00.pdf' },
     ],
   },
   {
@@ -1123,6 +1392,7 @@ export const scripts: ScriptNode[] = [
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/N%C3%BCshu' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1B170.pdf' },
     ],
   },
@@ -1358,6 +1628,7 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A right-to-left script used for Dhivehi in the Maldives. It combines consonant letters with vowel marks and has distinctive numeral-derived forms.',
+    notes: ['Classed here as an abugida-like consonant-and-vowel-mark system, though it does not behave like a classic inherent-vowel Brahmic abugida.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Thaana' },
@@ -1406,9 +1677,11 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A Brahmic-derived abugida used for Lao. It is historically related to Thai and earlier Tai writing traditions.',
+    notes: ['Kept under abugida for lineage and vowel-mark behavior, while Lao orthography represents vowels more explicitly than many Indic abugidas.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Lao_script' },
+      { label: 'Unicode Core Spec: Southeast Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-16/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U0E80.pdf' },
     ],
   },
@@ -1550,9 +1823,11 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A Berber/Amazigh alphabet with ancient Libyco-Berber ancestry and modern standardized forms used in North Africa.',
+    notes: ['Ancient Libyco-Berber and modern Neo-Tifinagh conventions differ; the node represents the broader Tifinagh tradition.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Tifinagh' },
+      { label: 'Unicode Core Spec: Africa', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U2D30.pdf' },
     ],
   },
@@ -1650,6 +1925,52 @@ export const scripts: ScriptNode[] = [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Turkic_script' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10C00.pdf' },
+    ],
+  },
+  {
+    id: 'sogdian',
+    name: 'Sogdian',
+    type: 'abjad',
+    status: 'historical',
+    region: ['Central Asia'],
+    startYear: 300,
+    endYear: 1000,
+    direction: 'rtl',
+    unicodeBlock: ['Sogdian'],
+    sampleGlyphs: ['𐼰', '𐼱', '𐼲', '𐼳'],
+    characterRows: characterRows(
+      '𐼰 𐼱 𐼲 𐼳 𐼴 𐼵 𐼶 𐼷 𐼸 𐼹 𐼺 𐼻 𐼼 𐼽 𐼾 𐼿 𐽀 𐽁 𐽂 𐽃 𐽄',
+      'aleph|beth|gimel|he|waw|zayin|heth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|sadhe|resh|shin|taw|feth|lesh',
+    ),
+    summary:
+      'An Aramaic-derived Central Asian script used for the Sogdian language. Its cursive forms are an important ancestor of Old Uyghur and, through that branch, Mongolian writing.',
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Sogdian_alphabet' },
+      { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10F30.pdf' },
+    ],
+  },
+  {
+    id: 'old-uyghur',
+    name: 'Old Uyghur',
+    type: 'alphabet',
+    status: 'historical',
+    region: ['Central Asia'],
+    startYear: 800,
+    endYear: 1700,
+    direction: 'ttb',
+    unicodeBlock: ['Old Uyghur'],
+    sampleGlyphs: ['𐽰', '𐽱', '𐽲', '𐽳'],
+    characterRows: characterRows(
+      '𐽰 𐽱 𐽲 𐽳 𐽴 𐽵 𐽶 𐽷 𐽸 𐽹 𐽺 𐽻 𐽼 𐽽 𐽾 𐽿 𐾀 𐾁',
+      'aleph|beth|gimel-heth|waw|zayin|final heth|yodh|kaph|lamedh|mem|nun|samekh|pe|resh|shin|taw|leshz|beth-2',
+    ),
+    summary:
+      'A Central Asian alphabet developed from cursive Sogdian and used for Old Uyghur and related manuscript traditions. It is the immediate historical model for traditional Mongolian writing.',
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Uyghur_alphabet' },
+      { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10F70.pdf' },
     ],
   },
   {
@@ -1811,6 +2132,8 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'hebrew', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hebrew_alphabet'] },
   { from: 'aramaic', to: 'syriac', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Syriac_alphabet'] },
   { from: 'aramaic', to: 'nabataean', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Nabataean_script'] },
+  { from: 'aramaic', to: 'kharoshthi', relationship: 'adapted_from', confidence: 'medium', note: 'Kharoshthi is usually linked to Aramaic influence, while the exact mechanism of adaptation is reconstructed.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'aramaic', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'nabataean', to: 'arabic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Arabic_alphabet'] },
   { from: 'brahmi', to: 'devanagari', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Devanagari'] },
   { from: 'brahmi', to: 'bengali-assamese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Bengali%E2%80%93Assamese_script'] },
@@ -1825,11 +2148,16 @@ export const edges: ScriptEdge[] = [
   { from: 'greek', to: 'armenian', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Armenian_alphabet'] },
   { from: 'old-italic', to: 'runic', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Runes'] },
   { from: 'latin', to: 'ogham', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Ogham'] },
-  { from: 'oracle-bone', to: 'chinese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Chinese_characters'] },
-  { from: 'chinese', to: 'hiragana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hiragana'] },
-  { from: 'chinese', to: 'katakana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Katakana'] },
+  { from: 'oracle-bone', to: 'bronze-script', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'bronze-script', to: 'seal-script', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/L2/topical/seal/'] },
+  { from: 'seal-script', to: 'clerical-script', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'clerical-script', to: 'chinese', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'chinese', to: 'manyogana', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Man%27y%C5%8Dgana', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'manyogana', to: 'hiragana', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Hiragana', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'manyogana', to: 'katakana', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Katakana', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
   { from: 'chinese', to: 'bopomofo', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Bopomofo'] },
-  { from: 'chinese', to: 'tangut', relationship: 'influenced_by', confidence: 'medium', note: 'Tangut was constructed for a separate language and is graphically inspired by Chinese characters, not descended from them.', sources: ['https://en.wikipedia.org/wiki/Tangut_script'] },
+  { from: 'chinese', to: 'tangut', relationship: 'influenced_by', confidence: 'high', note: 'Tangut was constructed for a separate language and is graphically inspired by Chinese characters, not descended from them.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
+  { from: 'chinese', to: 'khitan-small-script', relationship: 'influenced_by', confidence: 'medium', note: 'Khitan Small Script belongs to the Chinese-script cultural sphere but is not a direct descendant of Chinese characters.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-18/'] },
   { from: 'greek', to: 'glagolitic', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Glagolitic_script'] },
   { from: 'brahmi', to: 'sinhala', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sinhala_script'] },
   { from: 'brahmi', to: 'odia', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Odia_script'] },
@@ -1844,7 +2172,9 @@ export const edges: ScriptEdge[] = [
   { from: 'thai', to: 'lao', relationship: 'adapted_from', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Lao_script'] },
   { from: 'paleo-hebrew', to: 'samaritan', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Samaritan_script', 'https://en.wikipedia.org/wiki/Paleo-Hebrew_alphabet'] },
   { from: 'aramaic', to: 'mandaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Mandaic_alphabet'] },
-  { from: 'aramaic', to: 'mongolian', relationship: 'descended', confidence: 'medium', note: 'Shortcut for the Central Asian branch via Sogdian and Old Uyghur, which are not represented as separate nodes.', sources: ['https://en.wikipedia.org/wiki/Mongolian_script'] },
+  { from: 'sogdian', to: 'old-uyghur', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'old-uyghur', to: 'mongolian', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'old-south-arabian', to: 'geez', relationship: 'descended', confidence: 'medium', note: 'Ethiopic is rooted in the South Semitic inscriptional tradition; the exact early development is compressed here.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/'] },
   { from: 'latin', to: 'deseret', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Deseret_alphabet'] },
   { from: 'latin', to: 'osage', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Osage_script'] },
 ]
@@ -1868,7 +2198,7 @@ export const guidedTraces = [
   {
     id: 'chinese-path',
     label: 'Chinese Characters',
-    nodeIds: ['oracle-bone', 'chinese', 'hiragana', 'katakana', 'bopomofo'],
+    nodeIds: ['oracle-bone', 'bronze-script', 'seal-script', 'clerical-script', 'chinese', 'manyogana', 'hiragana', 'katakana', 'bopomofo'],
   },
 ] as const
 
