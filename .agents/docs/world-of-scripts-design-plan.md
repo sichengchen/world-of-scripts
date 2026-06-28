@@ -1,8 +1,8 @@
-# Alphabet World Design Plan
+# World of Scripts Design Plan
 
 ## Product Brief
 
-Build an educational web app that lets users explore the history and relationships of major world alphabets and alphabet-like writing systems through an interactive family-tree diagram. Users can click a writing-system node to inspect its alphabet, sample glyphs, lineage, date range, region, script type, writing direction, and notes.
+Build an educational web app that lets users explore the history and relationships of major world scripts and writing systems through an interactive family-tree diagram. Users can click a writing-system node to inspect its characters, sample glyphs, lineage, date range, region, script type, writing direction, and notes.
 
 Primary references:
 
@@ -54,7 +54,7 @@ The main screen has three persistent zones:
 Desktop:
 
 - Top toolbar, 56px high:
-  - App title: "Alphabet World"
+  - App title: "World of Scripts"
   - Search input
   - Filter button
   - View segmented control
