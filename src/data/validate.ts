@@ -24,7 +24,7 @@ export function validateContent() {
     if (inventoryMode === 'representative' && (!script.characterRows || script.characterRows.length < representativeExampleLimit)) {
       errors.push(`${script.id} must list at least ${representativeExampleLimit} representative examples`)
     }
-    for (const visualGlyph of script.visualGlyphs ?? []) {
+    for (const visualGlyph of [...(script.nativeNameVisual ?? []), ...(script.visualGlyphs ?? [])]) {
       if (!visualGlyph.label.trim()) errors.push(`${script.id} has a visual glyph without a label`)
       if (!visualGlyph.sourceLabel.trim() || !visualGlyph.sourceUrl.trim()) {
         errors.push(`${script.id} visual glyph ${visualGlyph.label} is missing source attribution`)

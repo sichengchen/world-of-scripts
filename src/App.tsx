@@ -212,6 +212,8 @@ const scriptLanguageTags: Record<string, string> = {
   yi: 'ii',
 }
 
+const verticalNodeGlyphScriptIds = new Set(['ogham', 'mongolian', 'manchu', 'old-uyghur'])
+
 type Filters = {
   type: 'all' | ScriptNode['type']
   region: 'all' | string
@@ -288,11 +290,13 @@ function AlphabetWorld() {
       .filter((script) => {
         const haystack = [
           script.name,
+          script.commonName,
           script.nativeName,
           script.type,
           script.status,
           ...script.region,
           ...script.sampleGlyphs,
+          ...(script.nativeNameVisual?.map((glyph) => glyph.label) ?? []),
           ...(script.visualGlyphs?.map((glyph) => glyph.label) ?? []),
         ]
           .filter(Boolean)
@@ -1045,7 +1049,8 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
   const { script, dimmed, isRelated, isSelected, isTraced } = data
   const color = getTypeColor(script.type)
   const scriptText = getScriptTextAttributes(script)
-  const isVertical = isVerticalDirection(script.direction)
+  const useVerticalNodeGlyphs = verticalNodeGlyphScriptIds.has(script.id)
+  const useCompactNodeGlyphs = script.id === 'khitan-small-script'
 
   return (
     <article
@@ -1056,6 +1061,7 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
         isTraced && 'is-traced',
         dimmed && 'is-dimmed',
       )}
+      data-script-id={script.id}
       style={{ '--node-accent': color, '--script-font': scriptText.fontFamily } as CSSProperties}
       tabIndex={0}
       aria-label={`${script.name}, ${script.type}, ${formatDate(script)}`}
@@ -1073,10 +1079,18 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'} lang={scriptText.lang}>
         {script.visualGlyphs ? (
           <SvgGlyphStrip glyphs={script.visualGlyphs.slice(0, 4)} />
-        ) : isVertical ? (
+        ) : useVerticalNodeGlyphs ? (
           <span className="node-vertical-glyphs">
             {script.sampleGlyphs.slice(0, 4).map((glyph) => (
               <span className="script-glyph node-vertical-sample is-vertical" key={glyph}>
+                {glyph}
+              </span>
+            ))}
+          </span>
+        ) : useCompactNodeGlyphs ? (
+          <span className="node-inline-glyphs">
+            {script.sampleGlyphs.slice(0, 4).map((glyph) => (
+              <span className="script-glyph node-inline-sample" key={glyph}>
                 {glyph}
               </span>
             ))}
@@ -1139,6 +1153,14 @@ function Inspector({
   )
   const scriptText = getScriptTextAttributes(script)
   const isVertical = isVerticalDirection(script.direction)
+  const inspectorTitle = script.commonName ?? script.name
+  const useVerticalInspectorGlyphs = verticalNodeGlyphScriptIds.has(script.id)
+  const hasCroppedNativeNameVisual = script.nativeNameVisual?.some((glyph) => glyph.crop)
+  const nativeNameVisualClassName = hasCroppedNativeNameVisual
+    ? 'h-20 w-12 max-w-full'
+    : script.nativeNameVisual?.length === 1
+      ? 'h-24 w-40 max-w-full'
+      : 'h-10 w-10'
 
   function handleSheetPointerDown(event: PointerEvent<HTMLButtonElement>) {
     dragStartY.current = event.clientY
@@ -1179,7 +1201,7 @@ function Inspector({
           ? 'max-[820px]:h-full max-[820px]:max-h-full'
           : 'max-[820px]:h-[48dvh] max-[820px]:max-h-[48dvh]',
       )}
-      aria-label={`${script.name} details`}
+      aria-label={`${inspectorTitle} details`}
       style={{ '--script-font': scriptText.fontFamily } as CSSProperties}
     >
       <button
@@ -1198,17 +1220,24 @@ function Inspector({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3 max-[820px]:justify-start max-[820px]:gap-2">
-            <h2 className="min-w-0 text-3xl font-semibold leading-none">{script.name}</h2>
+            <h2 className="min-w-0 text-3xl font-semibold leading-none">{inspectorTitle}</h2>
             <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
           </div>
-          {script.nativeName && !script.visualGlyphs && (
+          {script.nativeNameVisual ? (
+            <SvgGlyphStrip
+              className="mt-2"
+              glyphClassName={nativeNameVisualClassName}
+              glyphs={script.nativeNameVisual}
+              orientation={isVertical ? 'vertical' : 'horizontal'}
+            />
+          ) : script.nativeName && !script.visualGlyphs ? (
             <p
               className={cn('script-native mt-2 text-lg text-muted-foreground', isVertical && 'is-vertical')}
               lang={scriptText.lang}
             >
               {script.nativeName}
             </p>
-          )}
+          ) : null}
         </div>
         <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label="Close inspector" onClick={onClose}>
           <X data-icon="inline-start" />
@@ -1257,11 +1286,11 @@ function Inspector({
                 key={`${row.glyph}-${index}`}
               >
                 <span className="flex items-baseline justify-center gap-1.5">
-                  <span className={cn('script-glyph text-3xl leading-none', isVertical && 'is-vertical')}>
+                  <span className={cn('script-glyph text-3xl leading-none', useVerticalInspectorGlyphs && 'is-vertical')}>
                     {row.glyph}
                   </span>
                   {row.alternateGlyph && (
-                    <span className={cn('script-glyph text-2xl leading-none text-muted-foreground', isVertical && 'is-vertical')}>
+                    <span className={cn('script-glyph text-2xl leading-none text-muted-foreground', useVerticalInspectorGlyphs && 'is-vertical')}>
                       {row.alternateGlyph}
                     </span>
                   )}
@@ -1324,11 +1353,27 @@ function Inspector({
   )
 }
 
-function SvgGlyphStrip({ glyphs }: { glyphs: NonNullable<ScriptNode['visualGlyphs']> }) {
+function SvgGlyphStrip({
+  className,
+  glyphClassName = 'h-7 w-7',
+  glyphs,
+  orientation = 'horizontal',
+}: {
+  className?: string
+  glyphClassName?: string
+  glyphs: NonNullable<ScriptNode['visualGlyphs']>
+  orientation?: 'horizontal' | 'vertical'
+}) {
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={cn(
+        'flex gap-2',
+        orientation === 'vertical' ? 'w-fit flex-col items-center' : 'items-center',
+        className,
+      )}
+    >
       {glyphs.map((glyph) => (
-        <SvgGlyph className="h-7 w-7" glyph={glyph} key={glyph.label} />
+        <SvgGlyph className={glyphClassName} glyph={glyph} key={glyph.label} />
       ))}
     </div>
   )
@@ -1342,6 +1387,20 @@ function SvgGlyph({
   glyph: NonNullable<ScriptNode['visualGlyphs']>[number]
 }) {
   if (glyph.imageUrl) {
+    if (glyph.crop === 'right-half') {
+      return (
+        <span className={cn(className, 'inline-block overflow-hidden')} role="img" aria-label={`${glyph.label}; source: ${glyph.sourceLabel}`}>
+          <img
+            alt=""
+            aria-hidden="true"
+            className="h-full w-[200%] max-w-none object-fill"
+            src={glyph.imageUrl}
+            style={{ transform: 'translateX(-50%)' }}
+          />
+        </span>
+      )
+    }
+
     return (
       <img
         alt={`${glyph.label}; source: ${glyph.sourceLabel}`}

@@ -239,6 +239,26 @@ body,
   gap: 18px;
 }
 
+.node-inline-glyphs {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.node-inline-sample {
+  display: inline-flex;
+  width: 24px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  font-size: 19px;
+  line-height: 1;
+}
+
 .script-glyph.is-vertical,
 .script-native.is-vertical {
   writing-mode: vertical-lr;

@@ -11,11 +11,23 @@ export type ScriptType =
 
 export type ScriptStatus = 'living' | 'historical' | 'revived' | 'constructed'
 
+export type VisualGlyph = {
+  label: string
+  sourceLabel: string
+  sourceUrl: string
+  imageUrl?: string
+  crop?: 'right-half'
+  viewBox?: string
+  paths?: string[]
+}
+
 export type ScriptNode = {
   id: string
   name: string
+  commonName?: string
   // Display label in the script or community language; not always a formal script autonym.
   nativeName?: string
+  nativeNameVisual?: VisualGlyph[]
   type: ScriptType
   status: ScriptStatus
   region: string[]
@@ -26,14 +38,7 @@ export type ScriptNode = {
   inventoryMode?: 'full' | 'representative'
   // For scripts without practical Unicode glyphs, these may be modern descendants or labels.
   sampleGlyphs: string[]
-  visualGlyphs?: Array<{
-    label: string
-    sourceLabel: string
-    sourceUrl: string
-    imageUrl?: string
-    viewBox?: string
-    paths?: string[]
-  }>
+  visualGlyphs?: VisualGlyph[]
   characterRows?: Array<{
     glyph: string
     alternateGlyph?: string
@@ -842,7 +847,8 @@ export const scripts: ScriptNode[] = [
   },
   {
     id: 'oracle-bone',
-    name: 'Oracle Bone Script',
+    name: 'Jiaguwen',
+    commonName: 'Oracle Bone Script',
     type: 'logographic',
     status: 'historical',
     region: ['East Asia'],
@@ -894,8 +900,8 @@ export const scripts: ScriptNode[] = [
   },
   {
     id: 'bronze-script',
-    name: 'Bronze Script',
-    nativeName: '金文',
+    name: 'Jinwen',
+    commonName: 'Bronze Script',
     type: 'logographic',
     status: 'historical',
     region: ['East Asia'],
@@ -947,8 +953,18 @@ export const scripts: ScriptNode[] = [
   },
   {
     id: 'seal-script',
-    name: 'Seal Script',
+    name: 'Zhuanshu',
+    commonName: 'Seal Script',
     nativeName: '篆書',
+    nativeNameVisual: [
+      {
+        label: '篆書',
+        sourceLabel: 'Wikimedia Commons: Seal Eg.png',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Seal_Eg.png',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/Seal_Eg.png',
+        crop: 'right-half',
+      },
+    ],
     type: 'logographic',
     status: 'historical',
     region: ['East Asia'],
@@ -997,12 +1013,23 @@ export const scripts: ScriptNode[] = [
       { label: 'Wikimedia Commons: 月-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%9C%88-seal.svg' },
       { label: 'Wikimedia Commons: 山-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E5%B1%B1-seal.svg' },
       { label: 'Wikimedia Commons: 水-seal.svg', url: 'https://commons.wikimedia.org/wiki/File:%E6%B0%B4-seal.svg' },
+      { label: 'Wikimedia Commons: Seal Eg.png', url: 'https://commons.wikimedia.org/wiki/File:Seal_Eg.png' },
     ],
   },
   {
     id: 'clerical-script',
-    name: 'Clerical Script',
+    name: 'Lishu',
+    commonName: 'Clerical Script',
     nativeName: '隸書',
+    nativeNameVisual: [
+      {
+        label: '隸書',
+        sourceLabel: 'Wikimedia Commons: Regular and clerical script eg.svg',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Regular_and_clerical_script_eg.svg',
+        imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/94/Regular_and_clerical_script_eg.svg',
+        crop: 'right-half',
+      },
+    ],
     type: 'logographic',
     status: 'historical',
     region: ['East Asia'],
@@ -1050,11 +1077,13 @@ export const scripts: ScriptNode[] = [
       { label: 'Wikimedia Commons: Character Yue4 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Yue4_Cler.svg' },
       { label: 'Wikimedia Commons: Character Shan1 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Shan1_Cler.svg' },
       { label: 'Wikimedia Commons: Character Shui3 Cler.svg', url: 'https://commons.wikimedia.org/wiki/File:Character_Shui3_Cler.svg' },
+      { label: 'Wikimedia Commons: Regular and clerical script eg.svg', url: 'https://commons.wikimedia.org/wiki/File:Regular_and_clerical_script_eg.svg' },
     ],
   },
   {
     id: 'chinese',
-    name: 'Chinese Characters',
+    name: 'Hanzi',
+    commonName: 'Chinese Characters',
     nativeName: '漢字',
     type: 'logographic',
     status: 'living',
@@ -1270,7 +1299,8 @@ export const scripts: ScriptNode[] = [
   },
   {
     id: 'bopomofo',
-    name: 'Bopomofo',
+    name: 'Zhuyin',
+    commonName: 'Bopomofo',
     nativeName: '注音符號',
     type: 'semisyllabary',
     status: 'living',
@@ -1286,7 +1316,7 @@ export const scripts: ScriptNode[] = [
     ),
     summary:
       'A Mandarin phonetic semisyllabary that served as the standard pronunciation system before Hanyu Pinyin and is now used mainly in Taiwan. Its forms are drawn from older Chinese character shapes and strokes.',
-    notes: ['Bopomofo is phonetic annotation for Chinese pronunciation, not the ordinary script for writing Chinese text.'],
+    notes: ['Zhuyin is phonetic annotation for Chinese pronunciation, not the ordinary script for writing Chinese text.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Bopomofo' },
@@ -1347,7 +1377,8 @@ export const scripts: ScriptNode[] = [
   },
   {
     id: 'khitan-small-script',
-    name: 'Khitan Small Script',
+    name: 'Khitan Small',
+    commonName: 'Khitan Small Script',
     type: 'mixed',
     status: 'historical',
     region: ['East Asia'],
@@ -1356,7 +1387,7 @@ export const scripts: ScriptNode[] = [
     direction: 'ttb',
     unicodeBlock: ['Khitan Small Script'],
     inventoryMode: 'representative',
-    sampleGlyphs: ['𘬀', '𘬁', '𘬂', '𘬃'],
+    sampleGlyphs: ['𘬂', '𘬃', '𘬄', '𘬆'],
     characterRows:
       '𘬀 𘬁 𘬂 𘬃 𘬄 𘬅 𘬆 𘬇 𘬈 𘬉 𘬊 𘬋 𘬌 𘬍 𘬎 𘬏'
         .split(' ')
@@ -2225,7 +2256,7 @@ export const guidedTraces = [
   },
   {
     id: 'chinese-path',
-    label: 'Chinese Characters',
+    label: 'Hanzi',
     nodeIds: ['oracle-bone', 'bronze-script', 'seal-script', 'clerical-script', 'chinese', 'manyogana', 'hiragana', 'katakana', 'bopomofo'],
   },
 ] as const
