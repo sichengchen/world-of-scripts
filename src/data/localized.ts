@@ -471,6 +471,32 @@ const localizedCharacterLabels: Record<Locale, Record<string, string>> = {
   },
 }
 
+const modernHanCharacterLabels: Record<string, string> = {
+  'sun / day': '日',
+  moon: '月',
+  mountain: '山',
+  water: '水',
+  wood: '木',
+  fire: '火',
+  earth: '土',
+  metal: '金',
+  person: '人',
+  mouth: '口',
+  heart: '心',
+  hand: '手',
+  horse: '馬',
+  bird: '鳥',
+  fish: '魚',
+  gate: '門',
+}
+
+const historicalHanFormScriptIds = new Set([
+  'oracle-bone',
+  'bronze-script',
+  'seal-script',
+  'clerical-script',
+])
+
 export function localizedTraceLabel(id: string, label: string, locale: Locale) {
   return localizedGuidedTraceLabels[locale][id] ?? label
 }
@@ -514,6 +540,10 @@ export function annotateHistoricalTerms(text: string, script: ScriptNode, locale
 }
 
 export function localizedCharacterLabel(label: string, locale: Locale, scriptId?: string) {
+  if (locale === 'zh-Hant-CN' && scriptId && historicalHanFormScriptIds.has(scriptId)) {
+    return modernHanCharacterLabels[label] ?? label
+  }
+
   return localizedCharacterLabels[locale][label] ?? label
 }
 
