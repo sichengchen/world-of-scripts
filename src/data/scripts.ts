@@ -358,7 +358,7 @@ export const scripts: ScriptNode[] = [
     type: 'abjad',
     status: 'living',
     region: ['Near East'],
-    startYear: -100,
+    startYear: 6,
     endYear: 'present',
     direction: 'rtl',
     unicodeBlock: ['Syriac'],
@@ -714,7 +714,7 @@ export const scripts: ScriptNode[] = [
     type: 'abugida',
     status: 'living',
     region: ['Horn of Africa'],
-    startYear: -500,
+    startYear: 300,
     endYear: 'present',
     direction: 'ltr',
     unicodeBlock: ['Ethiopic'],
@@ -724,6 +724,7 @@ export const scripts: ScriptNode[] = [
       .map((glyph) => ({ glyph })),
     summary:
       'A South Semitic script that developed into a vocalized abugida. It is used for Amharic, Tigrinya, liturgical Geʽez, and related languages.',
+    notes: ['Earlier unvocalized Ethiopic and South Arabian precursors predate this vocalized Ethiopic node.'],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Ge%CA%BDez_script' },
       { label: 'Unicode Core Spec: Africa', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/' },
@@ -1448,7 +1449,7 @@ export const scripts: ScriptNode[] = [
     type: 'syllabary',
     status: 'revived',
     region: ['East Asia'],
-    startYear: 1200,
+    startYear: 1800,
     endYear: 'present',
     direction: 'ttb',
     unicodeBlock: ['Nushu'],
@@ -1460,7 +1461,7 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A syllabic script historically used by women in Jiangyong, China, now preserved through cultural transmission and revival work. The encoded inventory is large, so the app shows representative signs.',
-    notes: ['The early date is approximate; Nüshu origins are uncertain.'],
+    notes: ['The display date is conservative; Nüshu origins are uncertain and may be earlier.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/N%C3%BCshu' },
@@ -1686,7 +1687,7 @@ export const scripts: ScriptNode[] = [
     id: 'thaana',
     name: 'Thaana',
     nativeName: 'ތާނަ',
-    type: 'abugida',
+    type: 'alphabet',
     status: 'living',
     region: ['South Asia'],
     startYear: 1700,
@@ -1699,8 +1700,8 @@ export const scripts: ScriptNode[] = [
         .split(' ')
         .map((glyph) => ({ glyph })),
     summary:
-      'A right-to-left script used for Dhivehi in the Maldives. It combines consonant letters with vowel marks and has distinctive numeral-derived forms.',
-    notes: ['Classed here as an abugida-like consonant-and-vowel-mark system, though it does not behave like a classic inherent-vowel Brahmic abugida.'],
+      'A right-to-left alphabet used for Dhivehi in the Maldives. It writes consonant letters with obligatory vowel marks and has distinctive numeral-derived forms.',
+    notes: ['Thaana uses combining vowel signs, but it does not behave like a classic inherent-vowel Brahmic abugida.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Thaana' },
@@ -1859,7 +1860,7 @@ export const scripts: ScriptNode[] = [
     nativeName: 'ᜊᜌ᜔ᜊᜌᜒᜈ᜔',
     type: 'abugida',
     status: 'historical',
-    region: ['Oceania', 'Southeast Asia'],
+    region: ['Southeast Asia'],
     startYear: 1300,
     endYear: 1800,
     direction: 'ltr',
@@ -2015,7 +2016,7 @@ export const scripts: ScriptNode[] = [
       'aleph|beth|gimel|he|waw|zayin|heth|yodh|kaph|lamedh|mem|nun|samekh|ayin|pe|sadhe|resh|shin|taw|feth|lesh',
     ),
     summary:
-      'A Syriac-derived Central Asian script used for the Sogdian language, within the broader Aramaic script family. Its cursive forms are an important ancestor of Old Uyghur and, through that branch, Mongolian writing.',
+      'An Aramaic-derived Central Asian script used for the Sogdian language. Its cursive forms are an important ancestor of Old Uyghur and, through that branch, Mongolian writing.',
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Sogdian_alphabet' },
       { label: 'Unicode Core Spec: South and Central Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/' },
@@ -2103,6 +2104,7 @@ export const scripts: ScriptNode[] = [
     status: 'historical',
     region: ['East Asia'],
     startYear: 1599,
+    endYear: 1912,
     direction: 'ttb',
     unicodeBlock: ['Mongolian'],
     sampleGlyphs: ['ᠠ', 'ᡝ', 'ᡳ', 'ᡠ'],
@@ -2112,7 +2114,10 @@ export const scripts: ScriptNode[] = [
     ),
     summary:
       'A vertical alphabet created for the Manchu language by adapting the Mongolian script. It belongs to the Old Uyghur-derived Mongolian script lineage, with later reforms adding distinguishing dots and circles.',
-    notes: ['Manchu should not be confused with the earlier Jurchen script, which belongs to a different graphically Chinese-influenced tradition.'],
+    notes: [
+      'Shown as the Qing-era Manchu script; related Sibe writing remains in use.',
+      'Manchu should not be confused with the earlier Jurchen script, which belongs to a different graphically Chinese-influenced tradition.',
+    ],
     sources: [
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Manchu_alphabet' },
       { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-13/' },
@@ -2256,7 +2261,7 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'nabataean', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Nabataean_script'] },
   { from: 'aramaic', to: 'kharoshthi', relationship: 'adapted_from', confidence: 'medium', note: 'Kharoshthi is usually linked to Aramaic influence, while the exact mechanism of adaptation is reconstructed.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'aramaic', to: 'brahmi', relationship: 'disputed', confidence: 'medium', note: 'Brahmi is often proposed as deriving from or adapting an Aramaic/Semitic model, but its origin remains debated and direct descent is not established.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/', 'https://en.wikipedia.org/wiki/Brahmi_script', 'https://www.jstor.org/stable/604670', 'https://archive.org/details/onoriginofindian00bhuoft'] },
-  { from: 'syriac', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sogdian_alphabet', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'aramaic', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sogdian_alphabet', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'nabataean', to: 'arabic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Arabic_alphabet'] },
   { from: 'brahmi', to: 'devanagari', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Devanagari'] },
   { from: 'brahmi', to: 'bengali-assamese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Bengali%E2%80%93Assamese_script'] },
@@ -2344,7 +2349,7 @@ export const guidedTraces = [
   {
     id: 'inner-asia-path',
     label: 'Aramaic to Manchu',
-    nodeIds: ['aramaic', 'syriac', 'sogdian', 'old-uyghur', 'mongolian', 'manchu'],
+    nodeIds: ['aramaic', 'sogdian', 'old-uyghur', 'mongolian', 'manchu'],
   },
   {
     id: 'chinese-path',

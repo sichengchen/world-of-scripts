@@ -168,6 +168,7 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     geez: {
       name: '吉茲文／埃塞俄比亞文字',
       summary: '吉茲文由南閃米特碑銘傳統發展而來，後來形成元音附標性質的埃塞俄比亞文字，用於吉茲語和阿姆哈拉語等。',
+      notes: ['更早的未標元音埃塞俄比亞文字和南阿拉伯先行傳統早於此處的元音化埃塞俄比亞文字節點。'],
     },
     armenian: {
       name: '亞美尼亞字母',
@@ -269,7 +270,7 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     nushu: {
       name: '女書',
       summary: '女書是湖南江永一帶女性社群使用的文字傳統，通常與當地漢語方言和女性書寫文化相關。',
-      notes: ['早期年代為近似值；女書起源仍不確定。'],
+      notes: ['圖中年代採較保守表示；女書起源仍不確定，也可能更早。'],
     },
     lisu: {
       name: '傈僳文',
@@ -285,7 +286,7 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     },
     deseret: {
       name: '德瑟雷特字母',
-      summary: '德瑟雷特字母是 19 世紀在美國創制的英語拼音化字母文字，與摩門社群歷史相關。',
+      summary: '德瑟雷特字母是 19 世紀在美國創制的英語音素字母文字，與摩門社群歷史相關。',
     },
     sinhala: {
       name: '僧伽羅文',
@@ -309,7 +310,8 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     },
     thaana: {
       name: '塔安那文',
-      summary: '塔安那文用於迪維希語，書寫方向由右至左，字形來源與數字符號和阿拉伯文字傳統有關。',
+      summary: '塔安那文是用於迪維希語的由右至左字母文字，以輔音字母配合必寫的元音符號，字形來源與數字符號有關。',
+      notes: ['塔安那文使用組合式元音符號，但不像典型婆羅米系元音附標文字那樣具有固有元音。'],
     },
     myanmar: {
       name: '緬甸文',
@@ -347,7 +349,7 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     },
     nko: {
       name: '恩科文',
-      summary: '恩科文是為曼德語族語言創制的字母文字，書寫方向由右至左。',
+      summary: '恩科文是為曼丁語支語言創制的字母文字，書寫方向由右至左。',
     },
     adlam: {
       name: '阿德拉姆文',
@@ -363,7 +365,7 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     },
     sogdian: {
       name: '粟特文',
-      summary: '粟特文源自敘利亞-阿拉姆文字傳統，曾在中亞商貿和宗教傳播中扮演重要角色。',
+      summary: '粟特文源自阿拉姆文字傳統，曾在中亞商貿和宗教傳播中扮演重要角色。',
     },
     'old-uyghur': {
       name: '回鶻文',
@@ -382,7 +384,10 @@ export const localizedScripts: Record<Locale, Record<string, LocalizedScriptCont
     manchu: {
       name: '滿文',
       summary: '滿文由蒙古文改編而來，用於滿語，保持縱向書寫方向。',
-      notes: ['滿文不應與更早的女真文字混淆；女真文字屬於另一種受漢字影響的圖形傳統。'],
+      notes: [
+        '此處表示清代滿文；相關的錫伯文書寫仍在使用。',
+        '滿文不應與更早的女真文字混淆；女真文字屬於另一種受漢字影響的圖形傳統。',
+      ],
     },
     ugaritic: {
       name: '烏加里特楔形字母',
