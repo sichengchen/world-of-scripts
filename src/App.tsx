@@ -1238,12 +1238,13 @@ function Inspector({
 
   if (!script || !relatedScripts) {
     return (
-      <aside className="inspector empty-inspector" aria-label={t.scriptDetails}>
-        <div className="p-4">
-          <Badge variant="outline" className="mb-2">{t.noSelection}</Badge>
-          <h2>{t.selectScript}</h2>
+      <aside className="min-h-0 min-w-0 border-l bg-card max-[820px]:hidden" aria-label={t.scriptDetails}>
+        <div className="grid h-full place-items-center px-8">
+          <div className="max-w-[21rem] text-left">
+            <h2 className="text-2xl font-semibold leading-tight tracking-normal text-foreground">{t.selectScript}</h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">{t.emptyInspectorCopy}</p>
+          </div>
         </div>
-        <p className="px-4 text-sm leading-6">{t.emptyInspectorCopy}</p>
       </aside>
     )
   }
@@ -1257,6 +1258,7 @@ function Inspector({
     0,
     isFiniteInventory ? undefined : representativeExampleLimit,
   )
+  const suppressCharacterMeaningLabels = locale === 'zh-Hant-CN' && script.id === 'chinese'
   const scriptText = getScriptTextAttributes(script)
   const isVertical = isVerticalDirection(script.direction)
   const localizedScript = localizeScript(script, locale)
@@ -1399,7 +1401,7 @@ function Inspector({
           >
             {characterRows.map((row, index) => {
               const characterLabel = [
-                row.label ? localizedCharacterLabel(row.label, locale, script.id) : undefined,
+                row.label && !suppressCharacterMeaningLabels ? localizedCharacterLabel(row.label, locale, script.id) : undefined,
                 row.transliteration,
               ]
                 .filter(Boolean)
