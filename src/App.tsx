@@ -1397,28 +1397,41 @@ function Inspector({
             dir={script.direction === 'rtl' ? 'rtl' : 'ltr'}
             lang={scriptText.lang}
           >
-            {characterRows.map((row, index) => (
-              <div
-                className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border bg-background px-1.5 py-2 text-center"
-                key={`${row.glyph}-${index}`}
-              >
-                <span className="flex items-baseline justify-center gap-1.5">
-                  <span className={cn('script-glyph text-3xl leading-none', useVerticalInspectorGlyphs && 'is-vertical')}>
-                    {row.glyph}
-                  </span>
-                  {row.alternateGlyph && (
-                    <span className={cn('script-glyph text-2xl leading-none text-muted-foreground', useVerticalInspectorGlyphs && 'is-vertical')}>
-                      {row.alternateGlyph}
+            {characterRows.map((row, index) => {
+              const characterLabel = [
+                row.label ? localizedCharacterLabel(row.label, locale, script.id) : undefined,
+                row.transliteration,
+              ]
+                .filter(Boolean)
+                .join(' · ')
+
+              return (
+                <div
+                  className="grid min-h-20 grid-rows-[2.75rem_minmax(1rem,auto)] content-center justify-items-center gap-1 rounded-lg border bg-background px-1.5 py-2 text-center"
+                  key={`${row.glyph}-${index}`}
+                >
+                  <span className="flex h-11 items-center justify-center gap-1.5">
+                    <span className={cn('script-glyph text-3xl leading-none', useVerticalInspectorGlyphs && 'is-vertical')}>
+                      {row.glyph}
                     </span>
-                  )}
-                </span>
-                {(row.label || row.transliteration) && (
-                  <small className="max-w-full text-xs font-medium leading-tight text-muted-foreground">
-                    {[row.label ? localizedCharacterLabel(row.label, locale, script.id) : undefined, row.transliteration].filter(Boolean).join(' · ')}
+                    {row.alternateGlyph && (
+                      <span className={cn('script-glyph text-2xl leading-none text-muted-foreground', useVerticalInspectorGlyphs && 'is-vertical')}>
+                        {row.alternateGlyph}
+                      </span>
+                    )}
+                  </span>
+                  <small
+                    className={cn(
+                      'min-h-4 max-w-full text-xs font-medium leading-tight text-muted-foreground',
+                      !characterLabel && 'invisible',
+                    )}
+                    aria-hidden={!characterLabel}
+                  >
+                    {characterLabel || ' '}
                   </small>
-                )}
-              </div>
-            ))}
+                </div>
+              )
+            })}
           </div>
         )}
       </section>
