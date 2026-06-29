@@ -101,6 +101,11 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+:lang(zh-Hant-CN) {
+  font-family: "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
+  line-break: strict;
+}
+
 html,
 body,
 #root {
@@ -226,14 +231,14 @@ body,
 
 .node-glyphs {
   display: flex;
-  flex: 1 1 auto;
+  flex: 1 1 30px;
   align-items: center;
   max-width: 100%;
-  min-height: 0;
-  margin-top: 8px;
+  min-height: 30px;
+  margin-top: 6px;
   overflow: hidden;
   font-size: 25px;
-  line-height: 1;
+  line-height: 1.2;
   word-spacing: 4px;
 }
 

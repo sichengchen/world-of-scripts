@@ -23,6 +23,7 @@ import {
   Github,
   GitBranch,
   Info,
+  Languages,
   MessageSquare,
   Minus,
   Plus,
@@ -31,7 +32,7 @@ import {
   Waypoints,
   X,
 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -62,6 +63,14 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { cn } from '@/lib/utils'
+import {
+  annotateHistoricalTerms,
+  englishScriptDisplayName,
+  localizedCharacterLabel,
+  localizedScriptName,
+  localizedTraceLabel,
+  localizeScript,
+} from './data/localized'
 import { edges, guidedTraces, regions, scripts, scriptTypes, type ScriptNode } from './data/scripts'
 import { validateContent } from './data/validate'
 import {
@@ -74,6 +83,18 @@ import {
   type TimelineTickData,
   type ViewMode,
 } from './graph'
+import {
+  type AppText,
+  type Locale,
+  directionLabel,
+  formatDate,
+  regionLabel,
+  statusLabel,
+  timelineTickLabel,
+  translations,
+  typeLabel,
+  viewModeLabel,
+} from './i18n'
 
 validateContent()
 
@@ -92,8 +113,6 @@ const referenceLinks = [
   { label: 'Wikipedia: Alphabet', url: 'https://en.wikipedia.org/wiki/Alphabet' },
   { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
 ]
-const appSummary =
-  'Explore the histories and lineages of writing systems across the world.'
 const fallbackScriptFont = '"Noto Sans", "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", serif'
 const scriptFontStacks: Record<string, string> = {
   'egyptian-hieroglyphs': `"Noto Sans Egyptian Hieroglyphs", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -224,6 +243,20 @@ type Filters = {
   status: 'all' | ScriptNode['status']
 }
 
+type I18nContextValue = {
+  locale: Locale
+  t: AppText
+  setLocale: (locale: Locale) => void
+}
+
+const I18nContext = createContext<I18nContextValue | null>(null)
+
+function useI18n() {
+  const value = useContext(I18nContext)
+  if (!value) throw new Error('I18nContext is missing')
+  return value
+}
+
 function App() {
   return (
     <ReactFlowProvider>
@@ -233,6 +266,7 @@ function App() {
 }
 
 function AlphabetWorld() {
+  const [locale, setLocale] = useState<Locale>('en')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState<Filters>({ type: 'all', region: 'all', status: 'all' })
@@ -243,6 +277,8 @@ function AlphabetWorld() {
   const [inspectorExpanded, setInspectorExpanded] = useState(false)
   const flowPaneRef = useRef<HTMLDivElement>(null)
   const { fitBounds, fitView, setCenter, setViewport, zoomIn, zoomOut } = useReactFlow()
+  const t = translations[locale]
+  const i18n = useMemo(() => ({ locale, t, setLocale }), [locale, t])
 
   const activeTraceIds = useMemo<Set<string>>(
     () => new Set(guidedTraces.find((trace) => trace.id === activeTrace)?.nodeIds ?? []),
@@ -261,8 +297,15 @@ function AlphabetWorld() {
 
   const selectedScript = scripts.find((script) => script.id === selectedId) ?? null
   const { nodes, graphEdges } = useMemo(
-    () => createGraph({ activeTraceIds, relatedIds, selectedId, visibleIds, viewMode }),
-    [activeTraceIds, relatedIds, selectedId, visibleIds, viewMode],
+    () => createGraph({
+      activeTraceIds,
+      getScriptSortName: (script) => localizedScriptName(script, locale),
+      relatedIds,
+      selectedId,
+      visibleIds,
+      viewMode,
+    }),
+    [activeTraceIds, locale, relatedIds, selectedId, visibleIds, viewMode],
   )
   const activeTraceBounds = useMemo(() => {
     const traceNodes = nodes.filter((node) => node.type === 'scriptNode' && activeTraceIds.has(node.id))
@@ -292,16 +335,29 @@ function AlphabetWorld() {
     if (!normalized) return []
     return scripts
       .filter((script) => {
+        const localized = localizeScript(script, locale)
         const haystack = [
           script.name,
           script.commonName,
+          localized.localizedName,
+          localized.localizedCommonName,
+          localized.localizedSummary,
+          ...(localized.localizedNotes ?? []),
           script.nativeName,
           script.type,
           script.status,
+          statusLabel(script.status, t),
           ...script.region,
+          ...script.region.map((region) => regionLabel(region, t)),
           ...script.sampleGlyphs,
+          typeLabel(script.type, t),
+          ...(script.characterRows?.flatMap((row) => [
+            row.label,
+            row.label ? localizedCharacterLabel(row.label, locale, script.id) : undefined,
+            row.transliteration,
+          ]) ?? []),
           ...(script.nativeNameVisual?.map((glyph) => glyph.label) ?? []),
-          ...(script.visualGlyphs?.map((glyph) => glyph.label) ?? []),
+          ...(script.visualGlyphs?.flatMap((glyph) => [glyph.label, localizedCharacterLabel(glyph.label, locale, script.id)]) ?? []),
         ]
           .filter(Boolean)
           .join(' ')
@@ -309,7 +365,7 @@ function AlphabetWorld() {
         return haystack.includes(normalized)
       })
       .slice(0, 5)
-  }, [query])
+  }, [locale, query, t])
 
   const getMobileFlowSize = useCallback((reserveInspector = false) => {
     const pane = flowPaneRef.current
@@ -435,10 +491,12 @@ function AlphabetWorld() {
   }
 
   return (
-    <main
-      className="relative grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[1fr]"
-      aria-describedby="app-summary"
-    >
+    <I18nContext.Provider value={i18n}>
+      <main
+        className="relative grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[1fr]"
+        aria-describedby="app-summary"
+        lang={locale}
+      >
       <Toolbar
         activeTrace={activeTrace}
         filters={filters}
@@ -458,7 +516,7 @@ function AlphabetWorld() {
 
       <section
         className="grid min-h-0 grid-cols-[minmax(0,1fr)_390px] overflow-hidden max-[820px]:relative max-[820px]:block"
-        aria-label="Alphabet relationship explorer"
+        aria-label={t.relationshipExplorer}
       >
         <div ref={flowPaneRef} className="relative min-h-0 min-w-0 border-r max-[820px]:h-full max-[820px]:border-r-0">
           <ReactFlow
@@ -474,7 +532,7 @@ function AlphabetWorld() {
             nodesDraggable={false}
             nodesConnectable={false}
             elementsSelectable
-            aria-label="World alphabets family tree"
+            aria-label={t.flowLabel}
           >
             <Background color="var(--border)" gap={28} size={1} variant={BackgroundVariant.Dots} />
           </ReactFlow>
@@ -500,7 +558,8 @@ function AlphabetWorld() {
           onSelect={selectScript}
         />
       </section>
-    </main>
+      </main>
+    </I18nContext.Provider>
   )
 }
 
@@ -535,6 +594,7 @@ function Toolbar({
   viewMode: ViewMode
   onSearchSelect: (script: ScriptNode) => void
 }) {
+  const { locale, t } = useI18n()
   const desktopSearchInputRef = useRef<HTMLInputElement>(null)
   const mobileSearchInputRef = useRef<HTMLInputElement>(null)
   const [mobileGuideOpen, setMobileGuideOpen] = useState(false)
@@ -558,11 +618,31 @@ function Toolbar({
     setSearchOpen(false)
   }
 
+  const viewOptions = (['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => ({
+    value: mode,
+    label: viewModeLabel(mode, t),
+  }))
+  const typeOptions = [
+    { value: 'all', label: t.allTypes },
+    ...scriptTypes.map((type) => ({ value: type, label: typeLabel(type, t) })),
+  ]
+  const regionOptions = [
+    { value: 'all', label: t.allRegions },
+    ...regions.map((region) => ({ value: region, label: regionLabel(region, t) })),
+  ]
+  const statusOptions = [
+    { value: 'all', label: t.allStatuses },
+    ...(['living', 'historical', 'revived', 'constructed'] as ScriptNode['status'][]).map((status) => ({
+      value: status,
+      label: statusLabel(status, t),
+    })),
+  ]
+
   return (
     <header className="relative z-20 flex min-h-[62px] flex-wrap items-center justify-between gap-3 border-b bg-background px-3.5 py-2.5 max-[820px]:pointer-events-none max-[820px]:absolute max-[820px]:inset-x-0 max-[820px]:top-0 max-[820px]:z-40 max-[820px]:grid max-[820px]:min-h-0 max-[820px]:grid-cols-[minmax(0,1fr)_auto] max-[820px]:items-start max-[820px]:gap-x-2 max-[820px]:gap-y-2 max-[820px]:border-0 max-[820px]:bg-transparent max-[820px]:p-2">
       <div className="flex min-w-0 items-center gap-2.5 max-[820px]:contents">
-        <h1 className="min-w-max text-base font-semibold leading-none text-foreground max-[820px]:sr-only">World of Scripts</h1>
-        <p id="app-summary" className="sr-only">{appSummary}</p>
+        <h1 className="min-w-max text-base font-semibold leading-none text-foreground max-[820px]:sr-only">{t.appName}</h1>
+        <p id="app-summary" className="sr-only">{t.appSummary}</p>
 
         <ToggleGroup
           type="single"
@@ -571,12 +651,12 @@ function Toolbar({
           variant="outline"
           size="sm"
           spacing={0}
-          aria-label="View mode"
+          aria-label={t.viewMode}
           className="max-[820px]:hidden"
         >
-          {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
-            <ToggleGroupItem key={mode} value={mode}>
-              {mode === 'az' ? 'A-Z' : capitalize(mode)}
+          {viewOptions.map((mode) => (
+            <ToggleGroupItem key={mode.value} value={mode.value}>
+              {mode.label}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
@@ -585,12 +665,12 @@ function Toolbar({
       <div className="ml-auto flex min-w-0 items-center justify-end gap-2 max-[820px]:contents">
         <ButtonGroup
           className="hidden max-[820px]:pointer-events-auto max-[820px]:col-start-1 max-[820px]:row-start-1 max-[820px]:inline-flex max-[820px]:justify-self-start"
-          aria-label="Navigation tools"
+          aria-label={t.navigationTools}
         >
           <Button
             variant="outline"
             size="icon"
-            aria-label="Search scripts"
+            aria-label={t.searchScripts}
             aria-expanded={searchOpen}
             onClick={() => setSearchOpen(true)}
           >
@@ -598,24 +678,24 @@ function Toolbar({
           </Button>
           <Popover open={viewOpen} onOpenChange={setViewOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="View mode" aria-expanded={viewOpen}>
+              <Button variant="outline" size="icon" aria-label={t.viewMode} aria-expanded={viewOpen}>
                 <Waypoints data-icon="inline-start" />
               </Button>
             </PopoverTrigger>
             <PopoverContent align="start" className="w-44 p-1 min-[821px]:hidden">
               <div className="flex flex-col gap-1">
-                {(['lineage', 'timeline', 'az'] as ViewMode[]).map((mode) => (
+                {viewOptions.map((mode) => (
                   <Button
-                    key={mode}
+                    key={mode.value}
                     className="w-full justify-between"
-                    variant={viewMode === mode ? 'secondary' : 'ghost'}
+                    variant={viewMode === mode.value ? 'secondary' : 'ghost'}
                     onClick={() => {
-                      setViewMode(mode)
+                      setViewMode(mode.value)
                       setViewOpen(false)
                     }}
                   >
-                    {mode === 'az' ? 'A-Z' : capitalize(mode)}
-                    {viewMode === mode && <Check data-icon="inline-end" />}
+                    {mode.label}
+                    {viewMode === mode.value && <Check data-icon="inline-end" />}
                   </Button>
                 ))}
               </div>
@@ -634,8 +714,8 @@ function Toolbar({
           <Input
             ref={mobileSearchInputRef}
             className="h-8 border-0 px-0 shadow-none focus-visible:ring-0"
-            aria-label="Search scripts"
-            placeholder="Search scripts"
+            aria-label={t.searchScripts}
+            placeholder={t.searchScripts}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             tabIndex={searchOpen ? undefined : -1}
@@ -643,7 +723,7 @@ function Toolbar({
           <Button
             variant="ghost"
             size="icon-xs"
-            aria-label="Close search"
+            aria-label={t.closeSearch}
             onClick={closeSearch}
             tabIndex={searchOpen ? undefined : -1}
           >
@@ -653,7 +733,7 @@ function Toolbar({
             <div
               className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
               role="listbox"
-              aria-label="Search results"
+              aria-label={t.searchResults}
             >
               {matchingScripts.map((script) => (
                 <Button
@@ -665,8 +745,8 @@ function Toolbar({
                     setSearchOpen(false)
                   }}
                 >
-                  <span>{script.name}</span>
-                  <Badge variant="secondary">{script.type}</Badge>
+                  <span>{localizedScriptName(script, locale)}</span>
+                  <Badge variant="secondary">{typeLabel(script.type, t)}</Badge>
                 </Button>
               ))}
             </div>
@@ -675,11 +755,11 @@ function Toolbar({
 
         <ButtonGroup
           className="hidden max-[820px]:pointer-events-auto max-[820px]:col-start-2 max-[820px]:row-start-1 max-[820px]:inline-flex max-[820px]:justify-self-end"
-          aria-label="Script tools"
+          aria-label={t.scriptTools}
         >
           <Popover open={mobileGuideOpen} onOpenChange={setMobileGuideOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Guided trace" aria-expanded={mobileGuideOpen}>
+              <Button variant="outline" size="icon" aria-label={t.guidedTrace} aria-expanded={mobileGuideOpen}>
                 <Compass data-icon="inline-start" />
               </Button>
             </PopoverTrigger>
@@ -693,7 +773,7 @@ function Toolbar({
                     setMobileGuideOpen(false)
                   }}
                 >
-                  No guided trace
+                  {t.noGuidedTrace}
                   {activeTrace === null && <Check data-icon="inline-end" />}
                 </Button>
                 {guidedTraces.map((trace) => (
@@ -706,7 +786,7 @@ function Toolbar({
                       setMobileGuideOpen(false)
                     }}
                   >
-                    {trace.label}
+                    {localizedTraceLabel(trace.id, trace.label, locale)}
                     {activeTrace === trace.id && <Check data-icon="inline-end" />}
                   </Button>
                 ))}
@@ -716,61 +796,51 @@ function Toolbar({
 
           <Popover open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Filters" aria-expanded={mobileFiltersOpen}>
+              <Button variant="outline" size="icon" aria-label={t.filters} aria-expanded={mobileFiltersOpen}>
                 <Filter data-icon="inline-start" />
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="filter-popover min-[821px]:hidden">
               <FilterSelect
-                label="Type"
+                label={t.type}
                 value={filters.type}
                 onValueChange={(type) => setFilters({ ...filters, type: type as Filters['type'] })}
-                options={[
-                  { value: 'all', label: 'All types' },
-                  ...scriptTypes.map((type) => ({ value: type, label: capitalize(type) })),
-                ]}
+                options={typeOptions}
               />
               <FilterSelect
-                label="Region"
+                label={t.region}
                 value={filters.region}
                 onValueChange={(region) => setFilters({ ...filters, region })}
-                options={[
-                  { value: 'all', label: 'All regions' },
-                  ...regions.map((region) => ({ value: region, label: region })),
-                ]}
+                options={regionOptions}
               />
               <FilterSelect
-                label="Status"
+                label={t.status}
                 value={filters.status}
                 onValueChange={(status) => setFilters({ ...filters, status: status as Filters['status'] })}
-                options={[
-                  { value: 'all', label: 'All statuses' },
-                  { value: 'living', label: 'Living' },
-                  { value: 'historical', label: 'Historical' },
-                  { value: 'revived', label: 'Revived' },
-                  { value: 'constructed', label: 'Constructed' },
-                ]}
+                options={statusOptions}
               />
             </PopoverContent>
           </Popover>
 
+          <LanguageSelect />
+
           <Button variant="outline" size="icon" asChild>
-            <a href={feedbackUrl} target="_blank" rel="noreferrer" aria-label="Feedback">
+            <a href={feedbackUrl} target="_blank" rel="noreferrer" aria-label={t.feedback}>
               <MessageSquare data-icon="inline-start" />
             </a>
           </Button>
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="About World of Scripts">
+              <Button variant="outline" size="icon" aria-label={t.about}>
                 <Info data-icon="inline-start" />
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
               <DialogHeader>
-                <DialogTitle>World of Scripts</DialogTitle>
+                <DialogTitle>{t.appName}</DialogTitle>
                 <DialogDescription>
-                  An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.
+                  {t.aboutDescription}
                 </DialogDescription>
               </DialogHeader>
               <AboutContent />
@@ -790,7 +860,7 @@ function Toolbar({
             className={cn('absolute inset-0 transition-opacity duration-150', searchOpen && 'pointer-events-none opacity-0')}
             variant="outline"
             size="icon"
-            aria-label="Search scripts"
+            aria-label={t.searchScripts}
             aria-expanded={searchOpen}
             onClick={() => setSearchOpen(true)}
           >
@@ -807,8 +877,8 @@ function Toolbar({
             <Input
               ref={desktopSearchInputRef}
               className="h-6 border-0 px-0 shadow-none focus-visible:ring-0"
-              aria-label="Search scripts"
-              placeholder="Search scripts"
+              aria-label={t.searchScripts}
+              placeholder={t.searchScripts}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               tabIndex={searchOpen ? undefined : -1}
@@ -816,7 +886,7 @@ function Toolbar({
             <Button
               variant="ghost"
               size="icon-xs"
-              aria-label="Close search"
+              aria-label={t.closeSearch}
               onClick={closeSearch}
               tabIndex={searchOpen ? undefined : -1}
             >
@@ -827,7 +897,7 @@ function Toolbar({
             <div
               className="absolute left-0 right-0 top-[calc(100%+7px)] z-30 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md"
               role="listbox"
-              aria-label="Search results"
+              aria-label={t.searchResults}
             >
               {matchingScripts.map((script) => (
                 <Button
@@ -839,8 +909,8 @@ function Toolbar({
                     setSearchOpen(false)
                   }}
                 >
-                  <span>{script.name}</span>
-                  <Badge variant="secondary">{script.type}</Badge>
+                  <span>{localizedScriptName(script, locale)}</span>
+                  <Badge variant="secondary">{typeLabel(script.type, t)}</Badge>
                 </Button>
               ))}
             </div>
@@ -849,7 +919,7 @@ function Toolbar({
 
         <Popover open={desktopGuideOpen} onOpenChange={setDesktopGuideOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Guided trace" aria-expanded={desktopGuideOpen}>
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label={t.guidedTrace} aria-expanded={desktopGuideOpen}>
               <Compass data-icon="inline-start" />
             </Button>
           </PopoverTrigger>
@@ -863,7 +933,7 @@ function Toolbar({
                   setDesktopGuideOpen(false)
                 }}
               >
-                No guided trace
+                {t.noGuidedTrace}
                 {activeTrace === null && <Check data-icon="inline-end" />}
               </Button>
               {guidedTraces.map((trace) => (
@@ -876,7 +946,7 @@ function Toolbar({
                     setDesktopGuideOpen(false)
                   }}
                 >
-                  {trace.label}
+                  {localizedTraceLabel(trace.id, trace.label, locale)}
                   {activeTrace === trace.id && <Check data-icon="inline-end" />}
                 </Button>
               ))}
@@ -886,62 +956,52 @@ function Toolbar({
 
         <Popover open={filtersOpen} onOpenChange={setFiltersOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="Filters" aria-expanded={filtersOpen}>
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label={t.filters} aria-expanded={filtersOpen}>
               <Filter data-icon="inline-start" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="filter-popover max-[820px]:hidden">
             <FilterSelect
-              label="Type"
+              label={t.type}
               value={filters.type}
               onValueChange={(type) => setFilters({ ...filters, type: type as Filters['type'] })}
-              options={[
-                { value: 'all', label: 'All types' },
-                ...scriptTypes.map((type) => ({ value: type, label: capitalize(type) })),
-              ]}
+              options={typeOptions}
             />
             <FilterSelect
-              label="Region"
+              label={t.region}
               value={filters.region}
               onValueChange={(region) => setFilters({ ...filters, region })}
-              options={[
-                { value: 'all', label: 'All regions' },
-                ...regions.map((region) => ({ value: region, label: region })),
-              ]}
+              options={regionOptions}
             />
             <FilterSelect
-              label="Status"
+              label={t.status}
               value={filters.status}
               onValueChange={(status) => setFilters({ ...filters, status: status as Filters['status'] })}
-              options={[
-                { value: 'all', label: 'All statuses' },
-                { value: 'living', label: 'Living' },
-                { value: 'historical', label: 'Historical' },
-                { value: 'revived', label: 'Revived' },
-                { value: 'constructed', label: 'Constructed' },
-              ]}
+              options={statusOptions}
             />
           </PopoverContent>
         </Popover>
 
+        <LanguageSelect className="max-[820px]:hidden" />
+
         <Button variant="outline" className="max-[820px]:hidden" asChild>
           <a href={feedbackUrl} target="_blank" rel="noreferrer">
             <MessageSquare data-icon="inline-start" />
-            Feedback
+            {t.feedback}
           </a>
         </Button>
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label="About World of Scripts">
+            <Button variant="outline" size="icon" className="max-[820px]:hidden" aria-label={t.about}>
               <Info data-icon="inline-start" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle>World of Scripts</DialogTitle>
+              <DialogTitle>{t.appName}</DialogTitle>
               <DialogDescription>
-                An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.
+                {t.aboutDescription}
               </DialogDescription>
             </DialogHeader>
             <AboutContent />
@@ -952,11 +1012,41 @@ function Toolbar({
   )
 }
 
+function LanguageSelect({ className }: { className?: string }) {
+  const { locale, setLocale, t } = useI18n()
+  const options: Array<{ label: string; value: Locale }> = [
+    { value: 'en', label: 'English' },
+    { value: 'zh-Hant-CN', label: '繁體中文（中國大陸）' },
+  ]
+
+  return (
+    <Select value={locale} onValueChange={(value) => setLocale(value as Locale)}>
+      <SelectTrigger
+        aria-label={t.language}
+        className={cn('h-8 w-8 justify-center px-0 [&>svg:last-child]:hidden', className)}
+      >
+        <Languages data-icon="inline-start" />
+      </SelectTrigger>
+      <SelectContent align="end" className="w-56" position="popper">
+        <SelectGroup>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  )
+}
+
 function AboutContent() {
+  const { t } = useI18n()
+
   return (
     <div className="grid gap-4 text-sm">
       <section className="grid gap-2">
-        <h2 className="font-medium">Project</h2>
+        <h2 className="font-medium">{t.project}</h2>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" asChild>
             <a href={repositoryUrl} target="_blank" rel="noreferrer">
@@ -967,7 +1057,7 @@ function AboutContent() {
         </div>
       </section>
       <section className="grid gap-2">
-        <h2 className="font-medium">References</h2>
+        <h2 className="font-medium">{t.references}</h2>
         <div className="flex flex-wrap gap-2">
           {referenceLinks.map((link) => (
             <Button key={link.url} variant="outline" size="sm" asChild>
@@ -981,8 +1071,7 @@ function AboutContent() {
       </section>
       <Separator />
       <p className="text-sm leading-6 text-muted-foreground">
-        This project is for reference only and is not a professional source. It may contain mistakes. If you find an
-        error or have suggestions for additional content, use the Feedback button in the header.
+        {t.disclaimer}
       </p>
     </div>
   )
@@ -1001,6 +1090,8 @@ function CanvasControls({
   onZoomIn: () => void
   onZoomOut: () => void
 }) {
+  const { locale, t } = useI18n()
+
   return (
     <ButtonGroup
       className={cn(
@@ -1008,15 +1099,15 @@ function CanvasControls({
         inspectorExpanded && 'max-[820px]:hidden',
         inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
-      aria-label="Canvas controls"
+      aria-label={t.canvasControls}
     >
-      <Button variant="outline" size="icon" aria-label="Zoom out" onClick={onZoomOut}>
+      <Button variant="outline" size="icon" aria-label={t.zoomOut} onClick={onZoomOut}>
         <Minus data-icon="inline-start" />
       </Button>
-      <Button variant="outline" size="icon" aria-label="Reset view" onClick={onFit}>
+      <Button variant="outline" size="icon" aria-label={t.resetView} onClick={onFit}>
         <RotateCcw data-icon="inline-start" />
       </Button>
-      <Button variant="outline" size="icon" aria-label="Zoom in" onClick={onZoomIn}>
+      <Button variant="outline" size="icon" aria-label={t.zoomIn} onClick={onZoomIn}>
         <Plus data-icon="inline-start" />
       </Button>
     </ButtonGroup>
@@ -1056,7 +1147,9 @@ function FilterSelect({
 }
 
 function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
+  const { locale, t } = useI18n()
   const { script, dimmed, isRelated, isSelected, isTraced } = data
+  const scriptName = localizedScriptName(script, locale)
   const color = getTypeColor(script.type)
   const scriptText = getScriptTextAttributes(script)
   const useVerticalNodeGlyphs = verticalNodeGlyphScriptIds.has(script.id)
@@ -1074,16 +1167,16 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
       data-script-id={script.id}
       style={{ '--node-accent': color, '--script-font': scriptText.fontFamily } as CSSProperties}
       tabIndex={0}
-      aria-label={`${script.name}, ${script.type}, ${formatDate(script)}`}
+      aria-label={`${scriptName}, ${typeLabel(script.type, t)}, ${formatDate(script, t)}`}
     >
       <Handle className="node-handle" id="target" position={Position.Left} type="target" />
       <Handle className="node-handle" id="source" position={Position.Right} type="source" />
       <div className="node-title-row">
-        <strong>{script.name}</strong>
-        <Badge variant="secondary">{script.type}</Badge>
+        <strong>{scriptName}</strong>
+        <Badge variant="secondary">{typeLabel(script.type, t)}</Badge>
       </div>
       <div className="node-meta-row">
-        <span>{formatDate(script)}</span>
+        <span>{formatDate(script, t)}</span>
         <DirectionIcon direction={script.direction} />
       </div>
       <div className="node-glyphs" dir={script.direction === 'rtl' ? 'rtl' : 'ltr'} lang={scriptText.lang}>
@@ -1114,9 +1207,11 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
 }
 
 function TimelineTickNode({ data }: { data: TimelineTickData }) {
+  const { t } = useI18n()
+
   return (
     <div className="pointer-events-none flex w-[104px] flex-col items-center gap-2 text-xs font-medium text-muted-foreground">
-      <span>{data.label}</span>
+      <span>{timelineTickLabel(data.year, t)}</span>
       <span className="h-8 border-l" aria-hidden="true" />
     </div>
   )
@@ -1137,17 +1232,18 @@ function Inspector({
   relatedScripts: { ancestors: ScriptNode[]; children: ScriptNode[] } | null
   script: ScriptNode | null
 }) {
+  const { locale, t } = useI18n()
   const dragStartY = useRef<number | null>(null)
   const dragHandled = useRef(false)
 
   if (!script || !relatedScripts) {
     return (
-      <aside className="inspector empty-inspector" aria-label="Script details">
+      <aside className="inspector empty-inspector" aria-label={t.scriptDetails}>
         <div className="p-4">
-          <Badge variant="outline" className="mb-2">No selection</Badge>
-          <h2>Select a script</h2>
+          <Badge variant="outline" className="mb-2">{t.noSelection}</Badge>
+          <h2>{t.selectScript}</h2>
         </div>
-        <p className="px-4 text-sm leading-6">Click a node in the diagram to inspect its characters, lineage, and sources.</p>
+        <p className="px-4 text-sm leading-6">{t.emptyInspectorCopy}</p>
       </aside>
     )
   }
@@ -1163,7 +1259,10 @@ function Inspector({
   )
   const scriptText = getScriptTextAttributes(script)
   const isVertical = isVerticalDirection(script.direction)
-  const inspectorTitle = script.commonName ?? script.name
+  const localizedScript = localizeScript(script, locale)
+  const inspectorTitle = localizedScript.localizedCommonName ?? localizedScript.localizedName
+  const shouldShowEnglishTitle = locale !== 'en'
+  const englishTitle = englishScriptDisplayName(script)
   const useVerticalInspectorGlyphs = verticalNodeGlyphScriptIds.has(script.id)
   const hasCroppedNativeNameVisual = script.nativeNameVisual?.some((glyph) => glyph.crop)
   const nativeNameVisualClassName = hasCroppedNativeNameVisual
@@ -1211,13 +1310,13 @@ function Inspector({
           ? 'max-[820px]:h-full max-[820px]:max-h-full'
           : 'max-[820px]:h-[48dvh] max-[820px]:max-h-[48dvh]',
       )}
-      aria-label={`${inspectorTitle} details`}
+      aria-label={`${inspectorTitle} ${t.scriptDetails}`}
       style={{ '--script-font': scriptText.fontFamily } as CSSProperties}
     >
       <button
         className="hidden h-8 shrink-0 touch-none items-center justify-center text-muted-foreground max-[820px]:flex"
         type="button"
-        aria-label={expanded ? 'Collapse details sheet' : 'Expand details sheet'}
+        aria-label={expanded ? t.collapseDetailsSheet : t.expandDetailsSheet}
         aria-expanded={expanded}
         onClick={handleSheetClick}
         onPointerDown={handleSheetPointerDown}
@@ -1231,8 +1330,13 @@ function Inspector({
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3 max-[820px]:justify-start max-[820px]:gap-2">
             <h2 className="min-w-0 text-3xl font-semibold leading-none">{inspectorTitle}</h2>
-            <Badge variant="outline" className="shrink-0">{capitalize(script.status)}</Badge>
+            <Badge variant="outline" className="shrink-0">{statusLabel(script.status, t)}</Badge>
           </div>
+          {shouldShowEnglishTitle && (
+            <p className="mt-1 text-sm font-medium leading-none text-muted-foreground" lang="en">
+              {englishTitle}
+            </p>
+          )}
           {script.nativeNameVisual ? (
             <SvgGlyphStrip
               className="mt-2"
@@ -1249,20 +1353,20 @@ function Inspector({
             </p>
           ) : null}
         </div>
-        <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label="Close inspector" onClick={onClose}>
+        <Button className="hidden max-[820px]:inline-flex" variant="outline" size="icon" aria-label={t.closeInspector} onClick={onClose}>
           <X data-icon="inline-start" />
         </Button>
       </div>
 
       <dl className="grid grid-cols-2 gap-2.5">
-        <MetadataItem label="Type" value={script.type} />
-        <MetadataItem label="Region" value={script.region.join(', ')} />
-        <MetadataItem label="Era" value={formatDate(script)} />
+        <MetadataItem label={t.type} value={typeLabel(script.type, t)} />
+        <MetadataItem label={t.region} value={script.region.map((region) => regionLabel(region, t)).join(', ')} />
+        <MetadataItem label={t.era} value={formatDate(script, t)} />
         <div className="rounded-lg border bg-background p-2.5">
-          <dt className="text-xs font-medium text-muted-foreground">Direction</dt>
+          <dt className="text-xs font-medium text-muted-foreground">{t.direction}</dt>
           <dd className="mt-1 flex items-center gap-2 text-sm font-medium text-foreground">
             <DirectionIcon direction={script.direction} />
-            {directionLabel(script.direction)}
+            {directionLabel(script.direction, t)}
           </dd>
         </div>
       </dl>
@@ -1272,14 +1376,14 @@ function Inspector({
       <section>
         <div className="mb-2.5 flex items-center gap-2">
           <BookOpen className="size-4 shrink-0" />
-          <h2 className="text-sm font-semibold">{isFiniteInventory ? 'Characters' : 'Representative signs'}</h2>
+          <h2 className="text-sm font-semibold">{isFiniteInventory ? t.characters : t.representativeSigns}</h2>
         </div>
         {script.visualGlyphs ? (
           <div className="grid grid-cols-2 gap-2">
             {script.visualGlyphs.map((glyph) => (
               <div className="grid min-h-28 place-items-center gap-2 rounded-lg border bg-background px-3 py-3 text-center" key={glyph.label}>
-                <SvgGlyph glyph={glyph} className="h-14 w-14" />
-                <small className="text-xs font-medium text-muted-foreground">{glyph.label}</small>
+                <SvgGlyph glyph={glyph} className="h-14 w-14" scriptId={script.id} />
+                <small className="text-xs font-medium text-muted-foreground">{localizedCharacterLabel(glyph.label, locale, script.id)}</small>
               </div>
             ))}
           </div>
@@ -1307,7 +1411,7 @@ function Inspector({
                 </span>
                 {(row.label || row.transliteration) && (
                   <small className="max-w-full text-xs font-medium leading-tight text-muted-foreground">
-                    {[row.label, row.transliteration].filter(Boolean).join(' · ')}
+                    {[row.label ? localizedCharacterLabel(row.label, locale, script.id) : undefined, row.transliteration].filter(Boolean).join(' · ')}
                   </small>
                 )}
               </div>
@@ -1321,12 +1425,12 @@ function Inspector({
       <section>
         <div className="mb-2.5 flex items-center gap-2">
           <Info className="size-4 shrink-0" />
-          <h2 className="text-sm font-semibold">Historical note</h2>
+          <h2 className="text-sm font-semibold">{t.historicalNote}</h2>
         </div>
-        <p className="text-sm leading-6">{script.summary}</p>
-        {script.notes?.map((note) => (
+        <p className="text-sm leading-6">{annotateHistoricalTerms(localizedScript.localizedSummary, script, locale)}</p>
+        {localizedScript.localizedNotes?.map((note) => (
           <p className="mt-2 border-l pl-3 text-sm leading-6 text-muted-foreground" key={note}>
-            {note}
+            {annotateHistoricalTerms(note, script, locale)}
           </p>
         ))}
       </section>
@@ -1336,16 +1440,16 @@ function Inspector({
       <section>
         <div className="mb-2.5 flex items-center gap-2">
           <GitBranch className="size-4 shrink-0" />
-          <h2 className="text-sm font-semibold">Lineage</h2>
+          <h2 className="text-sm font-semibold">{t.lineage}</h2>
         </div>
-        <RelationGroup label="Ancestors" scripts={relatedScripts.ancestors} onSelect={onSelect} />
-        <RelationGroup label="Children" scripts={relatedScripts.children} onSelect={onSelect} />
+        <RelationGroup label={t.ancestors} scripts={relatedScripts.ancestors} onSelect={onSelect} />
+        <RelationGroup label={t.children} scripts={relatedScripts.children} onSelect={onSelect} />
       </section>
 
       <Separator />
 
       <section>
-        <h2 className="mb-2.5 text-sm font-semibold">Sources</h2>
+        <h2 className="mb-2.5 text-sm font-semibold">{t.sources}</h2>
         <div className="flex flex-wrap gap-2">
           {script.sources.map((source) => (
             <Button key={source.url} asChild variant="outline" size="sm">
@@ -1392,14 +1496,19 @@ function SvgGlyphStrip({
 function SvgGlyph({
   className,
   glyph,
+  scriptId,
 }: {
   className?: string
   glyph: NonNullable<ScriptNode['visualGlyphs']>[number]
+  scriptId?: string
 }) {
+  const { locale, t } = useI18n()
+  const glyphLabel = localizedCharacterLabel(glyph.label, locale, scriptId)
+
   if (glyph.imageUrl) {
     if (glyph.crop === 'right-half') {
       return (
-        <span className={cn(className, 'inline-block overflow-hidden')} role="img" aria-label={`${glyph.label}; source: ${glyph.sourceLabel}`}>
+        <span className={cn(className, 'inline-block overflow-hidden')} role="img" aria-label={`${glyphLabel}; ${t.source}: ${glyph.sourceLabel}`}>
           <img
             alt=""
             aria-hidden="true"
@@ -1413,7 +1522,7 @@ function SvgGlyph({
 
     return (
       <img
-        alt={`${glyph.label}; source: ${glyph.sourceLabel}`}
+        alt={`${glyphLabel}; ${t.source}: ${glyph.sourceLabel}`}
         className={cn(className, 'object-contain')}
         src={glyph.imageUrl}
       />
@@ -1422,7 +1531,7 @@ function SvgGlyph({
 
   return (
     <svg
-      aria-label={`${glyph.label}; source: ${glyph.sourceLabel}`}
+      aria-label={`${glyphLabel}; ${t.source}: ${glyph.sourceLabel}`}
       className={className}
       fill="none"
       role="img"
@@ -1449,7 +1558,8 @@ function MetadataItem({ label, value }: { label: string; value: string }) {
 }
 
 function DirectionIcon({ direction }: { direction?: ScriptNode['direction'] }) {
-  const label = directionLabel(direction)
+  const { t } = useI18n()
+  const label = directionLabel(direction, t)
   const Icon =
     direction === 'rtl'
       ? ArrowLeft
@@ -1484,6 +1594,8 @@ function RelationGroup({
   scripts: ScriptNode[]
   onSelect: (id: string) => void
 }) {
+  const { locale, t } = useI18n()
+
   return (
     <div className="mt-2 grid gap-2">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
@@ -1491,12 +1603,12 @@ function RelationGroup({
         <div className="flex flex-wrap gap-2">
           {relationScripts.map((script) => (
             <Button key={script.id} variant="outline" size="sm" onClick={() => onSelect(script.id)}>
-              {script.name}
+              {localizedScriptName(script, locale)}
             </Button>
           ))}
         </div>
       ) : (
-        <span className="text-sm text-muted-foreground">No direct relationship shown</span>
+        <span className="text-sm text-muted-foreground">{t.noDirectRelationship}</span>
       )}
     </div>
   )
@@ -1509,6 +1621,8 @@ function Legend({
   inspectorDocked: boolean
   inspectorExpanded: boolean
 }) {
+  const { t } = useI18n()
+
   return (
     <div
       className={cn(
@@ -1516,15 +1630,15 @@ function Legend({
         inspectorExpanded && 'max-[820px]:hidden',
         inspectorDocked && 'max-[820px]:bottom-[calc(48dvh+0.75rem)]',
       )}
-      aria-label="Relationship legend"
+      aria-label={t.relationshipLegend}
       tabIndex={0}
     >
       <CircleHelp className="size-4 shrink-0" aria-hidden="true" />
       <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[680px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[680px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:hidden max-[820px]:grid-cols-1 max-[820px]:items-start max-[820px]:group-focus-within:grid max-[820px]:group-hover:grid">
-        <LegendItem label="descended/adapted" />
-        <LegendItem dash="7 6" label="influenced" />
-        <LegendItem dash="2 5" label="disputed" />
-        <LegendItem strong label="selected path" />
+        <LegendItem label={t.legendLabels.descended} />
+        <LegendItem dash="7 6" label={t.legendLabels.influenced} />
+        <LegendItem dash="2 5" label={t.legendLabels.disputed} />
+        <LegendItem strong label={t.legendLabels.selectedPath} />
       </div>
     </div>
   )
@@ -1571,34 +1685,8 @@ function getImmediateRelations(scriptId: string) {
   return { ancestors, children }
 }
 
-function formatDate(script: ScriptNode) {
-  const start = script.startYear ? formatYear(script.startYear) : 'unknown'
-  const end = script.endYear === 'present' ? 'present' : script.endYear ? formatYear(script.endYear) : ''
-  return end ? `c. ${start}-${end}` : `c. ${start}`
-}
-
-function formatYear(year: number) {
-  return year < 0 ? `${Math.abs(year)} BCE` : `${year} CE`
-}
-
-function directionLabel(direction?: ScriptNode['direction']) {
-  if (!direction) return 'varies'
-  const labels = {
-    ltr: 'left-to-right',
-    rtl: 'right-to-left',
-    ttb: 'top-to-bottom',
-    btt: 'bottom-to-top',
-    mixed: 'mixed',
-  }
-  return labels[direction]
-}
-
 function isVerticalDirection(direction?: ScriptNode['direction']) {
   return direction === 'ttb' || direction === 'btt'
-}
-
-function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 export default App

@@ -206,18 +206,22 @@ export function getRelatedIds(selectedId: string | null) {
 
 export function createGraph({
   activeTraceIds,
+  getScriptSortName = (script) => script.name,
   relatedIds,
   selectedId,
   visibleIds,
   viewMode,
 }: {
   activeTraceIds: Set<string>
+  getScriptSortName?: (script: ScriptNode) => string
   relatedIds: Set<string>
   selectedId: string | null
   visibleIds: Set<string>
   viewMode: ViewMode
 }): { nodes: Node<GraphNodeData>[]; graphEdges: Edge[] } {
-  const sortedScripts = viewMode === 'az' ? [...scripts].sort((a, b) => a.name.localeCompare(b.name)) : scripts
+  const sortedScripts = viewMode === 'az'
+    ? [...scripts].sort((a, b) => getScriptSortName(a).localeCompare(getScriptSortName(b)))
+    : scripts
   const hasFocus = Boolean(selectedId || activeTraceIds.size)
 
   const scriptNodes: Node<ScriptNodeData>[] = sortedScripts
