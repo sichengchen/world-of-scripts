@@ -126,7 +126,10 @@ body,
 
 .script-node {
   width: 188px;
-  min-height: 106px;
+  height: 106px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   padding: 10px;
   border: 1px solid var(--border);
   border-top: 4px solid var(--node-accent);
@@ -159,10 +162,42 @@ body,
   opacity: 0.26;
 }
 
+.node-title-row,
+.node-meta-row {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.node-title-row > [data-slot='badge'],
+.node-meta-row > svg {
+  flex: 0 0 auto;
+}
+
 .script-node strong {
+  min-width: 0;
+  overflow: hidden;
   color: var(--foreground);
   font-size: 14px;
   line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-meta-row {
+  margin-top: 8px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.node-meta-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .node-handle {
@@ -183,10 +218,12 @@ body,
 
 .node-glyphs {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   max-width: 100%;
-  min-height: 34px;
+  min-height: 0;
   margin-top: 8px;
+  overflow: hidden;
   font-size: 25px;
   line-height: 1;
   word-spacing: 4px;
@@ -195,7 +232,8 @@ body,
 .node-vertical-glyphs {
   display: flex;
   width: 100%;
-  min-height: 42px;
+  height: 100%;
+  min-height: 0;
   align-items: center;
   justify-content: center;
   gap: 18px;

@@ -1062,11 +1062,11 @@ function ScriptGraphNode({ data }: { data: ScriptNodeData }) {
     >
       <Handle className="node-handle" id="target" position={Position.Left} type="target" />
       <Handle className="node-handle" id="source" position={Position.Right} type="source" />
-      <div className="flex items-start justify-between gap-2">
+      <div className="node-title-row">
         <strong>{script.name}</strong>
         <Badge variant="secondary">{script.type}</Badge>
       </div>
-      <div className="mt-2 flex justify-between gap-2 text-xs font-medium text-muted-foreground">
+      <div className="node-meta-row">
         <span>{formatDate(script)}</span>
         <DirectionIcon direction={script.direction} />
       </div>
