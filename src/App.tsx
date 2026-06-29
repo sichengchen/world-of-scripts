@@ -140,6 +140,7 @@ const scriptFontStacks: Record<string, string> = {
   yi: `"Noto Sans Yi", "Nuosu SIL", ${fallbackScriptFont}`,
   tangut: `"Noto Serif Tangut", "Tangut Yinchuan", ${fallbackScriptFont}`,
   'khitan-small-script': `"Noto Serif Khitan Small Script", ${fallbackScriptFont}`,
+  'khitan-large-script': `"BabelStone Khitan Large Glyphs", ${fallbackScriptFont}`,
   nushu: `"Noto Sans Nushu", "Noto Traditional Nushu", ${fallbackScriptFont}`,
   lisu: `"Noto Sans Lisu", ${fallbackScriptFont}`,
   glagolitic: `"Noto Sans Glagolitic", "Segoe UI Historic", ${fallbackScriptFont}`,
@@ -166,6 +167,7 @@ const scriptFontStacks: Record<string, string> = {
   sogdian: `"Noto Sans Sogdian", "Segoe UI Historic", ${fallbackScriptFont}`,
   'old-uyghur': `"Noto Serif Old Uyghur", "Noto Sans Old Uyghur", ${fallbackScriptFont}`,
   mongolian: `"Noto Sans Mongolian", "Mongolian Baiti", ${fallbackScriptFont}`,
+  'phags-pa': `"Noto Sans PhagsPa", "Noto Sans Phags Pa", "BabelStone Phags-pa Book", "Microsoft PhagsPa", "Segoe UI Historic", ${fallbackScriptFont}`,
   manchu: `"Noto Sans Mongolian", "Mongolian Baiti", ${fallbackScriptFont}`,
   ugaritic: `"Noto Sans Ugaritic", "Segoe UI Historic", ${fallbackScriptFont}`,
   samaritan: `"Noto Sans Samaritan", ${fallbackScriptFont}`,
@@ -191,6 +193,7 @@ const scriptLanguageTags: Record<string, string> = {
   hiragana: 'ja',
   kannada: 'kn',
   katakana: 'ja',
+  'khitan-large-script': 'zkt-Kitl',
   'khitan-small-script': 'zkt-Kits',
   khmer: 'km',
   lao: 'lo',
@@ -200,6 +203,7 @@ const scriptLanguageTags: Record<string, string> = {
   mongolian: 'mn-Mong',
   myanmar: 'my',
   nushu: 'zh-Nshu',
+  'phags-pa': 'mn-Phag',
   'oracle-bone': 'zh-Hant',
   odia: 'or',
   sinhala: 'si',
@@ -212,7 +216,7 @@ const scriptLanguageTags: Record<string, string> = {
   yi: 'ii',
 }
 
-const verticalNodeGlyphScriptIds = new Set(['ogham', 'mongolian', 'manchu', 'old-uyghur'])
+const verticalNodeGlyphScriptIds = new Set(['ogham', 'mongolian', 'manchu', 'old-uyghur', 'khitan-large-script', 'phags-pa'])
 
 type Filters = {
   type: 'all' | ScriptNode['type']

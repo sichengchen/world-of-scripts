@@ -22,6 +22,14 @@
 }
 
 @font-face {
+  font-family: "BabelStone Khitan Large Glyphs";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/BabelStoneKhitanLargeGlyphs.woff2") format("woff2");
+}
+
+@font-face {
   font-family: "Noto Sans Nushu";
   font-style: normal;
   font-weight: 400;
