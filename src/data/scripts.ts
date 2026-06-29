@@ -1999,6 +1999,30 @@ export const scripts: ScriptNode[] = [
     ],
   },
   {
+    id: 'manchu',
+    name: 'Manchu',
+    nativeName: 'ᠮᠠᠨᠵᡠ',
+    type: 'alphabet',
+    status: 'historical',
+    region: ['East Asia'],
+    startYear: 1599,
+    direction: 'ttb',
+    unicodeBlock: ['Mongolian'],
+    sampleGlyphs: ['ᠠ', 'ᡝ', 'ᡳ', 'ᡠ'],
+    characterRows: characterRows(
+      'ᠠ ᡝ ᡳ ᠣ ᡠ ᡡ ᠨ ᡢ ᡴ ᡤ ᡥ ᠪ ᡦ ᠰ ᡧ ᡨ ᡩ ᠯ ᠮ ᠴ ᠵ ᠶ ᡵ ᡶ ᠸ',
+      'a|e|i|o|u|ū|na|ng|ka|ga|ha|ba|pa|sa|sha|ta|da|la|ma|ca|ja|ya|ra|fa|wa',
+    ),
+    summary:
+      'A vertical alphabet created for the Manchu language by adapting the Mongolian script. It belongs to the Old Uyghur-derived Mongolian script lineage, with later reforms adding distinguishing dots and circles.',
+    notes: ['Manchu should not be confused with the earlier Jurchen script, which belongs to a different graphically Chinese-influenced tradition.'],
+    sources: [
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Manchu_alphabet' },
+      { label: 'Unicode Core Spec: East Asia', url: 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-13/' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U1800.pdf' },
+    ],
+  },
+  {
     id: 'ugaritic',
     name: 'Ugaritic',
     type: 'abjad',
@@ -2176,9 +2200,11 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'mandaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Mandaic_alphabet'] },
   { from: 'sogdian', to: 'old-uyghur', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'old-uyghur', to: 'mongolian', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'mongolian', to: 'manchu', relationship: 'adapted_from', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-13/', 'https://www.unicode.org/charts/PDF/U1800.pdf'] },
   { from: 'old-south-arabian', to: 'geez', relationship: 'descended', confidence: 'medium', note: 'Ethiopic is rooted in the South Semitic inscriptional tradition; the exact early development is compressed here.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/'] },
   { from: 'latin', to: 'deseret', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Deseret_alphabet'] },
   { from: 'latin', to: 'osage', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Osage_script'] },
+  { from: 'latin', to: 'lisu', relationship: 'influenced_by', confidence: 'medium', sources: ['https://en.wikipedia.org/wiki/Fraser_script', 'https://www.unicode.org/charts/PDF/UA4D0.pdf'] },
 ]
 
 export const guidedTraces = [
