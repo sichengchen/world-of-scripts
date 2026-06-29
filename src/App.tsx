@@ -1263,6 +1263,9 @@ function Inspector({
   const inspectorTitle = localizedScript.localizedCommonName ?? localizedScript.localizedName
   const shouldShowEnglishTitle = locale !== 'en'
   const englishTitle = englishScriptDisplayName(script)
+  const shouldShowNativeName = Boolean(
+    script.nativeName && !script.visualGlyphs && script.nativeName.trim() !== inspectorTitle.trim(),
+  )
   const useVerticalInspectorGlyphs = verticalNodeGlyphScriptIds.has(script.id)
   const hasCroppedNativeNameVisual = script.nativeNameVisual?.some((glyph) => glyph.crop)
   const nativeNameVisualClassName = hasCroppedNativeNameVisual
@@ -1344,7 +1347,7 @@ function Inspector({
               glyphs={script.nativeNameVisual}
               orientation={isVertical ? 'vertical' : 'horizontal'}
             />
-          ) : script.nativeName && !script.visualGlyphs ? (
+          ) : shouldShowNativeName ? (
             <p
               className={cn('script-native mt-2 text-lg text-muted-foreground', isVertical && 'is-vertical')}
               lang={scriptText.lang}
