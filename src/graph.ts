@@ -17,6 +17,7 @@ export type TimelineTickData = {
 }
 
 export type GraphNodeData = ScriptNodeData | TimelineTickData
+type RelationshipLabeler = (relationship: ScriptEdge['relationship']) => string | undefined
 
 export const SCRIPT_NODE_WIDTH = 188
 export const SCRIPT_NODE_HEIGHT = 106
@@ -206,6 +207,7 @@ export function getRelatedIds(selectedId: string | null) {
 
 export function createGraph({
   activeTraceIds,
+  getRelationshipLabel = defaultRelationshipLabel,
   getScriptSortName = (script) => script.name,
   relatedIds,
   selectedId,
@@ -213,6 +215,7 @@ export function createGraph({
   viewMode,
 }: {
   activeTraceIds: Set<string>
+  getRelationshipLabel?: RelationshipLabeler
   getScriptSortName?: (script: ScriptNode) => string
   relatedIds: Set<string>
   selectedId: string | null
@@ -259,7 +262,9 @@ export function createGraph({
     viewMode === 'lineage'
       ? edges.filter((edge) => visibleIds.has(edge.from) && visibleIds.has(edge.to))
       : []
-  const graphEdges = visibleLineageEdges.map((edge) => createEdge(edge, activeTraceIds, relatedIds, selectedId))
+  const graphEdges = visibleLineageEdges.map((edge) =>
+    createEdge(edge, activeTraceIds, getRelationshipLabel, relatedIds, selectedId),
+  )
 
   return { nodes: [...tickNodes, ...scriptNodes], graphEdges }
 }
@@ -267,6 +272,7 @@ export function createGraph({
 function createEdge(
   edge: ScriptEdge,
   activeTraceIds: Set<string>,
+  getRelationshipLabel: RelationshipLabeler,
   relatedIds: Set<string>,
   selectedId: string | null,
 ): Edge {
@@ -284,7 +290,7 @@ function createEdge(
     animated: isTrace,
     className: isTrace ? 'guide-edge' : undefined,
     zIndex: isTrace ? 2 : isRelated ? 1 : 0,
-    label: relationshipStyle.label,
+    label: getRelationshipLabel(edge.relationship),
     style: {
       stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipStyle.color,
       strokeWidth: isTrace ? 2 : isRelated ? 1.5 : 1,
@@ -296,14 +302,18 @@ function createEdge(
 
 function getRelationshipStyle(relationship: ScriptEdge['relationship']) {
   if (relationship === 'influenced_by') {
-    return { color: '#525252', dash: '7 6', label: undefined }
+    return { color: '#525252', dash: '7 6' }
   }
 
   if (relationship === 'disputed') {
-    return { color: '#737373', dash: '2 5', label: 'disputed' }
+    return { color: '#737373', dash: '2 5' }
   }
 
-  return { color: '#737373', dash: undefined, label: undefined }
+  return { color: '#737373', dash: undefined }
+}
+
+function defaultRelationshipLabel(relationship: ScriptEdge['relationship']) {
+  return relationship === 'disputed' ? 'disputed' : undefined
 }
 
 export function getTypeColor(type: ScriptNode['type']) {

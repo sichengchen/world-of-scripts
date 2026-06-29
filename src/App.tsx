@@ -299,13 +299,14 @@ function AlphabetWorld() {
   const { nodes, graphEdges } = useMemo(
     () => createGraph({
       activeTraceIds,
+      getRelationshipLabel: (relationship) => (relationship === 'disputed' ? t.legendLabels.disputed : undefined),
       getScriptSortName: (script) => localizedScriptName(script, locale),
       relatedIds,
       selectedId,
       visibleIds,
       viewMode,
     }),
-    [activeTraceIds, locale, relatedIds, selectedId, visibleIds, viewMode],
+    [activeTraceIds, locale, relatedIds, selectedId, t, visibleIds, viewMode],
   )
   const activeTraceBounds = useMemo(() => {
     const traceNodes = nodes.filter((node) => node.type === 'scriptNode' && activeTraceIds.has(node.id))

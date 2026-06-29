@@ -76,7 +76,7 @@ export type AppText = {
 }
 
 const englishText: AppText = {
-  appName: 'Writing Systems: Ancient to Modern',
+  appName: 'World of Scripts',
   appSummary: 'Explore the histories and lineages of writing systems across the world.',
   relationshipExplorer: 'Alphabet relationship explorer',
   flowLabel: 'World alphabets family tree',
@@ -91,7 +91,7 @@ const englishText: AppText = {
   filters: 'Filters',
   language: 'Language',
   feedback: 'Feedback',
-  about: 'About Writing Systems: Ancient to Modern',
+  about: 'About World of Scripts',
   aboutDescription: 'An interactive map of writing systems, their sourced relationships, dates, examples, and reading directions.',
   project: 'Project',
   references: 'References',
