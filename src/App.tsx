@@ -229,11 +229,11 @@ function App() {
 }
 
 function AlphabetWorld() {
-  const [selectedId, setSelectedId] = useState<string | null>('latin')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState<Filters>({ type: 'all', region: 'all', status: 'all' })
   const [viewMode, setViewMode] = useState<ViewMode>('lineage')
-  const [activeTrace, setActiveTrace] = useState<string | null>('latin-path')
+  const [activeTrace, setActiveTrace] = useState<string | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [inspectorExpanded, setInspectorExpanded] = useState(false)
@@ -425,6 +425,11 @@ function AlphabetWorld() {
     if (node.type === 'scriptNode') selectScript(node.id)
   }
 
+  function selectTrace(id: string | null) {
+    setActiveTrace(id)
+    if (id) setSelectedId(null)
+  }
+
   return (
     <main
       className="relative grid h-full min-w-0 grid-rows-[62px_1fr] overflow-hidden bg-background text-foreground max-[1160px]:grid-rows-[112px_1fr] max-[820px]:grid-rows-[1fr]"
@@ -437,7 +442,6 @@ function AlphabetWorld() {
         matchingScripts={matchingScripts}
         query={query}
         searchOpen={searchOpen}
-        setActiveTrace={setActiveTrace}
         setFilters={setFilters}
         setFiltersOpen={setFiltersOpen}
         setQuery={setQuery}
@@ -445,6 +449,7 @@ function AlphabetWorld() {
         setViewMode={setViewMode}
         viewMode={viewMode}
         onSearchSelect={searchSelect}
+        onTraceSelect={selectTrace}
       />
 
       <section
@@ -457,6 +462,7 @@ function AlphabetWorld() {
             edges={graphEdges}
             nodeTypes={nodeTypes}
             onNodeClick={handleNodeClick}
+            onPaneClick={() => setSelectedId(null)}
             fitView
             minZoom={flowMinZoom}
             maxZoom={flowMaxZoom}
@@ -499,9 +505,9 @@ function Toolbar({
   filters,
   filtersOpen,
   matchingScripts,
+  onTraceSelect,
   query,
   searchOpen,
-  setActiveTrace,
   setFilters,
   setFiltersOpen,
   setQuery,
@@ -514,9 +520,9 @@ function Toolbar({
   filters: Filters
   filtersOpen: boolean
   matchingScripts: ScriptNode[]
+  onTraceSelect: (id: string | null) => void
   query: string
   searchOpen: boolean
-  setActiveTrace: (id: string | null) => void
   setFilters: (filters: Filters) => void
   setFiltersOpen: (open: boolean) => void
   setQuery: (query: string) => void
@@ -679,7 +685,7 @@ function Toolbar({
                   className="w-full justify-between"
                   variant={activeTrace === null ? 'secondary' : 'ghost'}
                   onClick={() => {
-                    setActiveTrace(null)
+                    onTraceSelect(null)
                     setMobileGuideOpen(false)
                   }}
                 >
@@ -692,7 +698,7 @@ function Toolbar({
                     className="w-full justify-between"
                     variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
                     onClick={() => {
-                      setActiveTrace(trace.id)
+                      onTraceSelect(trace.id)
                       setMobileGuideOpen(false)
                     }}
                   >
@@ -849,7 +855,7 @@ function Toolbar({
                 className="w-full justify-between"
                 variant={activeTrace === null ? 'secondary' : 'ghost'}
                 onClick={() => {
-                  setActiveTrace(null)
+                  onTraceSelect(null)
                   setDesktopGuideOpen(false)
                 }}
               >
@@ -862,7 +868,7 @@ function Toolbar({
                   className="w-full justify-between"
                   variant={activeTrace === trace.id ? 'secondary' : 'ghost'}
                   onClick={() => {
-                    setActiveTrace(trace.id)
+                    onTraceSelect(trace.id)
                     setDesktopGuideOpen(false)
                   }}
                 >

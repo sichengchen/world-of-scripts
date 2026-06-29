@@ -2241,22 +2241,46 @@ export const edges: ScriptEdge[] = [
 export const guidedTraces = [
   {
     id: 'latin-path',
-    label: 'Hieroglyphs to Latin',
+    label: 'Alphabet origins to Latin',
     nodeIds: ['egyptian-hieroglyphs', 'proto-sinaitic', 'phoenician', 'greek', 'old-italic', 'latin'],
   },
   {
     id: 'arabic-path',
-    label: 'Phoenician to Arabic',
-    nodeIds: ['phoenician', 'aramaic', 'nabataean', 'arabic'],
+    label: 'Aramaic to Arabic',
+    nodeIds: ['aramaic', 'nabataean', 'arabic'],
   },
   {
-    id: 'brahmi-path',
+    id: 'south-asia-path',
     label: 'Brahmi and South Asia',
-    nodeIds: ['brahmi', 'devanagari', 'tamil', 'kannada', 'telugu', 'tibetan'],
+    nodeIds: [
+      'brahmi',
+      'sinhala',
+      'tibetan',
+      'devanagari',
+      'bengali-assamese',
+      'odia',
+      'gujarati',
+      'gurmukhi',
+      'tamil',
+      'malayalam',
+      'kannada',
+      'telugu',
+      'meetei-mayek',
+    ],
+  },
+  {
+    id: 'southeast-asia-path',
+    label: 'Brahmi and Southeast Asia',
+    nodeIds: ['brahmi', 'myanmar', 'cham', 'javanese', 'balinese', 'sundanese', 'tagalog', 'khmer', 'thai', 'lao'],
+  },
+  {
+    id: 'inner-asia-path',
+    label: 'Aramaic to Manchu',
+    nodeIds: ['aramaic', 'syriac', 'sogdian', 'old-uyghur', 'mongolian', 'manchu'],
   },
   {
     id: 'chinese-path',
-    label: 'Hanzi',
+    label: 'Hanzi to Kana and Zhuyin',
     nodeIds: ['oracle-bone', 'bronze-script', 'seal-script', 'clerical-script', 'chinese', 'manyogana', 'hiragana', 'katakana', 'bopomofo'],
   },
 ] as const
