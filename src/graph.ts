@@ -264,12 +264,7 @@ function createEdge(
   relatedIds: Set<string>,
   selectedId: string | null,
 ): Edge {
-  const relationshipColor =
-    edge.relationship === 'descended' || edge.relationship === 'adapted_from'
-      ? '#737373'
-      : edge.relationship === 'disputed'
-        ? '#737373'
-        : '#525252'
+  const relationshipStyle = getRelationshipStyle(edge.relationship)
   const isTrace = activeTraceIds.has(edge.from) && activeTraceIds.has(edge.to)
   const isRelated = Boolean(selectedId && relatedIds.has(edge.from) && relatedIds.has(edge.to))
 
@@ -283,15 +278,26 @@ function createEdge(
     animated: isTrace,
     className: isTrace ? 'guide-edge' : undefined,
     zIndex: isTrace ? 2 : isRelated ? 1 : 0,
-    label: edge.relationship === 'disputed' ? 'disputed' : undefined,
+    label: relationshipStyle.label,
     style: {
-      stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipColor,
+      stroke: isTrace ? '#111111' : isRelated ? '#111111' : relationshipStyle.color,
       strokeWidth: isTrace ? 2 : isRelated ? 1.5 : 1,
-      strokeDasharray:
-        !isTrace && (edge.relationship === 'influenced_by' || edge.relationship === 'disputed') ? '7 6' : undefined,
+      strokeDasharray: !isTrace ? relationshipStyle.dash : undefined,
       opacity: selectedId || activeTraceIds.size ? (isTrace || isRelated ? 0.95 : 0.18) : 0.74,
     },
   }
+}
+
+function getRelationshipStyle(relationship: ScriptEdge['relationship']) {
+  if (relationship === 'influenced_by') {
+    return { color: '#525252', dash: '7 6', label: undefined }
+  }
+
+  if (relationship === 'disputed') {
+    return { color: '#737373', dash: '2 5', label: 'disputed' }
+  }
+
+  return { color: '#737373', dash: undefined, label: undefined }
 }
 
 export function getTypeColor(type: ScriptNode['type']) {

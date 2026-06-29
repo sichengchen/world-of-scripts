@@ -1451,9 +1451,10 @@ function Legend({
       tabIndex={0}
     >
       <CircleHelp className="size-4 shrink-0" aria-hidden="true" />
-      <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[520px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[520px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:hidden max-[820px]:grid-cols-1 max-[820px]:items-start max-[820px]:group-focus-within:grid max-[820px]:group-hover:grid">
+      <div className="grid max-w-0 grid-cols-[max-content_max-content_max-content_max-content] items-center gap-0 overflow-hidden opacity-0 transition-all duration-200 group-focus-within:ml-3 group-focus-within:max-w-[680px] group-focus-within:gap-3 group-focus-within:opacity-100 group-hover:ml-3 group-hover:max-w-[680px] group-hover:gap-3 group-hover:opacity-100 max-[820px]:hidden max-[820px]:grid-cols-1 max-[820px]:items-start max-[820px]:group-focus-within:grid max-[820px]:group-hover:grid">
         <LegendItem label="descended/adapted" />
-        <LegendItem dashed label="influenced/disputed" />
+        <LegendItem dash="7 6" label="influenced" />
+        <LegendItem dash="2 5" label="disputed" />
         <LegendItem strong label="selected path" />
       </div>
     </div>
@@ -1461,11 +1462,11 @@ function Legend({
 }
 
 function LegendItem({
-  dashed = false,
+  dash,
   label,
   strong = false,
 }: {
-  dashed?: boolean
+  dash?: string
   label: string
   strong?: boolean
 }) {
@@ -1478,7 +1479,7 @@ function LegendItem({
           y1="7"
           y2="7"
           stroke="currentColor"
-          strokeDasharray={dashed ? '5 4' : undefined}
+          strokeDasharray={dash}
           strokeLinecap="round"
           strokeWidth={strong ? 2 : 1.4}
         />
