@@ -1409,10 +1409,15 @@ function Inspector({
 
               return (
                 <div
-                  className="grid min-h-20 grid-rows-[2.75rem_minmax(1rem,auto)] content-center justify-items-center gap-1 rounded-lg border bg-background px-1.5 py-2 text-center"
+                  className={cn(
+                    'grid min-h-20 rounded-lg border bg-background px-1.5 py-2 text-center',
+                    characterLabel
+                      ? 'grid-rows-[2.75rem_minmax(1rem,auto)] content-center justify-items-center gap-1'
+                      : 'place-items-center',
+                  )}
                   key={`${row.glyph}-${index}`}
                 >
-                  <span className="flex h-11 items-center justify-center gap-1.5">
+                  <span className={cn('flex items-center justify-center gap-1.5', characterLabel ? 'h-11' : 'min-h-11')}>
                     <span className={cn('script-glyph text-3xl leading-none', useVerticalInspectorGlyphs && 'is-vertical')}>
                       {row.glyph}
                     </span>
@@ -1422,15 +1427,11 @@ function Inspector({
                       </span>
                     )}
                   </span>
-                  <small
-                    className={cn(
-                      'min-h-4 max-w-full text-xs font-medium leading-tight text-muted-foreground',
-                      !characterLabel && 'invisible',
-                    )}
-                    aria-hidden={!characterLabel}
-                  >
-                    {characterLabel || ' '}
-                  </small>
+                  {characterLabel && (
+                    <small className="min-h-4 max-w-full text-xs font-medium leading-tight text-muted-foreground">
+                      {characterLabel}
+                    </small>
+                  )}
                 </div>
               )
             })}
