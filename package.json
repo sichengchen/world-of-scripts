@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": "^20.19.0 || ^22.18.0 || >=24.11.0"
+  },
   "scripts": {
     "dev": "devpin run --wait",
     "dev:app": "vp dev --host 127.0.0.1",
