@@ -78,7 +78,9 @@ const lineagePositions: Record<string, { x: number; y: number }> = {
   arabic: { x: 1580, y: 1320 },
   sogdian: { x: 1540, y: 900 },
   'old-uyghur': { x: 1800, y: 900 },
+  'old-turkic': { x: 1800, y: 620 },
   mongolian: { x: 2060, y: 780 },
+  'old-hungarian': { x: 2060, y: 620 },
   manchu: { x: 2320, y: 620 },
   kharoshthi: { x: 1060, y: 1460 },
   'old-south-arabian': { x: 280, y: 980 },
@@ -134,7 +136,6 @@ const lineagePositions: Record<string, { x: number; y: number }> = {
   vai: { x: 800, y: 2120 },
   cherokee: { x: 20, y: 2260 },
   'canadian-aboriginal': { x: 280, y: 2260 },
-  'old-turkic': { x: 540, y: 2260 },
 }
 
 const timelinePositions = buildTimelinePositions()

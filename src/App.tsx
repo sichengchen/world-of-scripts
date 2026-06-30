@@ -183,6 +183,7 @@ const scriptFontStacks: Record<string, string> = {
   adlam: `"Noto Sans Adlam", "Ebrima", ${fallbackScriptFont}`,
   vai: `"Noto Sans Vai", ${fallbackScriptFont}`,
   'old-turkic': `"Noto Sans Old Turkic", "Segoe UI Historic", ${fallbackScriptFont}`,
+  'old-hungarian': `"Noto Sans Old Hungarian", "Segoe UI Historic", ${fallbackScriptFont}`,
   sogdian: `"Noto Sans Sogdian", "Segoe UI Historic", ${fallbackScriptFont}`,
   'old-uyghur': `"Noto Serif Old Uyghur", "Noto Sans Old Uyghur", ${fallbackScriptFont}`,
   mongolian: `"Noto Sans Mongolian", "Mongolian Baiti", ${fallbackScriptFont}`,

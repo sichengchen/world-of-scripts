@@ -1994,10 +1994,39 @@ export const scripts: ScriptNode[] = [
         .map((glyph) => ({ glyph })),
     summary:
       'A runiform alphabet used for early Turkic inscriptions in Central Asia. It is not a descendant of Germanic runes despite superficial visual comparison.',
+    notes: ['Its exact origin remains debated; the graph shows the conservative Sogdian-influenced path rather than a high-confidence descent claim.'],
     sources: [
       { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
       { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Turkic_script' },
       { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10C00.pdf' },
+    ],
+  },
+  {
+    id: 'old-hungarian',
+    name: 'Old Hungarian',
+    type: 'alphabet',
+    status: 'revived',
+    region: ['Europe'],
+    startYear: 900,
+    endYear: 'present',
+    direction: 'rtl',
+    unicodeBlock: ['Old Hungarian'],
+    sampleGlyphs: ['𐲀', '𐲁', '𐲂', '𐲃'],
+    characterRows: characterRows(
+      '𐲀 𐲁 𐲂 𐲃 𐲄 𐲅 𐲆 𐲇 𐲈 𐲉 𐲊 𐲋 𐲌 𐲍 𐲎 𐲏 𐲐 𐲑 𐲒 𐲓 𐲔 𐲕 𐲖 𐲗 𐲘 𐲙 𐲚 𐲛 𐲜 𐲝 𐲞 𐲟 𐲠 𐲡 𐲢 𐲣 𐲤 𐲥 𐲦 𐲧 𐲨 𐲩 𐲪 𐲫 𐲬 𐲭 𐲮 𐲯 𐲰 𐲱 𐲲',
+      'a|aa|eb|amb|ec|enc|ecs|ed|and|e|close e|ee|ef|eg|egy|eh|i|ii|ej|ek|ak|unk|el|ely|em|en|eny|o|oo|nikolsburg oe|rudimenta oe|oee|ep|emp|er|short er|es|esz|et|ent|ety|ech|u|uu|nikolsburg ue|rudimenta ue|ev|ez|ezs|ent-shaped sign|us',
+      '𐳀 𐳁 𐳂 𐳃 𐳄 𐳅 𐳆 𐳇 𐳈 𐳉 𐳊 𐳋 𐳌 𐳍 𐳎 𐳏 𐳐 𐳑 𐳒 𐳓 𐳔 𐳕 𐳖 𐳗 𐳘 𐳙 𐳚 𐳛 𐳜 𐳝 𐳞 𐳟 𐳠 𐳡 𐳢 𐳣 𐳤 𐳥 𐳦 𐳧 𐳨 𐳩 𐳪 𐳫 𐳬 𐳭 𐳮 𐳯 𐳰 𐳱 𐳲',
+    ),
+    summary:
+      'A right-to-left alphabet historically used for Hungarian, especially in Székely contexts, and revived in modern cultural and public-signage use.',
+    notes: [
+      'Shown as revived because modern Hungarian is normally written in Latin script, while Old Hungarian has contemporary cultural and educational use.',
+      'The origin is commonly discussed near Old Turkic runiform traditions, but the exact transmission path is not settled.',
+    ],
+    sources: [
+      { label: 'World Writing Systems', url: 'https://www.worldswritingsystems.org/' },
+      { label: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/Old_Hungarian_script' },
+      { label: 'Unicode', url: 'https://www.unicode.org/charts/PDF/U10C80.pdf' },
     ],
   },
   {
@@ -2262,6 +2291,7 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'kharoshthi', relationship: 'adapted_from', confidence: 'medium', note: 'Kharoshthi is usually linked to Aramaic influence, while the exact mechanism of adaptation is reconstructed.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'aramaic', to: 'brahmi', relationship: 'disputed', confidence: 'medium', note: 'Brahmi is often proposed as deriving from or adapting an Aramaic/Semitic model, but its origin remains debated and direct descent is not established.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/', 'https://en.wikipedia.org/wiki/Brahmi_script', 'https://www.jstor.org/stable/604670', 'https://archive.org/details/onoriginofindian00bhuoft'] },
   { from: 'aramaic', to: 'sogdian', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Sogdian_alphabet', 'https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'sogdian', to: 'old-turkic', relationship: 'influenced_by', confidence: 'medium', note: 'Old Turkic is often linked to Aramaic-derived Central Asian scripts including Sogdian or Syriac, but its exact origin remains debated.', sources: ['https://en.wikipedia.org/wiki/Old_Turkic_script', 'https://en.wikipedia.org/wiki/Sogdian_alphabet'] },
   { from: 'nabataean', to: 'arabic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Arabic_alphabet'] },
   { from: 'brahmi', to: 'devanagari', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Devanagari'] },
   { from: 'brahmi', to: 'bengali-assamese', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Bengali%E2%80%93Assamese_script'] },
@@ -2303,6 +2333,7 @@ export const edges: ScriptEdge[] = [
   { from: 'aramaic', to: 'mandaic', relationship: 'descended', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/Mandaic_alphabet'] },
   { from: 'tibetan', to: 'phags-pa', relationship: 'adapted_from', confidence: 'high', sources: ['https://en.wikipedia.org/wiki/%CA%BCPhags-pa_script', 'https://www.unicode.org/charts/PDF/UA840.pdf'] },
   { from: 'sogdian', to: 'old-uyghur', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
+  { from: 'old-turkic', to: 'old-hungarian', relationship: 'influenced_by', confidence: 'medium', note: 'Old Hungarian is commonly placed near Old Turkic runiform traditions, but the precise origin and route of transmission are not settled.', sources: ['https://en.wikipedia.org/wiki/Old_Hungarian_script', 'https://en.wikipedia.org/wiki/Old_Turkic_script'] },
   { from: 'old-uyghur', to: 'mongolian', relationship: 'descended', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-14/'] },
   { from: 'mongolian', to: 'manchu', relationship: 'adapted_from', confidence: 'high', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-13/', 'https://www.unicode.org/charts/PDF/U1800.pdf'] },
   { from: 'old-south-arabian', to: 'geez', relationship: 'descended', confidence: 'medium', note: 'Ethiopic is rooted in the South Semitic inscriptional tradition; the exact early development is compressed here.', sources: ['https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-19/'] },
