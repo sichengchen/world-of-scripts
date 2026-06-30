@@ -21,10 +21,10 @@ This project **is not** a professional source. It may contain mistakes. Correcti
 ## Development
 
 ```sh
-npm install
-npm run dev
-npm run build
-npm run validate:content
+vp install
+vp run dev
+vp build
+vp run validate:content
 ```
 
 ## References

@@ -1091,7 +1091,7 @@ function CanvasControls({
   onZoomIn: () => void
   onZoomOut: () => void
 }) {
-  const { locale, t } = useI18n()
+  const { t } = useI18n()
 
   return (
     <ButtonGroup
